@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Medibook.Data\Medibook.Data.csproj" />
+    <ProjectReference Include="..\Medibook.Data\MediBook.Data.csproj" />
     <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
   </ItemGroup>
 

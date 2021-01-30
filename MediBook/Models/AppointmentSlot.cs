@@ -1,6 +1,7 @@
 ﻿namespace MediBook.Core.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -18,6 +19,7 @@
         /// <summary>
         /// The Appointment Id
         /// </summary>
+        [ForeignKey("AppointmentId")]
         public int AppointmentId { get; set; }
 
         /// <summary>

@@ -8,7 +8,7 @@
     /// <summary>
     /// The User account
     /// </summary>
-    [Index(nameof(JobDescription))]
+    [Index(nameof(JobDescriptionId))]
     [Index(nameof(Role))]
     public class User : IDbEntity
     {

@@ -11,7 +11,6 @@
     /// </summary>
     [Index(nameof(PatientId))]
     [Index(nameof(MedicalPractitionerId))]
-    [Index(nameof(AppointmentSlotId))]
     public class Appointment : IDbEntity
     {
         /// <summary>
@@ -53,10 +52,6 @@
         [Required]
         public AppointmentState State { get; set; }
 
-        /// <summary>
-        /// The Id of the AppointmentSlot
-        /// </summary>
-        public int AppointmentSlotId { get; set; }
 
         /// <summary>
         /// The AppointmentSlot navigation property
