@@ -82,7 +82,7 @@
         /// <summary>
         /// The MedicalPractitioners the patient is associated with
         /// </summary>
-        public ICollection<PatientsMedicalPractitioners> MedicalPractitioners { get; set; }
+        public ICollection<PatientsMedicalPractitioner> MedicalPractitioners { get; set; }
 
         /// <summary>
         /// The patient's notes

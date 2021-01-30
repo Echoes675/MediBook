@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediBook.Core", "MediBook\M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medibook.Data", "Medibook.Data\Medibook.Data.csproj", "{2B09FC21-5E44-424F-B3F8-6DB8D85EC59D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{795637DB-5C06-4C51-9CF1-E61B0DAA3235}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medibook.Data.Test", "Medibook.Data.Test\Medibook.Data.Test.csproj", "{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,16 @@ Global
 		{2B09FC21-5E44-424F-B3F8-6DB8D85EC59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B09FC21-5E44-424F-B3F8-6DB8D85EC59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B09FC21-5E44-424F-B3F8-6DB8D85EC59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30} = {795637DB-5C06-4C51-9CF1-E61B0DAA3235}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EF17E2E-FA69-4D35-B9A8-6D388C6117FD}

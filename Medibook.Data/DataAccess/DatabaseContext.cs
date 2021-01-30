@@ -19,6 +19,46 @@
         }
 
         /// <summary>
+        /// The DbSet of Appointments table in the Database
+        /// </summary>
+        public DbSet<Appointment> Appointments { get; set; }
+
+        /// <summary>
+        /// The DbSet of AppointmentSessions table in the Database
+        /// </summary>
+        public DbSet<AppointmentSession> AppointmentSessions { get; set; }
+
+        /// <summary>
+        /// The DbSet of AppointmentSlots table in the Database
+        /// </summary>
+        public DbSet<AppointmentSlot> AppointmentSlots { get; set; }
+
+        /// <summary>
+        /// The DbSet of JobDescriptions table in the Database
+        /// </summary>
+        public DbSet<JobDescription> JobDescriptions { get; set; }
+
+        /// <summary>
+        /// The DbSet of Patients table in the Database
+        /// </summary>
+        public DbSet<Patient> Patients { get; set; }
+
+        /// <summary>
+        /// The DbSet of PatientNotes table in the Database
+        /// </summary>
+        public DbSet<PatientNote> PatientNotes { get; set; }
+
+        /// <summary>
+        /// The DbSet of PatientsMedicalPractitioners table in the Database
+        /// </summary>
+        public DbSet<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
+
+        /// <summary>
+        /// The DbSet of Users table in the Database
+        /// </summary>
+        public DbSet<User> Users { get; set; }
+
+        /// <summary>
         ///     Creates a <see cref="DbSet{TEntity}" /> that can be used to query and save instances of <typeparamref name="TEntity" />.
         /// </summary>
         /// <typeparam name="TEntity"> The type of entity for which a set should be returned. </typeparam>

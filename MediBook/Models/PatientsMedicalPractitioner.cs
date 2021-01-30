@@ -1,9 +1,9 @@
 ﻿namespace MediBook.Core.Models
 {
-    public class PatientsMedicalPractitioners : IDbEntity
+    public class PatientsMedicalPractitioner : IDbEntity
     {
         /// <summary>
-        /// The PatientsMedicalPractitioners Id
+        /// The PatientsMedicalPractitioner Id
         /// </summary>
         public int Id { get; set; }
 
