@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Medibook.Data\Medibook.Data.csproj" />
+    <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
+  </ItemGroup>
+
 </Project>
