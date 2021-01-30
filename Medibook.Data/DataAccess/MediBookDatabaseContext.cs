@@ -6,13 +6,13 @@
     using MediBook.Core.Models;
     using Microsoft.EntityFrameworkCore;
 
-    public class DatabaseContext : DbContext, IDatabaseContext
+    public class MediBookDatabaseContext : DbContext, IDatabaseContext
     {
         /// <summary>
-        /// Initializes an instance of the <see cref="DatabaseContext"/> class
+        /// Initializes an instance of the <see cref="MediBookDatabaseContext"/> class
         /// </summary>
         /// <param name="options"></param>
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) 
+        public MediBookDatabaseContext(DbContextOptions<MediBookDatabaseContext> options) 
             : base(options)
         {
 

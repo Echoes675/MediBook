@@ -1,5 +1,14 @@
 ﻿namespace MediBook.Core.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.EntityFrameworkCore;
+
+    /// <summary>
+    /// The Patient Note
+    /// </summary>
+    [Index(nameof(PatientId))]
+    [Index(nameof(MedicalPractitionerId))]
     public class PatientNote : IDbEntity
     {
         /// <summary>
@@ -10,6 +19,7 @@
         /// <summary>
         /// The content of the PatientNote
         /// </summary>
+        [Required, MaxLength(2500), MinLength(2)]
         public string Content { get; set; }
 
         /// <summary>
@@ -25,11 +35,12 @@
         /// <summary>
         /// The Id of the associated Medical Practitioner User account
         /// </summary>
-        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+        public int MedicalPractitionerId { get; set; }
 
         /// <summary>
         /// The User navigation property
         /// </summary>
-        public User User { get; set; }
+        public User MedicalPractitioner { get; set; }
     }
 }

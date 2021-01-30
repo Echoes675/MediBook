@@ -1,8 +1,13 @@
 ﻿namespace MediBook.Core.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using Microsoft.EntityFrameworkCore;
+
     /// <summary>
     /// The Appointment Slot
     /// </summary>
+    [Index(nameof(AppointmentSessionId))]
+    [Index(nameof(AppointmentId))]
     public class AppointmentSlot : IDbEntity
     {
         /// <summary>
@@ -18,6 +23,7 @@
         /// <summary>
         /// The Appointment Navigation property
         /// </summary>
+        [Required]
         public Appointment Appointment { get; set; }
 
         /// <summary>
@@ -28,6 +34,7 @@
         /// <summary>
         /// The AppointmentSession Navigation property
         /// </summary>
+        [Required]
         public AppointmentSession AppointmentSession { get; set; }
     }
 }

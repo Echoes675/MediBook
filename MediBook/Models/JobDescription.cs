@@ -1,5 +1,7 @@
 ﻿namespace MediBook.Core.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// The user's JobDescription
     /// </summary>
@@ -13,6 +15,7 @@
         /// <summary>
         /// The JobDescription
         /// </summary>
+        [MaxLength(100)]
         public string Description { get; set; }
     }
 }

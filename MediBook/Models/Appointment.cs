@@ -1,14 +1,28 @@
 ﻿namespace MediBook.Core.Models
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using MediBook.Core.Enums;
+    using Microsoft.EntityFrameworkCore;
+
     /// <summary>
     /// The booked Appointment
     /// </summary>
+    [Index(nameof(PatientId))]
+    [Index(nameof(MedicalPractitionerId))]
+    [Index(nameof(AppointmentSlotId))]
     public class Appointment : IDbEntity
     {
         /// <summary>
-        /// The AppointmentSlot Id
+        /// The Appointment Id
         /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// The day and time of the appointment
+        /// </summary>
+        public DateTime AppointmentDateTime { get; set; }
 
         /// <summary>
         /// The Patient Id
@@ -18,16 +32,36 @@
         /// <summary>
         /// The Patient navigation property
         /// </summary>
+        [Required]
         public Patient Patient { get; set; }
 
         /// <summary>
         /// The Id of the associated Medical Practitioner User account
         /// </summary>
-        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+        public int MedicalPractitionerId { get; set; }
 
         /// <summary>
         /// The User navigation property
         /// </summary>
-        public User User { get; set; }
+        [Required]
+        public User MedicalPractitioner { get; set; }
+
+        /// <summary>
+        /// The Appointment State
+        /// </summary>
+        [Required]
+        public AppointmentState State { get; set; }
+
+        /// <summary>
+        /// The Id of the AppointmentSlot
+        /// </summary>
+        public int AppointmentSlotId { get; set; }
+
+        /// <summary>
+        /// The AppointmentSlot navigation property
+        /// </summary>
+        [Required]
+        public AppointmentSlot AppointmentSlot { get; set; }
     }
 }

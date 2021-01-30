@@ -21,7 +21,7 @@
         /// The database Context.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">
-        /// DatabaseContext not provided.
+        /// MediBookDatabaseContext not provided.
         /// </exception>
         protected RepositoryBase(IDatabaseContext databaseContext)
         {
