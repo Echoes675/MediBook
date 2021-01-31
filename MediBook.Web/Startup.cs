@@ -1,6 +1,7 @@
 namespace MediBook.Web
 {
     using Medibook.Data.DataAccess;
+    using Medibook.Data.Repositories;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -20,8 +21,23 @@ namespace MediBook.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Database
             services.AddDbContext<MediBookDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
+            // Allows the Db to be injectable using an interface
+            services.AddScoped<IDatabaseContext>(provider => provider.GetService<MediBookDatabaseContext>());
+            #endregion
+
+            #region Data Accessors
+            services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
+            //services.AddScoped<IAppointmentDal, AppointmentDal>();
+            //services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
+            //services.AddScoped<IPatientDal, PatientDal>();
+            //services.AddScoped<IPatientNoteDal, PatientNoteDal>();
+            //services.AddScoped<IUserDal, UserDal>();
+            //services.AddScoped<IPatientsMedicalPractitionerDal, PatientsMedicalPractitionerDal>();
+            #endregion
 
             services.AddControllersWithViews();
         }

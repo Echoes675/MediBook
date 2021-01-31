@@ -8,8 +8,7 @@
     using Medibook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
 
-    public abstract class RepositoryBase<TEntity>
-           where TEntity : class, IDbEntity
+    public abstract class RepositoryBase<TEntity> where TEntity : class, IDbEntity
     {
         protected readonly IDatabaseContext Db;
 
@@ -89,7 +88,7 @@
         /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            var retVal = await Db.Set<TEntity>().AsNoTracking().ToListAsync().ConfigureAwait(false);
+            var retVal = await Db.Set<TEntity>().ToListAsync().ConfigureAwait(false);
             return retVal;
         }
 
@@ -145,23 +144,17 @@
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return (Db.Set<TEntity>().AsNoTracking().AsEnumerable() ?? throw new InvalidOperationException(nameof(TEntity))).Where(predicate);
+            return (Db.Set<TEntity>().AsEnumerable() ?? throw new InvalidOperationException(nameof(TEntity))).Where(predicate);
         }
 
         /// <summary>
-        /// Returns all entities as IQueryable
+        /// Retrieves the entity matching the Id
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IQueryable<TEntity> DbGetAll()
-        {
-            return Db.Set<TEntity>().AsNoTracking();
-        }
-
         protected Task<TEntity> DbGetByIdAsync(int id)
         {
-            return Db.Set<TEntity>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id == id);
+            return Db.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
         }
 
         /// <summary>
@@ -172,16 +165,16 @@
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
         protected async Task<TEntity> DbUpdateAsync(TEntity entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
             Db.Set<TEntity>().Update(entity);
             await Db.SaveChangesAsync().ConfigureAwait(false);
             return entity;
         }
 
+        /// <summary>
+        /// Deletes the entity from the database with the given Id number
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         protected async Task<bool> DbDeleteAsync(int id)
         {
             var entity = await DbGetByIdAsync(id).ConfigureAwait(false);
@@ -195,17 +188,16 @@
             return true;
         }
 
+        /// <summary>
+        /// Adds the new entity to the database
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         protected async Task<TEntity> DbCreateAsync(TEntity entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
             await Db.Set<TEntity>().AddAsync(entity).ConfigureAwait(false);
             await Db.SaveChangesAsync().ConfigureAwait(false);
             return entity;
-
         }
     }
 }
