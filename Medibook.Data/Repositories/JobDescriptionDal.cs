@@ -41,7 +41,7 @@
 
             var dbEntity = await Db.Set<JobDescription>()
                 .FirstOrDefaultAsync(x => 
-                    string.Compare(x.Description, entity.Description, StringComparison.InvariantCultureIgnoreCase) == 0);
+                    string.Compare(x.Description, entity.Description.Trim(), StringComparison.InvariantCultureIgnoreCase) == 0);
 
             return dbEntity != null;
         }
