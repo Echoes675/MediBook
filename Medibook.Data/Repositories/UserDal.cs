@@ -7,7 +7,7 @@
     /// <summary>
     /// The UserDal
     /// </summary>
-    public class UserDal : RepositoryBase<User>
+    public class UserDal : RepositoryBase<Employee>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDal"/> class

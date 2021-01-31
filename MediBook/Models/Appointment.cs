@@ -46,16 +46,16 @@
         public Patient Patient { get; set; }
 
         /// <summary>
-        /// The Id of the associated Medical Practitioner User account
+        /// The Id of the associated Medical Practitioner Employee account
         /// </summary>
         [ForeignKey("UserId")]
         public int MedicalPractitionerId { get; set; }
 
         /// <summary>
-        /// The User navigation property
+        /// The Employee navigation property
         /// </summary>
         [Required]
-        public User MedicalPractitioner { get; set; }
+        public Employee MedicalPractitioner { get; set; }
 
         /// <summary>
         /// The Id of the AppointmentSession

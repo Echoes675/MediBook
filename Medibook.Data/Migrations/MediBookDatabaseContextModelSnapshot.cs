@@ -208,7 +208,7 @@ namespace MediBook.Data.Migrations
                     b.ToTable("PatientsMedicalPractitioners");
                 });
 
-            modelBuilder.Entity("MediBook.Core.Models.User", b =>
+            modelBuilder.Entity("MediBook.Core.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -263,7 +263,7 @@ namespace MediBook.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MediBook.Core.Models.User", "MedicalPractitioner")
+                    b.HasOne("MediBook.Core.Models.Employee", "MedicalPractitioner")
                         .WithMany("Appointments")
                         .HasForeignKey("MedicalPractitionerId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -284,7 +284,7 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
                 {
-                    b.HasOne("MediBook.Core.Models.User", "MedicalPractitioner")
+                    b.HasOne("MediBook.Core.Models.Employee", "MedicalPractitioner")
                         .WithMany("AppointmentSessions")
                         .HasForeignKey("MedicalPractitionerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -295,7 +295,7 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.PatientNote", b =>
                 {
-                    b.HasOne("MediBook.Core.Models.User", "MedicalPractitioner")
+                    b.HasOne("MediBook.Core.Models.Employee", "MedicalPractitioner")
                         .WithMany("PatientNotes")
                         .HasForeignKey("MedicalPractitionerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -314,7 +314,7 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.PatientsMedicalPractitioner", b =>
                 {
-                    b.HasOne("MediBook.Core.Models.User", "MedicalPractitioner")
+                    b.HasOne("MediBook.Core.Models.Employee", "MedicalPractitioner")
                         .WithMany("PatientsMedicalPractitioners")
                         .HasForeignKey("MedicalPractitionerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -331,7 +331,7 @@ namespace MediBook.Data.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("MediBook.Core.Models.User", b =>
+            modelBuilder.Entity("MediBook.Core.Models.Employee", b =>
                 {
                     b.HasOne("MediBook.Core.Models.JobDescription", "JobDescription")
                         .WithMany()
@@ -356,7 +356,7 @@ namespace MediBook.Data.Migrations
                     b.Navigation("PatientsMedicalPractitioners");
                 });
 
-            modelBuilder.Entity("MediBook.Core.Models.User", b =>
+            modelBuilder.Entity("MediBook.Core.Models.Employee", b =>
                 {
                     b.Navigation("Appointments");
 

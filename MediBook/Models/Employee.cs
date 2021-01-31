@@ -6,13 +6,13 @@
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// The User account
+    /// The Employee account
     /// </summary>
     [Index(nameof(JobDescriptionId))]
-    public class User : IDbEntity
+    public class Employee : IDbEntity
     {
         /// <summary>
-        /// The User Id
+        /// The Employee Id
         /// </summary>
         public int Id { get; set; }
 

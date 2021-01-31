@@ -51,7 +51,7 @@
         /// <summary>
         /// The DbSet of Users table in the Database
         /// </summary>
-        public DbSet<User> Users { get; set; }
+        public DbSet<Employee> Users { get; set; }
 
         /// <summary>
         ///     Creates a <see cref="DbSet{TEntity}" /> that can be used to query and save instances of <typeparamref name="TEntity" />.
