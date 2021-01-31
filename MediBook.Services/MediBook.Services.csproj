@@ -9,8 +9,4 @@
     <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Cryptography\" />
-  </ItemGroup>
-
 </Project>

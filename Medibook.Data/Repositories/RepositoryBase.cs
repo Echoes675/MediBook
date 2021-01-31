@@ -1,11 +1,11 @@
-﻿namespace Medibook.Data.Repositories
+﻿namespace MediBook.Data.Repositories
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
-    using Medibook.Data.DataAccess;
+    using MediBook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 

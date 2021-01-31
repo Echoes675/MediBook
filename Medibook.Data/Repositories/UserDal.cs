@@ -1,13 +1,15 @@
-﻿namespace Medibook.Data.Repositories
+﻿namespace MediBook.Data.Repositories
 {
+    using System.Threading.Tasks;
     using MediBook.Core.Models;
-    using Medibook.Data.DataAccess;
+    using MediBook.Data.DataAccess;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The UserDal
     /// </summary>
-    public class UserDal : RepositoryBase<Employee>
+    public class UserDal : RepositoryBase<Employee>, IUserDal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDal"/> class
@@ -16,6 +18,16 @@
         /// <param name="logger"></param>
         public UserDal(IDatabaseContext databaseContext, ILogger<UserDal> logger) : base(databaseContext, logger)
         {
+        }
+
+        /// <summary>
+        /// Searches for any registered users using the supplied username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public async Task<User> GetUserAsync(string username)
+        {
+            return await Db.Set<User>().FirstOrDefaultAsync(x => x.Username == username).ConfigureAwait(false);
         }
     }
 }

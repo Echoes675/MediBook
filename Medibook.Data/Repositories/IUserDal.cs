@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using MediBook.Core.Models;
 
-    public interface IJobDescriptionDal
+    public interface IUserDal
     {
         /// <summary>
         /// Method to Add an Entity to the database after confirming it doesn't already exist
@@ -13,7 +13,7 @@
         /// <param name="entity">The entity parameter</param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        Task<JobDescription> AddAsync(JobDescription entity);
+        Task<Employee> AddAsync(Employee entity);
 
         /// <summary>
         /// Method to delete an entity from the database if it exists
@@ -28,20 +28,27 @@
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        Task<JobDescription> UpdateAsync(JobDescription entity);
+        Task<Employee> UpdateAsync(Employee entity);
 
         /// <summary>
         /// Returns all the entities in a particular DbSet
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<JobDescription>> GetAllAsync();
+        Task<IEnumerable<Employee>> GetAllAsync();
 
         /// <summary>
         /// Returns an entity of a given type using its Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<JobDescription> GetEntityAsync(int id);
+        Task<Employee> GetEntityAsync(int id);
+
+        /// <summary>
+        /// Searches for any registered users using the supplied username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public Task<User> GetUserAsync(string username);
 
         /// <summary>
         /// Check if entity exists in the database
@@ -49,7 +56,7 @@
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        Task<bool> CheckEntityExistsAsync(JobDescription entity);
+        Task<bool> CheckEntityExistsAsync(Employee entity);
 
         /// <summary>
         /// Check if entity exists in the database
@@ -65,6 +72,6 @@
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
         /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
-        IEnumerable<JobDescription> Filter(Func<JobDescription, bool> predicate);
+        IEnumerable<Employee> Filter(Func<Employee, bool> predicate);
     }
 }

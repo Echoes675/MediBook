@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using MediBook.Core.Enums;
-    using Microsoft.EntityFrameworkCore;
+    using IndexAttribute = Microsoft.EntityFrameworkCore.IndexAttribute;
 
     /// <summary>
     /// The booked Appointment

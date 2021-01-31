@@ -1,7 +1,7 @@
-﻿namespace Medibook.Data.Repositories
+﻿namespace MediBook.Data.Repositories
 {
     using MediBook.Core.Models;
-    using Medibook.Data.DataAccess;
+    using MediBook.Data.DataAccess;
     using Microsoft.Extensions.Logging;
 
     /// <summary>

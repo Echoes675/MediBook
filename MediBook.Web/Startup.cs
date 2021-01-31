@@ -1,8 +1,8 @@
 namespace MediBook.Web
 {
-    using System;
-    using Medibook.Data.DataAccess;
-    using Medibook.Data.Repositories;
+    using MediBook.Data.DataAccess;
+    using MediBook.Data.Repositories;
+    using MediBook.Services.Cryptography;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -23,6 +23,8 @@ namespace MediBook.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var x = new DefaultCryptographyProcessorOptions(Configuration);
+
             #region Database
             services.AddDbContext<MediBookDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -33,14 +35,21 @@ namespace MediBook.Web
             services.AddScoped<IDatabaseContext>(provider => provider.GetService<MediBookDatabaseContext>());
             #endregion
 
+            services.AddAuthentication();
+
             #region Data Accessors
-            services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
+            //services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
             //services.AddScoped<IAppointmentDal, AppointmentDal>();
             //services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
             //services.AddScoped<IPatientDal, PatientDal>();
             //services.AddScoped<IPatientNoteDal, PatientNoteDal>();
-            //services.AddScoped<IUserDal, UserDal>();
+            services.AddScoped<IUserDal, UserDal>();
             //services.AddScoped<IPatientsMedicalPractitionerDal, PatientsMedicalPractitionerDal>();
+            #endregion
+
+            #region Services
+            services.AddScoped<ICryptographyProcessorFactory, CryptographyProcessorFactory>();
+            services.AddScoped<ICryptographyService, CryptographyService>();
             #endregion
 
             services.AddControllersWithViews();
@@ -66,7 +75,7 @@ namespace MediBook.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

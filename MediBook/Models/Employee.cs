@@ -1,5 +1,6 @@
 ﻿namespace MediBook.Core.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using MediBook.Core.Enums;
@@ -17,20 +18,9 @@
         public int Id { get; set; }
 
         /// <summary>
-        /// The Username
+        /// The Employee Guid
         /// </summary>
-        [Required, MaxLength(50), MinLength(3)]
-        public string Username { get; set; }
-
-        /// <summary>
-        /// The PasswordHash
-        /// </summary>
-        public byte[] PasswordHash { get; set; }
-
-        /// <summary>
-        /// The PasswordSalt
-        /// </summary>
-        public byte[] PasswordSalt { get; set; }
+        public Guid EmployeeGuid { get; set; }
 
         /// <summary>
         /// The user's title
@@ -49,18 +39,6 @@
         /// </summary>
         [Required, MaxLength(50), MinLength(2)]
         public string Lastname { get; set; }
-
-        /// <summary>
-        /// The user's role
-        /// </summary>
-        [Required]
-        public UserRole Role { get; set; }
-
-        /// <summary>
-        /// The Account State
-        /// </summary>
-        [Required]
-        public AccountState State { get; set; }
 
         /// <summary>
         /// The Id of the user's Job Description

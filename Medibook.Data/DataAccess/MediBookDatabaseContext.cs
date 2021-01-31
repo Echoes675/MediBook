@@ -1,4 +1,4 @@
-﻿namespace Medibook.Data.DataAccess
+﻿namespace MediBook.Data.DataAccess
 {
     using System;
     using System.Threading;
@@ -49,9 +49,14 @@
         public DbSet<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
 
         /// <summary>
+        /// The DbSet of Employees table in the Database
+        /// </summary>
+        public DbSet<Employee> Employees { get; set; }
+
+        /// <summary>
         /// The DbSet of Users table in the Database
         /// </summary>
-        public DbSet<Employee> Users { get; set; }
+        public DbSet<User> Users { get; set; }
 
         /// <summary>
         ///     Creates a <see cref="DbSet{TEntity}" /> that can be used to query and save instances of <typeparamref name="TEntity" />.
@@ -122,8 +127,6 @@
                 .HasOne(pt => pt.Patient)
                 .WithMany(p => p.PatientsMedicalPractitioners)
                 .HasForeignKey(pt => pt.PatientId);
-
-
         }
     }
 }

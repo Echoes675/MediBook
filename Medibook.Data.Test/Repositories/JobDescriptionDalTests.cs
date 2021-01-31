@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
-    using Medibook.Data.DataAccess;
-    using Medibook.Data.Repositories;
+    using MediBook.Data.DataAccess;
+    using MediBook.Data.Repositories;
     using Microsoft.Extensions.Logging;
     using MockQueryable.NSubstitute;
     using NSubstitute;
