@@ -29,11 +29,6 @@
         public DbSet<AppointmentSession> AppointmentSessions { get; set; }
 
         /// <summary>
-        /// The DbSet of AppointmentSlots table in the Database
-        /// </summary>
-        public DbSet<AppointmentSlot> AppointmentSlots { get; set; }
-
-        /// <summary>
         /// The DbSet of JobDescriptions table in the Database
         /// </summary>
         public DbSet<JobDescription> JobDescriptions { get; set; }
@@ -96,6 +91,39 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Set up relationships between tables
+            modelBuilder.Entity<Appointment>()
+                .HasOne(pt => pt.Patient)
+                .WithMany(p => p.Appointments)
+                .HasForeignKey(pt => pt.PatientId);
+
+            modelBuilder.Entity<Appointment>()
+                .HasOne(pt => pt.MedicalPractitioner)
+                .WithMany(p => p.Appointments)
+                .HasForeignKey(pt => pt.MedicalPractitionerId)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder.Entity<Appointment>()
+                .HasOne(pt => pt.AppointmentSession)
+                .WithMany(p => p.Appointments)
+                .HasForeignKey(pt => pt.AppointmentSessionId);
+
+            modelBuilder.Entity<AppointmentSession>()
+                .HasOne(pt => pt.MedicalPractitioner)
+                .WithMany(p => p.AppointmentSessions)
+                .HasForeignKey(pt => pt.MedicalPractitionerId);
+
+            modelBuilder.Entity<PatientsMedicalPractitioner>()
+                .HasOne(pt => pt.MedicalPractitioner)
+                .WithMany(p => p.PatientsMedicalPractitioners)
+                .HasForeignKey(pt => pt.MedicalPractitionerId);
+
+            modelBuilder.Entity<PatientsMedicalPractitioner>()
+                .HasOne(pt => pt.Patient)
+                .WithMany(p => p.PatientsMedicalPractitioners)
+                .HasForeignKey(pt => pt.PatientId);
+
+
         }
     }
 }

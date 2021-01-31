@@ -4,7 +4,7 @@
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// The Patient MedicalPractitioner one to many relationship
+    /// The many to many relationship between Patients and MedicalPractitioners
     /// </summary>
     [Index(nameof(PatientId))]
     [Index(nameof(MedicalPractitionerId))]

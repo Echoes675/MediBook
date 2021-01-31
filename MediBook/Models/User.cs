@@ -9,7 +9,6 @@
     /// The User account
     /// </summary>
     [Index(nameof(JobDescriptionId))]
-    [Index(nameof(Role))]
     public class User : IDbEntity
     {
         /// <summary>
@@ -52,17 +51,6 @@
         public string Lastname { get; set; }
 
         /// <summary>
-        /// The Id of the user's Job Description
-        /// </summary>
-        public int JobDescriptionId { get; set; }
-
-        /// <summary>
-        /// The navigation property for the user's Job Description
-        /// </summary>
-        [Required]
-        public JobDescription JobDescription { get; set; }
-
-        /// <summary>
         /// The user's role
         /// </summary>
         [Required]
@@ -75,13 +63,34 @@
         public AccountState State { get; set; }
 
         /// <summary>
-        /// Navigation property for any patients registered with this user
+        /// The Id of the user's Job Description
         /// </summary>
-        public ICollection<Patient> Patients { get; set; }
+        public int JobDescriptionId { get; set; }
+
+        /// <summary>
+        /// The navigation property for the user's Job Description
+        /// </summary>
+        [Required]
+        public JobDescription JobDescription { get; set; }
+
+        /// <summary>
+        /// The many to many relationship between Patients and MedicalPractitioners
+        /// </summary>
+        public ICollection<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
 
         /// <summary>
         /// Navigation property for patient notes this user has made
         /// </summary>
         public ICollection<PatientNote> PatientNotes { get; set; }
+
+        /// <summary>
+        /// Navigation property for the associated AppointmentSessions
+        /// </summary>
+        public ICollection<AppointmentSession> AppointmentSessions { get; set; }
+
+        /// <summary>
+        /// Navigation property for the associated Appointments
+        /// </summary>
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

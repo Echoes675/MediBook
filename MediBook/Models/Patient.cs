@@ -1,6 +1,7 @@
 ﻿namespace MediBook.Core.Models
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using MediBook.Core.Enums;
@@ -93,13 +94,18 @@
         public string Email { get; set; }
 
         /// <summary>
-        /// The MedicalPractitioners the patient is associated with
+        /// The many to many relationship between Patients and MedicalPractitioners
         /// </summary>
-        public ICollection<PatientsMedicalPractitioner> MedicalPractitioners { get; set; }
+        public ICollection<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
 
         /// <summary>
         /// The patient's notes
         /// </summary>
         public ICollection<PatientNote> PatientNotes { get; set; }
+
+        /// <summary>
+        /// The patient's appointments
+        /// </summary>
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }
