@@ -5,18 +5,23 @@
     using MediBook.Core.Models;
     using Medibook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The JobDescriptionDal
     /// </summary>
     public class JobDescriptionDal : RepositoryBase<JobDescription>, IJobDescriptionDal
     {
+        private readonly ILogger _log;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="JobDescriptionDal"/> class
         /// </summary>
         /// <param name="databaseContext"></param>
-        public JobDescriptionDal(IDatabaseContext databaseContext) : base(databaseContext)
+        /// <param name="logger"></param>
+        public JobDescriptionDal(IDatabaseContext databaseContext, ILogger logger) : base(databaseContext, logger)
         {
+            _log = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>

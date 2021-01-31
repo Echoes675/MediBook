@@ -7,10 +7,13 @@
     using MediBook.Core.Models;
     using Medibook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
 
     public abstract class RepositoryBase<TEntity> where TEntity : class, IDbEntity
     {
         protected readonly IDatabaseContext Db;
+
+        private readonly ILogger _log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase{TEntity}"/> class. 
@@ -19,11 +22,13 @@
         /// <param name="databaseContext">
         /// The database Context.
         /// </param>
+        /// <param name="logger"></param>
         /// <exception cref="T:System.ArgumentNullException">
         /// MediBookDatabaseContext not provided.
         /// </exception>
-        protected RepositoryBase(IDatabaseContext databaseContext)
+        protected RepositoryBase(IDatabaseContext databaseContext, ILogger logger)
         {
+            _log = logger ?? throw new ArgumentNullException(nameof(logger));
             Db = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
@@ -37,15 +42,19 @@
         {
             if (entity == null)
             {
+                
                 throw new ArgumentNullException(nameof(entity));
             }
 
             if (await CheckEntityExistsAsync(entity).ConfigureAwait(false))
             {
+                _log.LogWarning($"Entity cannot be added as it already exists. \"Id\"={entity.Id} \"EntityType\"={typeof(TEntity)}");
                 return null;
             }
 
             entity = await DbCreateAsync(entity).ConfigureAwait(false);
+            _log.LogDebug($"Entity added to the db. \"Id\"={entity.Id} \"EntityType\"={typeof(TEntity)}");
+
             return entity;
         }
 
@@ -57,6 +66,8 @@
         public virtual async Task<bool> DeleteAsync(int id)
         {
             var result = await DbDeleteAsync(id).ConfigureAwait(false);
+            _log.LogDebug($"Entity deleted from the db. \"Id\"={id} \"EntityType\"={typeof(TEntity)}");
+
             return result;
         }
 
@@ -76,9 +87,11 @@
             if (await CheckEntityExistsAsync(entity.Id).ConfigureAwait(false))
             {
                 await DbUpdateAsync(entity).ConfigureAwait(false);
+                _log.LogDebug($"Entity updated in the db. \"Id\"={entity.Id} \"EntityType\"={typeof(TEntity)}");
                 return entity;
             }
 
+            _log.LogWarning($"Entity cannot be updated as it does not exist in the db. \"Id\"={entity.Id} \"EntityType\"={typeof(TEntity)}");
             return null;
         }
 
@@ -89,6 +102,7 @@
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             var retVal = await Db.Set<TEntity>().ToListAsync().ConfigureAwait(false);
+            _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(TEntity)}");
             return retVal;
         }
 
@@ -100,6 +114,7 @@
         public virtual async Task<TEntity> GetEntityAsync(int id)
         {
             var entities = await GetAllAsync().ConfigureAwait(false);
+
             return entities.FirstOrDefault(s => s.Id == id);
         }
 
@@ -126,8 +141,7 @@
         /// <returns></returns>
         public virtual async Task<bool> CheckEntityExistsAsync(int id)
         {
-            var entities = await GetAllAsync().ConfigureAwait(false);
-            return entities.FirstOrDefault(s => s.Id == id) != null;
+            return await Db.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id) != null;
         }
 
         /// <summary>

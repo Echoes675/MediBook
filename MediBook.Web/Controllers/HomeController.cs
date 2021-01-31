@@ -2,16 +2,16 @@
 {
     using MediBook.Web.Models;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
     using System.Diagnostics;
+    using Microsoft.Extensions.Logging;
 
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger _log;
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
+            _log = logger;
         }
 
         public IActionResult Index()
@@ -21,6 +21,7 @@
 
         public IActionResult Privacy()
         {
+            _log.LogInformation("This is an info log");
             return View();
         }
 
