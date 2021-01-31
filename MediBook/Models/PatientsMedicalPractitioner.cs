@@ -1,9 +1,17 @@
 ﻿namespace MediBook.Core.Models
 {
-    public class PatientsMedicalPractitioners : IDbEntity
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.EntityFrameworkCore;
+
+    /// <summary>
+    /// The many to many relationship between Patients and MedicalPractitioners
+    /// </summary>
+    [Index(nameof(PatientId))]
+    [Index(nameof(MedicalPractitionerId))]
+    public class PatientsMedicalPractitioner : IDbEntity
     {
         /// <summary>
-        /// The PatientsMedicalPractitioners Id
+        /// The PatientsMedicalPractitioner Id
         /// </summary>
         public int Id { get; set; }
 
@@ -20,11 +28,12 @@
         /// <summary>
         /// The Id of the associated Medical Practitioner User account
         /// </summary>
-        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+        public int MedicalPractitionerId { get; set; }
 
         /// <summary>
         /// The User navigation property
         /// </summary>
-        public User User { get; set; }
+        public User MedicalPractitioner { get; set; }
     }
 }

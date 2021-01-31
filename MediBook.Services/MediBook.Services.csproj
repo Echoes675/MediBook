@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Medibook.Data\MediBook.Data.csproj" />
+    <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
+  </ItemGroup>
+
+</Project>

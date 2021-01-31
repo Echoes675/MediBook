@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
+    using Medibook.Data.DataAccess;
+    using Microsoft.EntityFrameworkCore;
 
     public abstract class RepositoryBase<TEntity>
            where TEntity : class, IDbEntity
@@ -19,7 +21,7 @@
         /// The database Context.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">
-        /// DatabaseContext not provided.
+        /// MediBookDatabaseContext not provided.
         /// </exception>
         protected RepositoryBase(IDatabaseContext databaseContext)
         {
