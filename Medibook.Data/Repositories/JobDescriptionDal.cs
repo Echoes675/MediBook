@@ -12,16 +12,13 @@
     /// </summary>
     public class JobDescriptionDal : RepositoryBase<JobDescription>, IJobDescriptionDal
     {
-        private readonly ILogger _log;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="JobDescriptionDal"/> class
         /// </summary>
         /// <param name="databaseContext"></param>
         /// <param name="logger"></param>
-        public JobDescriptionDal(IDatabaseContext databaseContext, ILogger logger) : base(databaseContext, logger)
+        public JobDescriptionDal(IDatabaseContext databaseContext, ILogger<JobDescriptionDal> logger) : base(databaseContext, logger)
         {
-            _log = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -46,7 +43,7 @@
                 .FirstOrDefaultAsync(x => 
                     string.Compare(x.Description, entity.Description, StringComparison.InvariantCultureIgnoreCase) == 0);
 
-            return dbEntity == null;
+            return dbEntity != null;
         }
     }
 }

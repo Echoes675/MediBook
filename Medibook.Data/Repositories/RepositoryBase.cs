@@ -13,7 +13,7 @@
     {
         protected readonly IDatabaseContext Db;
 
-        private readonly ILogger _log;
+        private protected readonly ILogger _log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase{TEntity}"/> class. 
@@ -26,7 +26,7 @@
         /// <exception cref="T:System.ArgumentNullException">
         /// MediBookDatabaseContext not provided.
         /// </exception>
-        protected RepositoryBase(IDatabaseContext databaseContext, ILogger logger)
+        protected RepositoryBase(IDatabaseContext databaseContext, ILogger<RepositoryBase<TEntity>> logger)
         {
             _log = logger ?? throw new ArgumentNullException(nameof(logger));
             Db = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));

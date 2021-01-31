@@ -24,9 +24,10 @@ namespace MediBook.Web
                 {
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureLogging(logBuilder =>
-                    {
-                        logBuilder.SetMinimumLevel(LogLevel.Information);
-                        logBuilder.AddLog4Net("log4net.config");
-                    }).UseConsoleLifetime();
+                {
+                    logBuilder.ClearProviders();
+                    logBuilder.SetMinimumLevel(LogLevel.Information);
+                    logBuilder.AddLog4Net("log4net.config");
+                }).UseConsoleLifetime();
     }
 }

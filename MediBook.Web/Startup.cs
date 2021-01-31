@@ -1,5 +1,6 @@
 namespace MediBook.Web
 {
+    using System;
     using Medibook.Data.DataAccess;
     using Medibook.Data.Repositories;
     using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,9 @@ namespace MediBook.Web
             #region Database
             services.AddDbContext<MediBookDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+
+            services.AddLogging();
+
             // Allows the Db to be injectable using an interface
             services.AddScoped<IDatabaseContext>(provider => provider.GetService<MediBookDatabaseContext>());
             #endregion
@@ -44,7 +47,7 @@ namespace MediBook.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -56,6 +59,8 @@ namespace MediBook.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            loggerFactory.AddLog4Net();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

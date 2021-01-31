@@ -2,6 +2,7 @@
 {
     using MediBook.Core.Models;
     using Medibook.Data.DataAccess;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The AppointmentDal
@@ -12,7 +13,7 @@
         /// Initializes a new instance of the <see cref="AppointmentDal"/> class
         /// </summary>
         /// <param name="databaseContext"></param>
-        public AppointmentDal(IDatabaseContext databaseContext) : base(databaseContext)
+        public AppointmentDal(IDatabaseContext databaseContext, ILogger<AppointmentDal> logger) : base(databaseContext, logger)
         {
         }
     }

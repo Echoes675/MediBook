@@ -2,6 +2,7 @@
 {
     using MediBook.Core.Models;
     using Medibook.Data.DataAccess;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The UserDal
@@ -12,7 +13,8 @@
         /// Initializes a new instance of the <see cref="UserDal"/> class
         /// </summary>
         /// <param name="databaseContext"></param>
-        public UserDal(IDatabaseContext databaseContext) : base(databaseContext)
+        /// <param name="logger"></param>
+        public UserDal(IDatabaseContext databaseContext, ILogger<UserDal> logger) : base(databaseContext, logger)
         {
         }
     }
