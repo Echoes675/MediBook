@@ -90,7 +90,8 @@
         private ClaimsPrincipal BuildClaimsPrincipal(User user)
         {
 
-            if (string.IsNullOrEmpty(user.Username) || user.Id < 1 || user.Role == UserRole.Unknown)
+            if (string.IsNullOrEmpty(user.Username) || user.Id < 1 || 
+                user.JobDescription == null || user.JobDescription.Role == UserRole.Unknown)
             {
                 return null;
             }
@@ -102,7 +103,7 @@
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim("Id", user.Id.ToString(CultureInfo.InvariantCulture)),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Role, user.JobDescription.Role.ToString())
             }, CookieAuthenticationDefaults.AuthenticationScheme);
 
             // build principal using claims

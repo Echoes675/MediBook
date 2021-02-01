@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Edit User";
+
+}
+
+@model UserDetailsViewModel
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="UserAdmin" asp-action="Index">User Administration</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+    </ol>
+</nav>
+
+<div class="card w-50" style=" margin:auto;">
+    <h3 class="card-header">@ViewData["Title"] @Model.Username</h3>
+    <div class="card-body w-100" style="margin: 0 auto">
+        <div class="col-12">
+            <form asp-action="EditUser">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="UserId" class="form-control" />
+                <input type="hidden" asp-for="Username" class="form-control" />
+                <div class="form-group">
+                    <label for="JobDescription" class="control-label">Job Description</label>
+                    <input asp-for="JobDescription" class="form-control" id="JobDescription" />
+                    <span asp-validation-for="JobDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Role" class="control-label">Location</label>
+                    <select asp-for="Role" class="browser-default custom-select" asp-items="Model.Roles"></select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-4">
+                    <input type="submit" value="Save Changes" class="btn btn-green-add" />
+                    <a class="btn btn-grey-cancel" asp-controller="Auth" asp-action="UserAdministration">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

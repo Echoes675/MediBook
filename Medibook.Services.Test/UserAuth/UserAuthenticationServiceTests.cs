@@ -183,6 +183,31 @@
         }
 
         [Test]
+        public void Login_UserFoundHasNullJobDescription_ReturnsNull()
+        {
+            var mockDal = Substitute.For<IUserDal>();
+            var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
+            var mockCryptoSvc = Substitute.For<ICryptographyService>();
+
+            var user = new User()
+            {
+                Id = 1,
+                Username = "name",
+                JobDescription = null
+            };
+
+            mockDal.GetUserAsync("username").Returns(user);
+            mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword").Returns(true);
+
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+
+            var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
+
+            Assert.That(result, Is.Null);
+            mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword");
+        }
+
+        [Test]
         public void Login_UserFoundHasUnknownRole_ReturnsNull()
         {
             var mockDal = Substitute.For<IUserDal>();
@@ -193,7 +218,11 @@
             {
                 Id = 1,
                 Username = "name",
-                Role = UserRole.Unknown
+                JobDescription = new JobDescription()
+                {
+                    Description = "General Practitioner",
+                    Role = UserRole.Unknown
+                }
             };
 
             mockDal.GetUserAsync("username").Returns(user);
@@ -218,7 +247,11 @@
             {
                 Id = 1,
                 Username = "name",
-                Role = UserRole.MedicalPractitioner
+                JobDescription = new JobDescription()
+                {
+                    Description = "General Practitioner",
+                    Role = UserRole.MedicalPractitioner
+                }
             };
 
             mockDal.GetUserAsync("username").Returns(user);

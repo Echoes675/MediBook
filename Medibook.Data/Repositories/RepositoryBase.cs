@@ -9,10 +9,20 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// The Repository base class
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
     public abstract class RepositoryBase<TEntity> where TEntity : class, IDbEntity
     {
+        /// <summary>
+        /// The Db context
+        /// </summary>
         protected readonly IDatabaseContext Db;
 
+        /// <summary>
+        /// The logger
+        /// </summary>
         private protected readonly ILogger _log;
 
         /// <summary>
@@ -151,7 +161,7 @@
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
         /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
-        public IEnumerable<TEntity> Filter(Func<TEntity, bool> predicate)
+        public virtual IEnumerable<TEntity> Filter(Func<TEntity, bool> predicate)
         {
             if (predicate == null)
             {

@@ -4,8 +4,10 @@ namespace MediBook.Web
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
     using MediBook.Services.UserAuthentication;
+    using MediBook.Web.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -37,22 +39,17 @@ namespace MediBook.Web
             services.AddAuthentication();
 
             #region Data Accessors
-            //services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
-            //services.AddScoped<IAppointmentDal, AppointmentDal>();
-            //services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
-            //services.AddScoped<IPatientDal, PatientDal>();
-            //services.AddScoped<IPatientNoteDal, PatientNoteDal>();
-            services.AddScoped<IUserDal, UserDal>();
-            //services.AddScoped<IPatientsMedicalPractitionerDal, PatientsMedicalPractitionerDal>();
+            services.AddDataAccessors();
             #endregion
 
             #region Services
-            services.AddScoped<ICryptographyProcessorFactory, CryptographyProcessorFactory>();
-            services.AddScoped<ICryptographyService, CryptographyService>();
-            services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+            services.AddServices();
             #endregion
 
             services.AddControllersWithViews();
+
+            // Required to access identity in AuthorizeTagHelper
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,6 +8,6 @@
         Info,
         Warning,
         Success,
-        Danger
+        Error
     }
 }

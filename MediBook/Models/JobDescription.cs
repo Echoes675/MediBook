@@ -1,6 +1,7 @@
 ﻿namespace MediBook.Core.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using MediBook.Core.Enums;
 
     /// <summary>
     /// The user's JobDescription
@@ -17,5 +18,10 @@
         /// </summary>
         [MaxLength(100)]
         public string Description { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public UserRole Role { get; set; }
     }
 }

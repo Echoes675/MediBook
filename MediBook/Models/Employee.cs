@@ -9,18 +9,12 @@
     /// <summary>
     /// The Employee account
     /// </summary>
-    [Index(nameof(JobDescriptionId))]
     public class Employee : IDbEntity
     {
         /// <summary>
         /// The Employee Id
         /// </summary>
         public int Id { get; set; }
-
-        /// <summary>
-        /// The Employee Guid
-        /// </summary>
-        public Guid EmployeeGuid { get; set; }
 
         /// <summary>
         /// The user's title
@@ -39,17 +33,6 @@
         /// </summary>
         [Required, MaxLength(50), MinLength(2)]
         public string Lastname { get; set; }
-
-        /// <summary>
-        /// The Id of the user's Job Description
-        /// </summary>
-        public int JobDescriptionId { get; set; }
-
-        /// <summary>
-        /// The navigation property for the user's Job Description
-        /// </summary>
-        [Required]
-        public JobDescription JobDescription { get; set; }
 
         /// <summary>
         /// The many to many relationship between Patients and MedicalPractitioners

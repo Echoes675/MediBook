@@ -7,7 +7,7 @@
     /// <summary>
     /// The EmployeeDal
     /// </summary>
-    public class EmployeeDal : RepositoryBase<Employee>
+    public class EmployeeDal : RepositoryBase<Employee>, IEmployeeDal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeDal"/> class

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using MediBook.Core.DTOs;
     using MediBook.Core.Models;
 
     public interface IUserDal
@@ -13,7 +14,7 @@
         /// <param name="entity">The entity parameter</param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        Task<Employee> AddAsync(Employee entity);
+        Task<User> AddAsync(User entity);
 
         /// <summary>
         /// Method to delete an entity from the database if it exists
@@ -28,27 +29,34 @@
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        Task<Employee> UpdateAsync(Employee entity);
+        Task<User> UpdateAsync(User entity);
 
         /// <summary>
         /// Returns all the entities in a particular DbSet
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Employee>> GetAllAsync();
+        Task<IEnumerable<User>> GetAllAsync();
 
         /// <summary>
         /// Returns an entity of a given type using its Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Employee> GetEntityAsync(int id);
+        Task<User> GetEntityAsync(int id);
 
         /// <summary>
         /// Searches for any registered users using the supplied username
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public Task<User> GetUserAsync(string username);
+        Task<User> GetUserAsync(string username);
+
+        /// <summary>
+        /// Returns the Users full account and employee details
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<User> GetUserFullDetailsAsync(int id);
 
         /// <summary>
         /// Check if entity exists in the database
@@ -56,7 +64,7 @@
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        Task<bool> CheckEntityExistsAsync(Employee entity);
+        Task<bool> CheckEntityExistsAsync(User entity);
 
         /// <summary>
         /// Check if entity exists in the database
@@ -72,6 +80,6 @@
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
         /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
-        IEnumerable<Employee> Filter(Func<Employee, bool> predicate);
+        IEnumerable<User> Filter(Func<User, bool> predicate);
     }
 }
