@@ -42,13 +42,29 @@
             Lastname = userFullDetails.Lastname;
 
             // Gets the list of Roles for the drop down
+            TitlesSelectListItems = SelectListHelpers.GetTitlesSelectList(Title);
+
+            // Gets the list of Roles for the drop down
             RolesSelectListItems = SelectListHelpers.GetRolesSelectList(Role);
+
+            // Gets the list of Account States for the drop down
+            AccountStatesSelectListItems = SelectListHelpers.GetAccountStatesSelectList(State);
         }
 
         /// <summary>
-        /// List of SelectListItems to be used as a dropdown in the EditUser view
+        /// List of SelectListItems to be used as a dropdown of Titles in the EditUser view
         /// </summary>
-        public List<SelectListItem> RolesSelectListItems { get; set; }
+        public List<SelectListItem> TitlesSelectListItems { get; }
+
+        /// <summary>
+        /// List of SelectListItems to be used as a dropdown of Roles in the EditUser view
+        /// </summary>
+        public List<SelectListItem> RolesSelectListItems { get; }
+
+        /// <summary>
+        /// List of SelectListItems to be used as a dropdown of Account States in the EditUser view
+        /// </summary>
+        public List<SelectListItem> AccountStatesSelectListItems { get; }
 
         /// <summary>
         /// The entity's Id in the Users table

@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using System.Globalization;
     using System.Threading.Tasks;
     using MediBook.Services.UserAuthentication;
     using Microsoft.Extensions.Logging;
@@ -83,7 +82,6 @@
             // record the login event in system logs and return to the Index page
             _logger.LogInformation($"User logged in. \"Username\"={userForLogin.Username}");
 
-            //await _repo.UpdateUserLoginTimeAsync(claimsPrincipal).ConfigureAwait(false);
             return RedirectToAction("Index", "Home");
         }
 
@@ -95,7 +93,5 @@
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
             return RedirectToAction(nameof(Login), "Auth");
         }
-
-
     }
 }

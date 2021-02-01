@@ -20,20 +20,42 @@
             <form asp-action="EditUser">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="UserId" class="form-control" />
+                <input type="hidden" asp-for="AccountGuid" class="form-control" />
                 <input type="hidden" asp-for="Username" class="form-control" />
+                <input type="hidden" asp-for="EmployeeId" class="form-control" />
+                <div class="form-group">
+                    <label for="Title" class="control-label">Role</label>
+                    <select asp-for="Title" class="browser-default custom-select" asp-items="Model.TitlesSelectListItems"></select>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Firstname" class="control-label">Firstname</label>
+                    <input asp-for="Firstname" class="form-control" id="Firstname" />
+                    <span asp-validation-for="Firstname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Lastname" class="control-label">Lastname</label>
+                    <input asp-for="Lastname" class="form-control" id="Lastname" />
+                    <span asp-validation-for="Lastname" class="text-danger"></span>
+                </div>
                 <div class="form-group">
                     <label for="JobDescription" class="control-label">Job Description</label>
                     <input asp-for="JobDescription" class="form-control" id="JobDescription" />
                     <span asp-validation-for="JobDescription" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Role" class="control-label">Location</label>
-                    <select asp-for="Role" class="browser-default custom-select" asp-items="Model.Roles"></select>
+                    <label for="Role" class="control-label">Role</label>
+                    <select asp-for="Role" class="browser-default custom-select" asp-items="Model.RolesSelectListItems"></select>
                     <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="State" class="control-label">State</label>
+                    <select asp-for="State" class="browser-default custom-select" asp-items="Model.AccountStatesSelectListItems"></select>
+                    <span asp-validation-for="State" class="text-danger"></span>
                 </div>
                 <div class="form-group mt-4">
                     <input type="submit" value="Save Changes" class="btn btn-green-add" />
-                    <a class="btn btn-grey-cancel" asp-controller="Auth" asp-action="UserAdministration">Cancel</a>
+                    <a class="btn btn-grey-cancel" asp-controller="UserAdmin" asp-action="Index">Cancel</a>
                 </div>
 
             </form>
