@@ -18,6 +18,10 @@
         /// </summary>
         public CryptographyProcessorFactory(IConfiguration config) : this(new DefaultCryptographyProcessorOptions(config))
         {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
         }
 
         /// <summary>
@@ -45,15 +49,15 @@
                 throw new ArgumentNullException(nameof(options));
             }
 
-            _cryptographyKey = options.CryptographyKey;
+            _cryptographyKey = options.CryptographyKey.Trim();
 
             _hashAlgorithm = 
-                Enum.TryParse<HashingAlgorithm>(options.HashingAlgorithm, true, out var parseHashResult) ? 
+                Enum.TryParse<HashingAlgorithm>(options.HashingAlgorithm.Trim(), true, out var parseHashResult) ? 
                     parseHashResult : 
                     throw new NotSupportedException($"Unsupported Hashing algorithm found in options. \"HashAlgorithm\"={options.HashingAlgorithm}");
 
             _encryptionAmAlgorithm =
-                Enum.TryParse<EncryptionAlgorithm>(options.EncryptionAlgorithm, true, out var parseEncryptAlgorithmResult) ?
+                Enum.TryParse<EncryptionAlgorithm>(options.EncryptionAlgorithm.Trim(), true, out var parseEncryptAlgorithmResult) ?
                     parseEncryptAlgorithmResult :
                     throw new NotSupportedException($"Unsupported Encryption algorithm found in options. \"EncryptionAlgorithm\"={options.EncryptionAlgorithm}");
 

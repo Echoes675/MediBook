@@ -1,10 +1,10 @@
 ﻿namespace MediBook.Services.UserAuth
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
     using MediBook.Data.Repositories;
+    using MediBook.Services.Cryptography;
     using Microsoft.Extensions.Logging;
 
     public class UserAuthService
@@ -13,6 +13,11 @@
         /// The logger
         /// </summary>
         private ILogger _log;
+
+        /// <summary>
+        /// The Cryptography Service
+        /// </summary>
+        private readonly ICryptographyService _cryptographyService;
 
         /// <summary>
         /// The database context
@@ -24,10 +29,12 @@
         /// </summary>
         /// <param name="userDal"></param>
         /// <param name="logger"></param>
-        public UserAuthService(IUserDal userDal, ILogger logger)
+        /// <param name="cryptographyService"></param>
+        public UserAuthService(IUserDal userDal, ILogger logger, ICryptographyService cryptographyService)
         {
             _userDal = userDal ?? throw new ArgumentNullException(nameof(userDal));
             _log = logger ?? throw new ArgumentNullException(nameof(logger));
+            _cryptographyService = cryptographyService ?? throw new ArgumentNullException(nameof(cryptographyService));
         }
 
         /// <summary>
@@ -55,40 +62,9 @@
                 return null;
             }
 
-            // user found, check the password is correct; if not, return null.
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-            {
-                return null;
-            }
-            // if password is also correct, return the user object
-            return user;
-        }
-
-        /// <summary>
-        /// Method to take password string, hash and salt and check whether the password string, when hashed, matches the 
-        /// password has stored against the user account
-        /// </summary>
-        /// <param name="password">String of entered password</param>
-        /// <param name="passwordHash">Byte array of hashed password stored in database</param>
-        /// <param name="passwordSalt">Byte array of password salt to be used to hash the password string</param>
-        /// <returns></returns>
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            // the using keyword means anything inside the brackets will be disposed of when complete
-            // pass the passwordSalt from the db to obtain the secure key
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
-            {
-                // password converted to a byte array so it can be hashed using the salt key above
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-
-                // compare each element in the computedHash byte array
-                if (computedHash.Where((t, i) => t != passwordHash[i]).Any())
-                {
-                    return false;
-                }
-            }
-            // if all correct, return true
-            return true;
+            // user found, check the password is correct, if not, return null
+            return _cryptographyService.VerifyPasswordHash(user.PasswordSalt, user.PasswordHash, password) ? 
+                user : null;
         }
     }
 }
