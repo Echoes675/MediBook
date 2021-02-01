@@ -3,6 +3,7 @@ namespace MediBook.Web
     using MediBook.Data.DataAccess;
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
+    using MediBook.Services.UserAuthentication;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -23,13 +24,11 @@ namespace MediBook.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var x = new DefaultCryptographyProcessorOptions(Configuration);
+            services.AddLogging();
 
             #region Database
             services.AddDbContext<MediBookDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddLogging();
 
             // Allows the Db to be injectable using an interface
             services.AddScoped<IDatabaseContext>(provider => provider.GetService<MediBookDatabaseContext>());
@@ -50,6 +49,7 @@ namespace MediBook.Web
             #region Services
             services.AddScoped<ICryptographyProcessorFactory, CryptographyProcessorFactory>();
             services.AddScoped<ICryptographyService, CryptographyService>();
+            services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             #endregion
 
             services.AddControllersWithViews();

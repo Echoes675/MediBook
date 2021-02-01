@@ -1,5 +1,6 @@
 ﻿namespace MediBook.Data.Repositories
 {
+    using System;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
     using MediBook.Data.DataAccess;
@@ -27,7 +28,7 @@
         /// <returns></returns>
         public async Task<User> GetUserAsync(string username)
         {
-            return await Db.Set<User>().FirstOrDefaultAsync(x => x.Username == username).ConfigureAwait(false);
+            return await Db.Set<User>().FirstOrDefaultAsync(x => x.Username.ToLower().CompareTo(username.Trim().ToLower()) == 0).ConfigureAwait(false);
         }
     }
 }

@@ -11,7 +11,7 @@
         /// The username
         /// </summary>
         [Required(ErrorMessage = "User name is required")]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
         /// The user's password
