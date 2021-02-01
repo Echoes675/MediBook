@@ -20,7 +20,12 @@
         /// <param name="cryptographyKey"></param>
         public TripleDesProcessor(string cryptographyKey)
         {
-            _cryptographyKey = cryptographyKey ?? throw new ArgumentNullException(nameof(cryptographyKey));
+            if (string.IsNullOrEmpty(cryptographyKey))
+            {
+                throw new ArgumentNullException(nameof(cryptographyKey));
+            }
+
+            _cryptographyKey = cryptographyKey;
         }
 
         /// <summary>
@@ -65,6 +70,11 @@
         /// <returns></returns>
         public string Decrypt(string data)
         {
+            if (string.IsNullOrEmpty(data))
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             var decryptArray = Convert.FromBase64String(data);
 
             using (var mD5CryptoService = new MD5CryptoServiceProvider())
