@@ -102,6 +102,11 @@
         /// <param name="salt"></param>
         public void CreateHash(string data, out byte[] hash, out byte[] salt)
         {
+            if (string.IsNullOrEmpty(data))
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             _hashingProcessor.CreateHash(data, out hash, out salt);
         }
 
@@ -114,6 +119,21 @@
         /// <returns></returns>
         public bool VerifyPasswordHash(byte[] passwordHash, byte[] passwordSalt, string plainTextPassword)
         {
+            if (passwordHash == null)
+            {
+                throw new ArgumentNullException(nameof(passwordHash));
+            }
+
+            if (passwordSalt == null)
+            {
+                throw new ArgumentNullException(nameof(passwordSalt));
+            }
+
+            if (string.IsNullOrEmpty(plainTextPassword))
+            {
+                throw new ArgumentNullException(nameof(plainTextPassword));
+            }
+
             return _hashingProcessor.VerifyPasswordHash(passwordHash, passwordSalt, plainTextPassword);
         }
     }

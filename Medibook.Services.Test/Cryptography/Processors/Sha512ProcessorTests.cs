@@ -70,7 +70,7 @@
         }
 
         [Test]
-        public void VerifyPasswordHash_PlainTextPasswordNull_ReturnsTrue()
+        public void VerifyPasswordHash_PlainTextPasswordNull_ThrowsArgumentNullException()
         {
             var processor = new Sha512Processor();
 
@@ -79,7 +79,7 @@
         }
 
         [Test]
-        public void VerifyPasswordHash_PlainTextPasswordEmpty_ReturnsTrue()
+        public void VerifyPasswordHash_PlainTextPasswordEmpty_ThrowsArgumentNullException()
         {
             var processor = new Sha512Processor();
 
