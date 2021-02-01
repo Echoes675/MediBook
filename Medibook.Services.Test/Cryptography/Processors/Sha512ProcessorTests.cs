@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Text;
     using MediBook.Services.Cryptography.Processors;
     using NUnit.Framework;
 
@@ -112,18 +111,6 @@
             byte[] bytes = strings.Select(s => byte.Parse(s)).ToArray();
 
             return bytes;
-        }
-
-        private string HashToString(byte[] hash)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            foreach (byte b in hash)
-            {
-                stringBuilder.AppendFormat("{0:X2}", b);
-            }
-
-            return stringBuilder.ToString();
         }
     }
 }
