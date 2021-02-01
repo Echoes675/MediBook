@@ -39,6 +39,21 @@
         /// <returns></returns>
         public bool VerifyPasswordHash(byte[] passwordHash, byte[] passwordSalt, string plainTextPassword)
         {
+            if (passwordHash == null)
+            {
+                throw new ArgumentNullException(nameof(passwordHash));
+            }
+
+            if (passwordSalt == null)
+            {
+                throw new ArgumentNullException(nameof(passwordSalt));
+            }
+
+            if (string.IsNullOrEmpty(plainTextPassword))
+            {
+                throw new ArgumentNullException(nameof(plainTextPassword));
+            }
+
             // pass the passwordSalt to obtain the secure key
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
