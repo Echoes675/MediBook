@@ -21,7 +21,12 @@
         /// <param name="cryptographyKey"></param>
         public AesProcessor(string cryptographyKey)
         {
-            _cryptographyKey = cryptographyKey ?? throw new ArgumentNullException(nameof(cryptographyKey));
+            if (string.IsNullOrEmpty(cryptographyKey))
+            {
+                throw new ArgumentNullException(nameof(cryptographyKey));
+            }
+
+            _cryptographyKey = cryptographyKey;
         }
 
         /// <summary>
@@ -31,33 +36,36 @@
         /// <returns></returns>
         public string Encrypt(string data)
         {
-            var key = Encoding.UTF8.GetBytes(_cryptographyKey);
-
-            using (var aesAlg = Aes.Create())
+            if (string.IsNullOrEmpty(data))
             {
-                using (var encryptor = aesAlg.CreateEncryptor(key, aesAlg.IV))
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            byte[] iv = new byte[16];
+            byte[] array;
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(_cryptographyKey);
+                aes.IV = iv;
+
+                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    using (var msEncrypt = new MemoryStream())
+                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, encryptor, CryptoStreamMode.Write))
                     {
-                        using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                        using (var swEncrypt = new StreamWriter(csEncrypt))
+                        using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
                         {
-                            swEncrypt.Write(data);
+                            streamWriter.Write(data);
                         }
 
-                        var iv = aesAlg.IV;
-
-                        var decryptedContent = msEncrypt.ToArray();
-
-                        var result = new byte[iv.Length + decryptedContent.Length];
-
-                        Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
-                        Buffer.BlockCopy(decryptedContent, 0, result, iv.Length, decryptedContent.Length);
-
-                        return Convert.ToBase64String(result);
+                        array = memoryStream.ToArray();
                     }
                 }
             }
+
+            return Convert.ToBase64String(array);
         }
 
         /// <summary>
@@ -67,32 +75,29 @@
         /// <returns></returns>
         public string Decrypt(string data)
         {
-            var fullCipher = Convert.FromBase64String(data);
-
-            var iv = new byte[16];
-            var cipher = new byte[16];
-
-            Buffer.BlockCopy(fullCipher, 0, iv, 0, iv.Length);
-            Buffer.BlockCopy(fullCipher, iv.Length, cipher, 0, iv.Length);
-            var key = Encoding.UTF8.GetBytes(_cryptographyKey);
-
-            using (var aesAlg = Aes.Create())
+            if (string.IsNullOrEmpty(data))
             {
-                using (var decryptor = aesAlg.CreateDecryptor(key, iv))
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            byte[] iv = new byte[16];
+            byte[] buffer = Convert.FromBase64String(data);
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(_cryptographyKey);
+                aes.IV = iv;
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using (MemoryStream memoryStream = new MemoryStream(buffer))
                 {
-                    string result;
-                    using (var msDecrypt = new MemoryStream(cipher))
+                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
                     {
-                        using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                        using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
                         {
-                            using (var srDecrypt = new StreamReader(csDecrypt))
-                            {
-                                result = srDecrypt.ReadToEnd();
-                            }
+                            return streamReader.ReadToEnd();
                         }
                     }
-
-                    return result;
                 }
             }
         }

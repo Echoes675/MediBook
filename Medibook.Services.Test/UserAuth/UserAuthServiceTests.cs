@@ -15,7 +15,7 @@
         {
             var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
             var e = Assert.Throws<ArgumentNullException>(() => new UserAuthService(null, mockLogger));
-            Assert.That(e.Message, Does.Contain("databaseContext"));
+            Assert.That(e.Message, Does.Contain("userDal"));
         }
 
         [Test]
