@@ -1,6 +1,7 @@
 ﻿namespace MediBook.Services.Test.Cryptography.Processors
 {
     using System;
+    using System.Linq;
     using MediBook.Services.Cryptography.Processors;
     using NUnit.Framework;
 
@@ -8,9 +9,14 @@
     public class TripleDesProcessorTests
     {
         private static string _mockCryptoKey = "N1jrLsHDE0prsWzq2KnXUPaDJi12wmFi";
-        private static string _validEncryptedString = "w6bDfcYaQB9LaW7YJkX9Mg==";
-        private static string _validDecryptedString = "TestData";
+        private static string _validEncryptedString = "195,166,195,125,198,26,64,31,75,105,110,216,38,69,253,50";
+        private static byte[] _validEncrypteBytes;
 
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _validEncrypteBytes = StringToBytes(_validEncryptedString);
+        }
 
         [Test]
         public void Ctor_CryptographyKeyNull_ThrowsArgumentNullException()
@@ -56,17 +62,26 @@
             var processor = new TripleDesProcessor(_mockCryptoKey);
             var result = processor.Encrypt("TestData");
 
-            Assert.That(result, Is.EqualTo(_validEncryptedString));
+            var resultAsString = string.Join(",", result);
+
+            Assert.That(resultAsString, Is.EqualTo(_validEncryptedString));
         }
 
         [Test]
         public void Decrypt_DataValid_Succeeds()
         {
             var processor = new TripleDesProcessor(_mockCryptoKey);
-            var testArray = new byte[8];
-            var result = processor.Decrypt(testArray);
+            var result = processor.Decrypt(_validEncrypteBytes);
 
-            Assert.That(result, Is.EqualTo(testArray));
+            Assert.That(result, Is.EqualTo("TestData"));
+        }
+
+        private byte[] StringToBytes(string input)
+        {
+            string[] strings = input.Split(',');
+            byte[] bytes = strings.Select(s => byte.Parse(s)).ToArray();
+
+            return bytes;
         }
     }
 }
