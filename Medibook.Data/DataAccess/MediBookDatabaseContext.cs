@@ -1,4 +1,4 @@
-﻿namespace Medibook.Data.DataAccess
+﻿namespace MediBook.Data.DataAccess
 {
     using System;
     using System.Threading;
@@ -47,6 +47,11 @@
         /// The DbSet of PatientsMedicalPractitioners table in the Database
         /// </summary>
         public DbSet<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
+
+        /// <summary>
+        /// The DbSet of Employees table in the Database
+        /// </summary>
+        public DbSet<Employee> Employees { get; set; }
 
         /// <summary>
         /// The DbSet of Users table in the Database
@@ -122,8 +127,6 @@
                 .HasOne(pt => pt.Patient)
                 .WithMany(p => p.PatientsMedicalPractitioners)
                 .HasForeignKey(pt => pt.PatientId);
-
-
         }
     }
 }

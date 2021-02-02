@@ -5,8 +5,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
-    using Medibook.Data.DataAccess;
-    using Medibook.Data.Repositories;
+    using MediBook.Data.DataAccess;
+    using MediBook.Data.Repositories;
+    using Microsoft.Extensions.Logging;
     using MockQueryable.NSubstitute;
     using NSubstitute;
     using NUnit.Framework;
@@ -17,15 +18,26 @@
         [Test]
         public void Ctor_NullDatabaseContext_ThrowsArgumentNullException()
         {
-            var e = Assert.Throws<ArgumentNullException>(() => new JobDescriptionDal(null));
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var e = Assert.Throws<ArgumentNullException>(() => new JobDescriptionDal(null, mockLogger));
             Assert.That(e.Message, Does.Contain("databaseContext"));
         }
+
+        [Test]
+        public void Ctor_NullLogger_ThrowsArgumentNullException()
+        {
+            var mockDbContext = Substitute.For<IDatabaseContext>();
+            var e = Assert.Throws<ArgumentNullException>(() => new JobDescriptionDal(mockDbContext,null));
+            Assert.That(e.Message, Does.Contain("logger"));
+        }
+
 
         [Test]
         public void AddAsync_NullEntity_ThrowsArgumentNullException()
         {
             var mockDbContext = Substitute.For<IDatabaseContext>();
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
             var e = Assert.Throws<ArgumentNullException>(() => dal.AddAsync(null).GetAwaiter().GetResult());
             Assert.That(e.Message, Does.Contain("entity"));
         }
@@ -48,8 +60,8 @@
 
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.AddAsync(entity)).GetAwaiter().GetResult();
             Assert.That(result, Is.Null);
@@ -78,7 +90,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.AddAsync(secondEntity)).GetAwaiter().GetResult();
             Assert.That(result, Is.EqualTo(secondEntity));
@@ -101,7 +114,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.DeleteAsync(2)).GetAwaiter().GetResult();
             Assert.That(result, Is.False);
@@ -124,7 +138,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.DeleteAsync(1)).GetAwaiter().GetResult();
             Assert.That(result, Is.True);
@@ -134,7 +149,8 @@
         public void UpdateAsync_NullEntity_ThrowsArgumentNullException()
         {
             var mockDbContext = Substitute.For<IDatabaseContext>();
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
             var e = Assert.Throws<ArgumentNullException>(() => dal.UpdateAsync(null).GetAwaiter().GetResult());
             Assert.That(e.Message, Does.Contain("entity"));
         }
@@ -162,7 +178,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.UpdateAsync(updatedEntity)).GetAwaiter().GetResult();
             Assert.That(result, Is.Null);
@@ -191,7 +208,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.UpdateAsync(updatedEntity)).GetAwaiter().GetResult();
             Assert.That(result, Is.EqualTo(updatedEntity));
@@ -214,7 +232,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.GetEntityAsync(1)).GetAwaiter().GetResult();
             Assert.That(result, Is.EqualTo(entity));
@@ -237,7 +256,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.GetEntityAsync(2)).GetAwaiter().GetResult();
             Assert.That(result, Is.Null);
@@ -247,10 +267,35 @@
         public void CheckEntityExistsAsync_NullEntity_ThrowsArgumentNullException()
         {
             var mockDbContext = Substitute.For<IDatabaseContext>();
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
             var e = Assert.Throws<ArgumentNullException>(
                 () => dal.CheckEntityExistsAsync(null).GetAwaiter().GetResult());
             Assert.That(e.Message, Does.Contain("entity"));
+        }
+
+        [Test]
+        public void CheckEntityExistsAsync_EntityDescriptionPropIsNull_ThrowsArgumentNullException()
+        {
+            var entity = new JobDescription
+            {
+                Id = 1
+            };
+
+            var data = new List<JobDescription>
+            {
+                entity
+            };
+
+            var mockSet = data.AsQueryable().BuildMockDbSet();
+            var mockDbContext = Substitute.For<IDatabaseContext>();
+            mockDbContext.Set<JobDescription>().Returns(mockSet);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
+
+            var e = Assert.Throws<ArgumentNullException>(
+                () => dal.CheckEntityExistsAsync(entity).GetAwaiter().GetResult());
+            Assert.That(e?.Message, Does.Contain("entity"));
         }
 
         [Test]
@@ -270,7 +315,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.CheckEntityExistsAsync(2)).GetAwaiter().GetResult();
             Assert.That(result, Is.False);
@@ -293,7 +339,8 @@
             var mockSet = data.AsQueryable().BuildMockDbSet();
             var mockDbContext = Substitute.For<IDatabaseContext>();
             mockDbContext.Set<JobDescription>().Returns(mockSet);
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
 
             var result = Task.Run(async () => await dal.CheckEntityExistsAsync(1)).GetAwaiter().GetResult();
             Assert.That(result, Is.True);
@@ -303,7 +350,9 @@
         public void Filter_PredicateIsNull_ThrowsArgumentNullException()
         {
             var mockDbContext = Substitute.For<IDatabaseContext>();
-            var dal = new JobDescriptionDal(mockDbContext);
+            var mockLogger = Substitute.For<ILogger<JobDescriptionDal>>();
+            var dal = new JobDescriptionDal(mockDbContext, mockLogger);
+
             var e = Assert.Throws<ArgumentNullException>(() => dal.Filter(null));
             Assert.That(e.Message, Does.Contain("predicate"));
         }

@@ -1,7 +1,8 @@
-﻿namespace Medibook.Data.Repositories
+﻿namespace MediBook.Data.Repositories
 {
     using MediBook.Core.Models;
-    using Medibook.Data.DataAccess;
+    using MediBook.Data.DataAccess;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The PatientsMedicalPractitionerDal
@@ -12,7 +13,7 @@
         /// Initializes a new instance of the <see cref="PatientsMedicalPractitionerDal"/> class
         /// </summary>
         /// <param name="databaseContext"></param>
-        public PatientsMedicalPractitionerDal(IDatabaseContext databaseContext) : base(databaseContext)
+        public PatientsMedicalPractitionerDal(IDatabaseContext databaseContext, ILogger<PatientsMedicalPractitionerDal> logger) : base(databaseContext, logger)
         {
         }
     }

@@ -1,20 +1,56 @@
 ﻿namespace MediBook.Core.Models
 {
-    using System.Collections.Generic;
+    using System;
     using System.ComponentModel.DataAnnotations;
+    using MediBook.Core.DTOs;
     using MediBook.Core.Enums;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// The User account
+    /// The UserAccount class
     /// </summary>
+    [Index(nameof(EmployeeId))]
     [Index(nameof(JobDescriptionId))]
     public class User : IDbEntity
     {
         /// <summary>
-        /// The User Id
+        /// Initializes a new instance of <see cref="User"/> class
+        /// </summary>
+        public User()
+        {
+        }
+
+        /// <summary>
+        /// Initializes an instance of the <see cref="UserFullDetailsDto"/> class
+        /// </summary>
+        public User(UserFullDetailsDto dto)
+        {
+            if (dto == null)
+            {
+                throw new ArgumentNullException(nameof(dto));
+            }
+
+            Id = dto.UserId;
+            AccountGuid = dto.AccountGuid;
+            Username = dto.Username;
+            JobDescription.Description = dto.JobDescription;
+            JobDescription.Role = dto.Role;
+            State = dto.State;
+            EmployeeDetails.Id = dto.EmployeeId;
+            EmployeeDetails.Title = dto.Title;
+            EmployeeDetails.Firstname = dto.Firstname;
+            EmployeeDetails.Lastname = dto.Lastname;
+        }
+
+        /// <summary>
+        /// The entity's Id in the Users table
         /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// The Account Guid
+        /// </summary>
+        public string AccountGuid { get; set; } = new Guid().ToString();
 
         /// <summary>
         /// The Username
@@ -33,37 +69,13 @@
         public byte[] PasswordSalt { get; set; }
 
         /// <summary>
-        /// The user's title
-        /// </summary>
-        [Required]
-        public Title Title { get; set; }
-
-        /// <summary>
-        /// The user's firstname
-        /// </summary>
-        [Required, MaxLength(50), MinLength(2)]
-        public string Firstname { get; set; }
-
-        /// <summary>
-        /// The user's lastname
-        /// </summary>
-        [Required, MaxLength(50), MinLength(2)]
-        public string Lastname { get; set; }
-
-        /// <summary>
-        /// The user's role
-        /// </summary>
-        [Required]
-        public UserRole Role { get; set; }
-
-        /// <summary>
         /// The Account State
         /// </summary>
         [Required]
         public AccountState State { get; set; }
 
         /// <summary>
-        /// The Id of the user's Job Description
+        /// The Id of the Job Description
         /// </summary>
         public int JobDescriptionId { get; set; }
 
@@ -74,23 +86,14 @@
         public JobDescription JobDescription { get; set; }
 
         /// <summary>
-        /// The many to many relationship between Patients and MedicalPractitioners
+        /// The Employee Id
         /// </summary>
-        public ICollection<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
+        public int EmployeeId { get; set; }
 
         /// <summary>
-        /// Navigation property for patient notes this user has made
+        /// Navigation property to the Employee
         /// </summary>
-        public ICollection<PatientNote> PatientNotes { get; set; }
-
-        /// <summary>
-        /// Navigation property for the associated AppointmentSessions
-        /// </summary>
-        public ICollection<AppointmentSession> AppointmentSessions { get; set; }
-
-        /// <summary>
-        /// Navigation property for the associated Appointments
-        /// </summary>
-        public ICollection<Appointment> Appointments { get; set; }
+        [Required]
+        public Employee EmployeeDetails { get; set; }
     }
 }

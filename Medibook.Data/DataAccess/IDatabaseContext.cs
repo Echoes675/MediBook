@@ -1,4 +1,4 @@
-﻿namespace Medibook.Data.DataAccess
+﻿namespace MediBook.Data.DataAccess
 {
     using System.Threading;
     using System.Threading.Tasks;

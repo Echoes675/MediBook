@@ -1,4 +1,4 @@
-﻿namespace Medibook.Data.Repositories
+﻿namespace MediBook.Data.Repositories
 {
     using System;
     using System.Collections.Generic;

@@ -1,19 +1,29 @@
-﻿namespace Medibook.Data.Repositories
+﻿namespace MediBook.Data.Repositories
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
-    using Medibook.Data.DataAccess;
+    using MediBook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// The Repository base class
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
     public abstract class RepositoryBase<TEntity> where TEntity : class, IDbEntity
     {
+        /// <summary>
+        /// The Db context
+        /// </summary>
         protected readonly IDatabaseContext Db;
 
-        private readonly ILogger _log;
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private protected readonly ILogger _log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase{TEntity}"/> class. 
@@ -26,7 +36,7 @@
         /// <exception cref="T:System.ArgumentNullException">
         /// MediBookDatabaseContext not provided.
         /// </exception>
-        protected RepositoryBase(IDatabaseContext databaseContext, ILogger logger)
+        protected RepositoryBase(IDatabaseContext databaseContext, ILogger<RepositoryBase<TEntity>> logger)
         {
             _log = logger ?? throw new ArgumentNullException(nameof(logger));
             Db = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
@@ -151,7 +161,7 @@
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
         /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
-        public IEnumerable<TEntity> Filter(Func<TEntity, bool> predicate)
+        public virtual IEnumerable<TEntity> Filter(Func<TEntity, bool> predicate)
         {
             if (predicate == null)
             {
