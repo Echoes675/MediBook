@@ -1,14 +1,13 @@
-﻿namespace MediBook.Core.Models
+﻿namespace MediBook.Core.DTOs
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using MediBook.Core.Enums;
 
     /// <summary>
-    /// The patient
+    /// The Patient details for registration
     /// </summary>
-    public class Patient : IDbEntity
+    public class PatientForRegistration
     {
         /// <summary>
         /// The Patient's Id
@@ -36,7 +35,7 @@
         /// <summary>
         /// The patient's date of birth
         /// </summary>
-        [Required] 
+        [Required]
         public DateTime DateOfBirth { get; set; }
 
         /// <summary>
@@ -47,13 +46,13 @@
         /// <summary>
         /// The first line of the patient's address
         /// </summary>
-        [Required, MaxLength(50)] 
+        [Required, MaxLength(50)]
         public string Address1 { get; set; }
 
         /// <summary>
         /// The second line of the patient's address
         /// </summary>
-        [MaxLength(50)] 
+        [MaxLength(50)]
         public string Address2 { get; set; }
 
         /// <summary>
@@ -71,7 +70,7 @@
         /// <summary>
         /// The patient's post code
         /// </summary>
-        [Required, MaxLength(8)] 
+        [Required, MaxLength(8)]
         public string PostCode { get; set; }
 
         /// <summary>
@@ -96,20 +95,5 @@
         /// The patient's status
         /// </summary>
         public PatientStatus Status { get; set; }
-
-        /// <summary>
-        /// The many to many relationship between Patients and MedicalPractitioners
-        /// </summary>
-        public ICollection<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
-
-        /// <summary>
-        /// The patient's notes
-        /// </summary>
-        public ICollection<PatientNote> PatientNotes { get; set; }
-
-        /// <summary>
-        /// The patient's appointments
-        /// </summary>
-        public ICollection<Appointment> Appointments { get; set; }
     }
 }

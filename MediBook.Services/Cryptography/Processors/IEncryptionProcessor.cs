@@ -7,13 +7,13 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Encrypt(string data);
+        public byte[] Encrypt(string data);
 
         /// <summary>
         /// Decrypts a string using the default configuration
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Decrypt(string data);
+        public string Decrypt(byte[] data);
     }
 }

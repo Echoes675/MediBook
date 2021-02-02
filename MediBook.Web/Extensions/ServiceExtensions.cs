@@ -2,6 +2,8 @@
 {
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
+    using MediBook.Services.PatientRecord;
+    using MediBook.Services.PatientRecord.Processors;
     using MediBook.Services.UserAdministration;
     using MediBook.Services.UserAuthentication;
     using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +25,8 @@
             services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
             //services.AddScoped<IAppointmentDal, AppointmentDal>();
             //services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
-            //services.AddScoped<IPatientDal, PatientDal>();
-            //services.AddScoped<IPatientNoteDal, PatientNoteDal>();
+            services.AddScoped<IPatientDal, PatientDal>();
+            services.AddScoped<IPatientNoteDal, PatientNoteDal>();
             services.AddScoped<IUserDal, UserDal>();
             services.AddScoped<IEmployeeDal, EmployeeDal>();
             //services.AddScoped<IPatientsMedicalPractitionerDal, PatientsMedicalPractitionerDal>();
@@ -40,6 +42,10 @@
             services.AddScoped<ICryptographyService, CryptographyService>();
             services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             services.AddScoped<IUserAdministrationService, UserAdministrationService>();
+            services.AddScoped<IPatientNoteProcessor, PatientNoteProcessor>();
+            services.AddScoped<IPatientRecordProcessorFactory, PatientRecordProcessorFactory>();
+            services.AddScoped<IPatientRecordService, PatientRecordService>();
+
         }
     }
 }

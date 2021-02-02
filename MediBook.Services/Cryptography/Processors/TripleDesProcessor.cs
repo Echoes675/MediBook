@@ -33,7 +33,7 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Encrypt(string data)
+        public byte[] Encrypt(string data)
         {
             if (string.IsNullOrEmpty(data))
             {
@@ -58,7 +58,8 @@
 
                     tripleDesCryptoService.Clear();
 
-                    return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+                    //return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+                    return resultArray;
                 }
             }
         }
@@ -68,14 +69,14 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Decrypt(string data)
+        public string Decrypt(byte[] data)
         {
-            if (string.IsNullOrEmpty(data))
+            if (data == null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
 
-            var decryptArray = Convert.FromBase64String(data);
+            // var decryptArray = Convert.FromBase64String(data);
 
             using (var mD5CryptoService = new MD5CryptoServiceProvider())
             {
@@ -89,7 +90,8 @@
                     tripleDesCryptoService.Padding = PaddingMode.PKCS7;
 
                     var cryptoTransform = tripleDesCryptoService.CreateDecryptor();
-                    var resultArray = cryptoTransform.TransformFinalBlock(decryptArray, 0, decryptArray.Length);
+                    // var resultArray = cryptoTransform.TransformFinalBlock(decryptArray, 0, decryptArray.Length);
+                    var resultArray = cryptoTransform.TransformFinalBlock(data, 0, data.Length);
                     tripleDesCryptoService.Clear();
 
                     return Encoding.UTF8.GetString(resultArray);

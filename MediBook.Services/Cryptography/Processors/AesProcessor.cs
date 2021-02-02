@@ -34,7 +34,7 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Encrypt(string data)
+        public byte[] Encrypt(string data)
         {
             if (string.IsNullOrEmpty(data))
             {
@@ -65,7 +65,8 @@
                 }
             }
 
-            return Convert.ToBase64String(array);
+            //return Convert.ToBase64String(array);
+            return array;
         }
 
         /// <summary>
@@ -73,15 +74,15 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Decrypt(string data)
+        public string Decrypt(byte[] data)
         {
-            if (string.IsNullOrEmpty(data))
+            if (data == null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
 
             byte[] iv = new byte[16];
-            byte[] buffer = Convert.FromBase64String(data);
+           // byte[] buffer = Convert.FromBase64String(data);
 
             using (Aes aes = Aes.Create())
             {
@@ -89,7 +90,8 @@
                 aes.IV = iv;
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
-                using (MemoryStream memoryStream = new MemoryStream(buffer))
+               // using (MemoryStream memoryStream = new MemoryStream(buffer))
+                using (MemoryStream memoryStream = new MemoryStream(data))
                 {
                     using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
                     {

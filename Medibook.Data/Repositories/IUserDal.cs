@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using MediBook.Core.DTOs;
     using MediBook.Core.Models;
 
     public interface IUserDal
@@ -43,6 +42,13 @@
         /// <param name="id"></param>
         /// <returns></returns>
         Task<User> GetEntityAsync(int id);
+
+        /// <summary>
+        /// Returns a list Users from the supplied list of Ids
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<List<User>> GetEntitiesAsync(List<int> ids);
 
         /// <summary>
         /// Searches for any registered users using the supplied username

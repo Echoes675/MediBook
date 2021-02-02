@@ -51,14 +51,6 @@
         }
 
         [Test]
-        public void Decrypt_DataEmpty_ThrowsArgumentNullException()
-        {
-            var processor = new AesProcessor(_mockCryptoKey);
-            var e = Assert.Throws<ArgumentNullException>(() => processor.Decrypt(string.Empty));
-            Assert.That(e.Message, Does.Contain("data"));
-        }
-
-        [Test]
         public void Encrypt_DataValid_Succeeds()
         {
             var processor = new AesProcessor(_mockCryptoKey);
@@ -71,9 +63,10 @@
         public void Decrypt_DataValid_Succeeds()
         {
             var processor = new AesProcessor(_mockCryptoKey);
-            var result = processor.Decrypt(_validEncryptedString);
+            var testArray = new byte[8];
+            var result = processor.Decrypt(testArray);
 
-            Assert.That(result, Is.EqualTo(_validDecryptedString));
+            Assert.That(result, Is.EqualTo(testArray));
         }
     }
 }
