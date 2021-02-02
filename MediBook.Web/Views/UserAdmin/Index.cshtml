@@ -21,111 +21,28 @@
             </a>
         </div>
     </div>
-
-    <h5>Active User Accounts</h5>
-    <table class="table table-striped">
-        <thead class="">
-        <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Lastname</th>
-            <th scope="col">Firstname</th>
-            <th scope="col">Job Description</th>
-            <th scope="col">Role</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody class="bg-white">
-        <!-- Loop to print out the user accounts -->
-        @for (int i = 0; i < Model?.ActiveUserAccounts?.Count; i++)
-        {
-            <tr>
-                <td>@Model.ActiveUserAccounts[i].Username</td>
-                <td>@Model.ActiveUserAccounts[i].Lastname</td>
-                <td>@Model.ActiveUserAccounts[i].Firstname</td>
-                <td>@Model.ActiveUserAccounts[i].JobDescription.Description</td>
-                <td>@Model.ActiveUserAccounts[i].JobDescription.Role</td>
-                <td>
-                    <a class="btn-sm" asp-action="ResetPassword" asp-route-id="@Model.ActiveUserAccounts[i].Id">
-                        <i class="fas fa-key fa-lg" title="Reset Password"></i>
-                    </a>
-                    <a class="btn-sm" asp-action="EditUser" asp-route-id="@Model.ActiveUserAccounts[i].Id">
-                        <i class="fas fa-user-edit fa-lg" title="Edit User"></i>
-                    </a>
-                    <a class="btn-sm" data-toggle="modal" data-target="#deleteuser" data-id="@Model.ActiveUserAccounts[i].Id" data-username="@Model.ActiveUserAccounts[i].Username">
-                        <i class="fas fa-user-alt-slash fa-lg" title="Delete User"></i>
-                    </a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-    
-    <h5>Inactive User Accounts</h5>
-    <table class="table table-striped">
-        <thead class="">
-        <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Job Description</th>
-            <th scope="col">Role</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody class="bg-white">
-        <!-- Loop to print out the user accounts -->
-        @for (int i = 0; i < Model?.InactiveUserAccounts?.Count; i++)
-        {
-            <tr>
-                <td>@Model.InactiveUserAccounts[i].Username</td>
-                <td>@Model.InactiveUserAccounts[i].JobDescription.Description</td>
-                <td>@Model.InactiveUserAccounts[i].JobDescription.Role</td>
-                <td>
-                    <a class="btn-sm" asp-action="ResetPassword" asp-route-id="@Model.InactiveUserAccounts[i].Id">
-                        <i class="fas fa-key fa-lg" title="Reset Password"></i>
-                    </a>
-                    <a class="btn-sm" asp-action="EditUser" asp-route-id="@Model.InactiveUserAccounts[i].Id">
-                        <i class="fas fa-user-edit fa-lg" title="Edit User"></i>
-                    </a>
-                    <a class="btn-sm" data-toggle="modal" data-target="#deleteuser" data-id="@Model.InactiveUserAccounts[i].Id" data-username="@Model.InactiveUserAccounts[i].Username">
-                        <i class="fas fa-user-alt-slash fa-lg" title="Delete User"></i>
-                    </a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-    
-    <h5>Deleted User Accounts</h5>
-    <table class="table table-striped">
-        <thead class="">
-        <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Job Description</th>
-            <th scope="col">Role</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody class="bg-white">
-        <!-- Loop to print out the user accounts -->
-        @for (int i = 0; i < Model?.InactiveUserAccounts?.Count; i++)
-        {
-            <tr>
-                <td>@Model.DeletedUserAccounts[i].Username</td>
-                <td>@Model.DeletedUserAccounts[i].JobDescription.Description</td>
-                <td>@Model.DeletedUserAccounts[i].JobDescription.Role</td>
-                <td>
-                    <a class="btn-sm" asp-action="EditUser" asp-route-id="@Model.DeletedUserAccounts[i].Id">
-                        <i class="fas fa-user-edit fa-lg" title="Edit User"></i>
-                    </a>
-                    <a class="btn-sm" data-toggle="modal" data-target="#deleteuser" data-id="@Model.DeletedUserAccounts[i].Id" data-username="@Model.InactiveUserAccounts[i].Username">
-                        <i class="fas fa-user-alt-slash fa-lg" title="Delete User"></i>
-                    </a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <div class="container-fluid">
+        <ul class="nav md-pills nav-justified table-blue-border">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#activeUsers">Active Users</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#inactiveUsers">Inactive Users</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#deletedUsers">Deleted Users</a></li>
+        </ul>
+    </div>
 </div>
-
+<div class="tab-content">
+    <div id="activeUsers" class="tab-pane active">
+        <!-- Active Users table -->
+        <partial name="_ActiveUsers" />
+    </div>
+    <div id="inactiveUsers" class="tab-pane">
+        <!-- Inactive Users table -->
+        <partial name="_InactiveUsers" />
+    </div>
+    <div id="deletedUsers" class="tab-pane">
+        <!-- Deleted Users table -->
+        <partial name="_DeletedUsers" />
+    </div>
+</div>
 <div class="modal fade" id="deleteuser" tabindex="-1" role="dialog" aria-labelledby="deleteuserLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -139,7 +56,7 @@
                 <p id="message-text"></p>
             </div>
             <div class="modal-footer">
-                <form asp-action="DeleteUser">
+                <form asp-action="Delete">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <!-- hidden input for Id -->
                     <div id="deleteuser"></div>
@@ -154,7 +71,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">

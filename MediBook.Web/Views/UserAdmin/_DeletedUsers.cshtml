@@ -1,0 +1,30 @@
+﻿<table class="table table-striped">
+    <thead class="">
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Lastname</th>
+            <th scope="col">Firstname</th>
+            <th scope="col">Job Description</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody class="bg-white">
+        <!-- Loop to print out the user accounts -->
+        @for (int i = 0; i < Model?.DeletedUserAccounts?.Count; i++)
+        {
+            <tr>
+                <td>@Model?.DeletedUserAccounts[i].Username</td>
+                <td>@Model?.DeletedUserAccounts[i].Lastname</td>
+                <td>@Model?.DeletedUserAccounts[i].Firstname</td>
+                <td>@Model?.DeletedUserAccounts[i].JobDescription.Description</td>
+                <td>@Model?.DeletedUserAccounts[i].JobDescription.Role</td>
+                <td>
+                    <a class="btn-sm" asp-action="EditUser" asp-route-id="@Model?.DeletedUserAccounts[i].Id">
+                        <i class="fas fa-user-edit fa-lg" title="Edit User"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

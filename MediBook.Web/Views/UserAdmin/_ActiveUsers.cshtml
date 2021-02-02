@@ -1,0 +1,36 @@
+﻿<table class="table table-striped">
+    <thead class="">
+    <tr>
+        <th scope="col">Username</th>
+        <th scope="col">Lastname</th>
+        <th scope="col">Firstname</th>
+        <th scope="col">Job Description</th>
+        <th scope="col">Role</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody class="bg-white">
+    <!-- Loop to print out the user accounts -->
+    @for (int i = 0; i < Model?.ActiveUserAccounts?.Count; i++)
+    {
+        <tr>
+            <td>@Model?.ActiveUserAccounts[i].Username</td>
+            <td>@Model?.ActiveUserAccounts[i].Lastname</td>
+            <td>@Model?.ActiveUserAccounts[i].Firstname</td>
+            <td>@Model?.ActiveUserAccounts[i].JobDescription.Description</td>
+            <td>@Model?.ActiveUserAccounts[i].JobDescription.Role</td>
+            <td>
+                <a class="btn-sm" asp-action="ResetPassword" asp-route-id="@Model?.ActiveUserAccounts[i].Id">
+                    <i class="fas fa-key fa-lg" title="Reset Password"></i>
+                </a>
+                <a class="btn-sm" asp-action="EditUser" asp-route-id="@Model?.ActiveUserAccounts[i].Id">
+                    <i class="fas fa-user-edit fa-lg" title="Edit User"></i>
+                </a>
+                <a class="btn-sm" data-toggle="modal" data-target="#deleteuser" data-id="@Model?.ActiveUserAccounts[i].Id" data-username="@Model?.ActiveUserAccounts[i].Username">
+                    <i class="fas fa-user-alt-slash fa-lg" title="Delete User"></i>
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -184,14 +184,37 @@
             switch (result)
             {
                 case ServiceResultStatusCode.Success:
-                    message = $"User password successfully updated. \"Username\"={passwordResetDetails.Username}, \"UserId\"={passwordResetDetails.Id}, \"ServiceResultStatusCode\"={result}";
-                    _logger.LogInformation(message);
+                    message = $"User password successfully updated. \"Username\"={passwordResetDetails.Username}, \"UserId\"={passwordResetDetails.Id}";
+                    _logger.LogInformation(message + $", \"ServiceResultStatusCode\"={result}");
                     Alert(message, AlertType.success);
                     return RedirectToAction("Index");
 
                 default:
-                    message = $"An error occurred. Could not update user password. \"Username\"={passwordResetDetails.Username}, \"UserId\"={passwordResetDetails.Id}, \"ServiceResultStatusCode\"={result}";
-                    _logger.LogInformation(message);
+                    message = $"An error occurred. Could not update user password. \"Username\"={passwordResetDetails.Username}, \"UserId\"={passwordResetDetails.Id}";
+                    _logger.LogInformation(message + $", \"ServiceResultStatusCode\"={result}");
+                    Alert(message, AlertType.danger);
+                    return RedirectToAction("Index");
+            }
+        }
+
+        // POST userauth/delete
+        //[Authorize(Roles = "Admin")]
+        [HttpPost("Delete")]
+        public async Task<IActionResult> Delete([FromForm] int id)
+        {
+            var result = await _userAdminSvc.DeleteUserAsync(id);
+            string message;
+            switch (result)
+            {
+                case ServiceResultStatusCode.Success:
+                    message = $"User successfully deleted. \"UserId\"={id}";
+                    _logger.LogInformation(message + $", \"ServiceResultStatusCode\"={result}");
+                    Alert(message, AlertType.success);
+                    return RedirectToAction("Index");
+
+                default:
+                    message = $"An error occurred. Could not delete user. \"UserId\"={id}";
+                    _logger.LogInformation(message + $", \"ServiceResultStatusCode\"={result}");
                     Alert(message, AlertType.danger);
                     return RedirectToAction("Index");
             }
