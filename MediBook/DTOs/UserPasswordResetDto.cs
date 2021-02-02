@@ -21,13 +21,13 @@
         /// <summary>
         /// The new password
         /// </summary>
-        [Required]
+        [Required, MinLength(10)]
         public string Password { get; set; }
 
         /// <summary>
         /// Confirmation of the new password
         /// </summary>
-        [Required, Compare("Password")]
+        [Required, MinLength(10), Compare("Password")]
         public string PasswordConfirm { get; set; }
     }
 }

@@ -17,7 +17,7 @@
     public class UserAuthenticationServiceTests
     {
         [Test]
-        public void Ctor_NullDatabaseContext_ThrowsArgumentNullException()
+        public void Ctor_NullUserDal_ThrowsArgumentNullException()
         {
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();

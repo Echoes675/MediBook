@@ -41,7 +41,7 @@
         /// <summary>
         /// The initial password confirm
         /// </summary>
-        [Required, MinLength(10)]
+        [Required, MinLength(10), Compare("Password")]
         public string ConfirmPassword { get; set; }
 
         /// <summary>

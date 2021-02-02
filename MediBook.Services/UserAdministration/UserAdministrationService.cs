@@ -149,7 +149,7 @@
         {
             if (id <= 0)
             {
-                throw new ArgumentNullException(nameof(id));
+                throw new ArgumentOutOfRangeException(nameof(id), $"Id provided cannot be less than 1 \"Id\"={id}");
             }
 
             if (await _userDal.DeleteAsync(id))
