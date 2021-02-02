@@ -8,6 +8,7 @@
     using MediBook.Core.Models;
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
+    using MediBook.Services.Enums;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.Extensions.Logging;
 
@@ -47,7 +48,7 @@
         /// <param name = "username" > String of the username</param>
         /// <param name = "password" > String of the submitted password</param>
         /// <returns>User object if authentication successful</returns>
-        public async Task<ClaimsPrincipal> Login(string username, string password)
+        public async Task<UserLoginResult> Login(string username, string password)
         {
             if (string.IsNullOrEmpty(username))
             {
@@ -62,28 +63,41 @@
             // attempt to retrieve a matching user from the db
             var user = await _userDal.GetUserAsync(username);
 
+            string message;
             // if not found return null
             if (user == null)
             {
-                _log.LogInformation($"User not found. \"Username\"={username}");
-                return null;
+                message = $"User not found. \"Username\"={username}";
+                _log.LogInformation(message);
+                return new UserLoginResult(ServiceResultStatusCode.NotFound, message, null);
+            }
+
+            if (user.State != AccountState.Active)
+            {
+                message = $"Account login failed. Account state is not active \"Username\"={username}, \"AccountState\"={user.State}";
+                return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
             }
 
             // user found, check the password is correct and build the ClaimsPrincipal, if not, return null
-            if (!_cryptographyService.VerifyPasswordHash(user.PasswordSalt, user.PasswordHash, password))
+            if (!_cryptographyService.VerifyPasswordHash(user.PasswordHash, user.PasswordSalt, password))
             {
-                return null;
+                message = $"Account login failed. Username or password not recognised. \"Username\"={username}";
+                _log.LogInformation(message);
+                return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
             }
             
             var claimsPrincipal = BuildClaimsPrincipal(user);
 
             if (claimsPrincipal != null)
             {
-                return claimsPrincipal;
+                message = "Account login Success.";
+                _log.LogInformation(message);
+                return new UserLoginResult(ServiceResultStatusCode.Success, message, claimsPrincipal);
             }
             
             _log.LogError($"Failed to build ClaimsPrincipal as malformed User received from Db. \"Username\"={username}");
-            return null;
+            message = $"Account login failed. Internal error. \"Username\"={username}";
+            return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
         }
 
         // Build a claims principal from authenticated user

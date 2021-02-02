@@ -23,6 +23,8 @@
             Id = user.Id;
             AccountGuid = user.AccountGuid;
             Username = user.Username;
+            Firstname = user.EmployeeDetails.Firstname;
+            Lastname = user.EmployeeDetails.Lastname;
             JobDescription = user.JobDescription;
             State = user.State;
         }
@@ -41,6 +43,16 @@
         /// The Username
         /// </summary>
         public string Username { get; set; }
+
+        /// <summary>
+        /// The user's firstname
+        /// </summary>
+        public string Firstname { get; set; }
+
+        /// <summary>
+        /// The user's lastname
+        /// </summary>
+        public string Lastname { get; set; }
 
         /// <summary>
         /// The User's JobDescription

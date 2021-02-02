@@ -5,9 +5,9 @@
     /// </summary>
     public enum AlertType
     {
-        Info,
-        Warning,
-        Success,
-        Error
+        success,
+        danger,
+        warning,
+        info
     }
 }

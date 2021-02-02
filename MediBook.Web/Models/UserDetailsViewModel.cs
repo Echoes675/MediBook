@@ -13,7 +13,7 @@
     public class UserDetailsViewModel
     {
         /// <summary>
-        /// Initializes an instance of the <see cref="UserFullDetailsDto"/> class
+        /// Initializes an instance of the <see cref="UserDetailsViewModel"/> class
         /// </summary>
         public UserDetailsViewModel()
         {
@@ -21,7 +21,7 @@
         }
 
         /// <summary>
-        /// Initializes an instance of the <see cref="UserFullDetailsDto"/> class
+        /// Initializes an instance of the <see cref="UserDetailsViewModel"/> class
         /// </summary>
         public UserDetailsViewModel(UserFullDetailsDto userFullDetails)
         {
@@ -115,5 +115,22 @@
         /// The user's Job Description
         /// </summary>
         public string JobDescription { get; set; }
+
+        public UserFullDetailsDto MapToUserFullDetailsDtoDto()
+        {
+            return new UserFullDetailsDto()
+            {
+                UserId = UserId,
+                AccountGuid = AccountGuid,
+                Username = Username,
+                Role = Role,
+                State = State,
+                EmployeeId = EmployeeId,
+                Title = Title,
+                Firstname = Firstname,
+                Lastname = Lastname,
+                JobDescription = JobDescription
+            };
+        }
     }
 }

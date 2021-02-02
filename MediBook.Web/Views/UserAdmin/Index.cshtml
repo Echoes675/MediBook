@@ -7,7 +7,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">User Administration</li>
+        <li class="breadcrumb-item active text-white" aria-current="page">User Administration</li>
     </ol>
 </nav>
 
@@ -27,6 +27,8 @@
         <thead class="">
         <tr>
             <th scope="col">Username</th>
+            <th scope="col">Lastname</th>
+            <th scope="col">Firstname</th>
             <th scope="col">Job Description</th>
             <th scope="col">Role</th>
             <th scope="col">Actions</th>
@@ -38,6 +40,8 @@
         {
             <tr>
                 <td>@Model.ActiveUserAccounts[i].Username</td>
+                <td>@Model.ActiveUserAccounts[i].Lastname</td>
+                <td>@Model.ActiveUserAccounts[i].Firstname</td>
                 <td>@Model.ActiveUserAccounts[i].JobDescription.Description</td>
                 <td>@Model.ActiveUserAccounts[i].JobDescription.Role</td>
                 <td>

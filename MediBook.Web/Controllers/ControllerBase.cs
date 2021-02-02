@@ -15,7 +15,7 @@
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        public void Alert(string message, AlertType type = AlertType.Info)
+        public void Alert(string message, AlertType type = AlertType.info)
         {
             TempData["Alert.Message"] = message;
             TempData["Alert.Type"] = type.ToString();

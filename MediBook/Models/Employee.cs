@@ -1,10 +1,8 @@
 ﻿namespace MediBook.Core.Models
 {
-    using System;
+    using MediBook.Core.Enums;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using MediBook.Core.Enums;
-    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The Employee account
@@ -37,21 +35,21 @@
         /// <summary>
         /// The many to many relationship between Patients and MedicalPractitioners
         /// </summary>
-        public ICollection<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; }
+        public ICollection<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; } = new List<PatientsMedicalPractitioner>();
 
         /// <summary>
         /// Navigation property for patient notes this user has made
         /// </summary>
-        public ICollection<PatientNote> PatientNotes { get; set; }
+        public ICollection<PatientNote> PatientNotes { get; set; } = new List<PatientNote>();
 
         /// <summary>
         /// Navigation property for the associated AppointmentSessions
         /// </summary>
-        public ICollection<AppointmentSession> AppointmentSessions { get; set; }
+        public ICollection<AppointmentSession> AppointmentSessions { get; set; } = new List<AppointmentSession>();
 
         /// <summary>
         /// Navigation property for the associated Appointments
         /// </summary>
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }

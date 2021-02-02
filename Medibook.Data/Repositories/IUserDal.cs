@@ -52,13 +52,6 @@
         Task<User> GetUserAsync(string username);
 
         /// <summary>
-        /// Returns the Users full account and employee details
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<User> GetUserFullDetailsAsync(int id);
-
-        /// <summary>
         /// Check if entity exists in the database
         /// </summary>
         /// <param name="entity"></param>

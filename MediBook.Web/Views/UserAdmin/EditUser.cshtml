@@ -9,7 +9,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
         <li class="breadcrumb-item"><a class="text-white" asp-controller="UserAdmin" asp-action="Index">User Administration</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+        <li class="breadcrumb-item active text-white" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
 
@@ -57,7 +57,6 @@
                     <input type="submit" value="Save Changes" class="btn btn-green-add" />
                     <a class="btn btn-grey-cancel" asp-controller="UserAdmin" asp-action="Index">Cancel</a>
                 </div>
-
             </form>
         </div>
     </div>

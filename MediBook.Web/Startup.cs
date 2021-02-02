@@ -1,10 +1,13 @@
 namespace MediBook.Web
 {
+    using System;
+    using AutoMapper;
     using MediBook.Data.DataAccess;
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
     using MediBook.Services.UserAuthentication;
     using MediBook.Web.Extensions;
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -27,6 +30,12 @@ namespace MediBook.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             #region Database
             services.AddDbContext<MediBookDatabaseContext>(options =>
@@ -46,8 +55,15 @@ namespace MediBook.Web
             services.AddServices();
             #endregion
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
-
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.AccessDeniedPath = "/Auth/ErrorNotAuthorised";
+                    options.LoginPath = "/Auth/Login";
+                    options.ExpireTimeSpan = new TimeSpan(30, 0, 0, 0);
+                });
             // Required to access identity in AuthorizeTagHelper
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }

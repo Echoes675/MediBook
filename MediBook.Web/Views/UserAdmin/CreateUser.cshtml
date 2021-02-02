@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Create User";
+}
+
+@using MediBook.Web.Helpers
+@model UserForRegistrationDto
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="UserAdmin" asp-action="Index">User Administration</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">@ViewData["Title"]</li>
+    </ol>
+</nav>
+
+<div class="card table-blue-border w-50" style=" margin:auto;">
+    <h3 class="card-header thead-blue">@ViewData["Title"]</h3>
+    <div class="card-body w-100" style="margin: 0 auto">
+        <div class="col-12">
+            <form asp-action="CreateUser" class="md-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="md-form">
+                    <label for="Username" class="col-form-label">Username</label>
+                    <input asp-for="Username" class="form-control" id="Username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label for="Password" class="col-form-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password" id="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label for="ConfirmPassword" class="col-form-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" id="ConfirmPassword" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select asp-for="Title" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetTitlesSelectList()">
+                        <option value="" selected>Select Title</option>
+                    </select>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label for="FirstName" class="col-form-label">FirstName</label>
+                    <input asp-for="FirstName" class="form-control" id="FirstName" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label for="LastName" class="col-form-label">LastName</label>
+                    <input asp-for="LastName" class="form-control" id="LastName" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label for="JobDescription" class="col-form-label">JobDescription</label>
+                    <input asp-for="JobDescription" class="form-control" id="JobDescription" />
+                    <span asp-validation-for="JobDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select asp-for="Role" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetRolesSelectList()">
+                        <option value="" selected>Select Role</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select asp-for="State" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetAccountStatesSelectList()">
+                        <option value="" selected>Select Account State</option>
+                    </select>
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-4">
+                    <input type="submit" value="Register" class="btn btn-green-add" />
+                    <a class="btn btn-grey-cancel" asp-controller="UserAdmin" asp-action="Index">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('.mdb-select').materialSelect();
+        });
+    </script>
+}

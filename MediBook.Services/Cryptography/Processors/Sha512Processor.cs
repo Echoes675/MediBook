@@ -58,7 +58,7 @@
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
                 // password converted to a byte array so it can be hashed using the salt key above
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(plainTextPassword));
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(plainTextPassword));
 
                 // compare each element in the computedHash byte array
                 if (computedHash.Where((t, i) => t != passwordHash[i]).Any())

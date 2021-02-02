@@ -1,14 +1,14 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-a.navbar-brand {
+/*a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
-}
+}*/
 
 /* Provide sufficient contrast against white background */
-a {
+/*a {
   color: #0366d6;
 }
 
@@ -22,11 +22,11 @@ a {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
-}
+}*/
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
+/*html {
   font-size: 14px;
 }
 @media (min-width: 768px) {
@@ -49,23 +49,331 @@ html {
 button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
-}
+}*/
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
+/*html {
   position: relative;
   min-height: 100%;
 }
 
-body {
+body {*/
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  /*margin-bottom: 60px;
 }
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+  line-height: 60px;*/ /* Vertically center the text there */
+/*}*/
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: #ffffff;
+    /*background-color: #ffe6c3;*/
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+/*input:invalid {
+    border: 2px dashed #10573f;
+}
+
+input:valid {
+    border: 2px solid #10573f;
+}*/
+
+.alert-success {
+    color: #003300;
+    background-color: #A5D1AA;
+    border-color: #54A55F
+}
+
+    .alert-success hr {
+        border-top-color: #4A9354
+    }
+
+    .alert-success .alert-link {
+        color: #214125
+    }
+
+.alert-info {
+    color: #093D93;
+    background-color: #97BCF9;
+    border-color: #4286F4
+}
+
+    .alert-info hr {
+        border-top-color: #0B48AE
+    }
+
+    .alert-info .alert-link {
+        color: #09275B
+    }
+
+.alert-warning {
+    color: #844E04;
+    background-color: #FBCE91;
+    border-color: #F79C1D
+}
+
+    .alert-warning hr {
+        border-top-color: #AD6605
+    }
+
+    .alert-warning .alert-link {
+        color: #593402
+    }
+
+.alert-danger {
+    color: #9c2c2c;
+    background-color: #EAB5B5;
+    border-color: #9c2c2c
+}
+
+    .alert-danger hr {
+        border-top-color: #7C2323
+    }
+
+    .alert-danger .alert-link {
+        color: #7C2323
+    }
+
+
+.active-monitor-active {
+    color: #10573f;
+}
+
+.grey-inactive {
+    color: #c6c6c6
+}
+
+.green-active {
+    color: #10573f
+}
+
+.green-action {
+    color: #10573f
+}
+
+.red-error {
+    color: #9c2c2c
+}
+
+.blue-info {
+    color: #2A73FF
+}
+
+.amber-warning {
+    color: #f79c1d
+}
+
+.boiler-active {
+    color: #9c2c2c
+}
+
+.boiler-inactive {
+    color: #c6c6c6
+}
+
+.boost-active {
+    color: #825cb8
+}
+
+.boost-inactive {
+    color: #fff
+}
+
+.green-minus-usage {
+    color: #54A55F
+}
+
+.red-plus-usage {
+    color: #9c2c2c
+}
+
+.breadcrumb {
+    background-color: #4286F4;
+    color: #fff
+}
+
+.breadcrumb-item.link {
+    color: #fff !important;
+}
+
+/* Switch success */
+.switch-green-grey label input[type=checkbox]:checked + .lever {
+    background-color: #54A55F;
+}
+
+    .switch-green-grey label input[type=checkbox]:checked + .lever:after {
+        background-color: #8e949e;
+    }
+
+.btn-green-add {
+    border: 2px solid #fff !important;
+    background-color: #54A55F !important;
+    color: #fff !important;
+}
+
+.btn-green-add-noborder {
+    border: none;
+    box-shadow: none;
+    background-color: #54A55F !important;
+    color: #fff !important;
+}
+
+.btn-grey-cancel {
+    border: 2px solid #fff !important;
+    background-color: #8e949e !important;
+    color: #fff !important;
+}
+
+.btn-red-confirm {
+    border: 2px solid #fff !important;
+    background-color: #9c2c2c !important;
+    color: #fff !important;
+}
+
+.table-gold-border {
+    border: 2px solid #f79c1d !important;
+}
+
+.bg-dark-bl {
+    background-color: #093D93;
+}
+
+.thead-gold {
+    background-color: #f79c1d;
+    color: #fff
+}
+
+.table-blue-border {
+    border: 2px solid #2A73FF !important;
+}
+
+
+.thead-blue {
+    background-color: #2A73FF;
+    color: #fff
+}
+
+.dropdown-main-nav .dropdown-content li.active,
+.dropdown-main-nav .dropdown-content li a,
+.dropdown-main-nav .dropdown-content li span:hover {
+    background-color: #54A55F !important;
+}
+
+.dropdown-main-nav .dropdown-content li.disabled.active {
+    background-color: transparent !important;
+}
+
+.dropdown-main-nav .search-wrap input:focus {
+    border-bottom: 1px solid #54A55F;
+    -webkit-box-shadow: 0 1px 0 0 #54A55F;
+    box-shadow: 0 1px 0 0 #54A55F;
+}
+
+.dropdown .dropdown-menu.dropdown-main-nav .dropdown-item:hover, .dropdown .dropdown-menu.dropdown-main-nav .dropdown-item:active, .dropdown .dropdown-menu.dropdown-main-nav .dropdown-item.active,
+.dropup .dropdown-menu.dropdown-main-nav .dropdown-item:hover,
+.dropup .dropdown-menu.dropdown-main-nav .dropdown-item:active,
+.dropup .dropdown-menu.dropdown-main-nav .dropdown-item.active,
+.dropleft .dropdown-menu.dropdown-main-nav .dropdown-item:hover,
+.dropleft .dropdown-menu.dropdown-main-nav .dropdown-item:active,
+.dropleft .dropdown-menu.dropdown-main-nav .dropdown-item.active,
+.dropright .dropdown-menu.dropdown-main-nav .dropdown-item:hover,
+.dropright .dropdown-menu.dropdown-main-nav .dropdown-item:active,
+.dropright .dropdown-menu.dropdown-main-nav .dropdown-item.active {
+    background-color: #54A55F !important;
+    -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+    -webkit-border-radius: 0.125rem;
+    border-radius: 0.125rem;
+}
+
+    .dropdown .dropdown-menu.dropdown-main-nav .dropdown-item:hover.disabled, .dropdown .dropdown-menu.dropdown-main-nav .dropdown-item:active.disabled, .dropdown .dropdown-menu.dropdown-main-nav .dropdown-item.active.disabled,
+    .dropup .dropdown-menu.dropdown-main-nav .dropdown-item:hover.disabled,
+    .dropup .dropdown-menu.dropdown-main-nav .dropdown-item:active.disabled,
+    .dropup .dropdown-menu.dropdown-main-nav .dropdown-item.active.disabled,
+    .dropleft .dropdown-menu.dropdown-main-nav .dropdown-item:hover.disabled,
+    .dropleft .dropdown-menu.dropdown-main-nav .dropdown-item:active.disabled,
+    .dropleft .dropdown-menu.dropdown-main-nav .dropdown-item.active.disabled,
+    .dropright .dropdown-menu.dropdown-main-nav .dropdown-item:hover.disabled,
+    .dropright .dropdown-menu.dropdown-main-nav .dropdown-item:active.disabled,
+    .dropright .dropdown-menu.dropdown-main-nav .dropdown-item.active.disabled {
+        background-color: transparent;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+.classic-tabs .nav.tabs-site-green li a.active {
+    border-color: #f79c1d;
+}
+
+.classic-tabs .nav.tabs-animated.tabs-site-green .floor {
+    background-color: #fff;
+}
+
+.tabs-site-green {
+    background-color: #54A55F !important;
+}
+
+.card-deck {
+    width: 100% !important;
 }

@@ -31,7 +31,7 @@
         /// </summary>
         /// <param name="selectedState"></param>
         /// <returns></returns>
-        public static List<SelectListItem> GetAccountStatesSelectList(AccountState selectedState)
+        public static List<SelectListItem> GetAccountStatesSelectList(AccountState selectedState = AccountState.Inactive)
         {
             return Enum.GetValues(typeof(AccountState))
                 .Cast<AccountState>()
@@ -48,7 +48,7 @@
         /// </summary>
         /// <param name="selectedTitle"></param>
         /// <returns></returns>
-        public static List<SelectListItem> GetTitlesSelectList(Title selectedTitle)
+        public static List<SelectListItem> GetTitlesSelectList(Title selectedTitle = Title.Unknown)
         {
             return Enum.GetValues(typeof(Title))
                 .Cast<Title>()

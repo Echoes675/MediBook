@@ -7,6 +7,7 @@
     using MediBook.Core.Models;
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
+    using MediBook.Services.Enums;
     using MediBook.Services.UserAuthentication;
     using Microsoft.Extensions.Logging;
     using NSubstitute;
@@ -91,7 +92,7 @@
         }
 
         [Test]
-        public void Login_UserNotFound_ReturnsNull()
+        public void Login_UserNotFound_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
@@ -102,113 +103,58 @@
             var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
 
             var result = svc.Login("username", "password").GetAwaiter().GetResult();
-            Assert.That(result, Is.Null);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ResultStatus, Is.EqualTo(ServiceResultStatusCode.NotFound));
+            Assert.That(result.Message, Does.Contain("User not found. \"Username\"=username"));
         }
 
         [Test]
-        public void Login_UserFoundButPasswordIncorrect_ReturnsNull()
+        public void Login_UserFoundButAccountNotActive_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
 
-            mockDal.GetUserAsync("username").Returns(new User());
+            var mockUser = new User()
+            {
+                State = AccountState.Deleted
+            };
+            mockDal.GetUserAsync("username").Returns(mockUser);
             mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "wrongPassword").Returns(false);
 
             var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
 
             var result = svc.Login("username", "wrongPassword").GetAwaiter().GetResult();
-            Assert.That(result, Is.Null);
-            mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "wrongPassword");
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ResultStatus, Is.EqualTo(ServiceResultStatusCode.Failed));
+            Assert.That(result.Message, Does.Contain("Account login failed. Account state is not active "));
         }
 
         [Test]
-        public void Login_UserFoundHasNullUsername_ReturnsNull()
+        public void Login_UserFoundButPasswordIncorrect_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
 
-            mockDal.GetUserAsync("username").Returns(new User());
-            mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword").Returns(true);
-
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
-
-            var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
-
-            Assert.That(result, Is.Null);
-            mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword");
-        }
-
-        [Test]
-        public void Login_UserFoundHasEmptyUsername_ReturnsNull()
-        {
-            var mockDal = Substitute.For<IUserDal>();
-            var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
-            var mockCryptoSvc = Substitute.For<ICryptographyService>();
-
-            mockDal.GetUserAsync("username").Returns(new User(){Username = string.Empty});
-            mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword").Returns(true);
-
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
-
-            var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
-
-            Assert.That(result, Is.Null);
-            mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword");
-        }
-
-        [Test]
-        public void Login_UserFoundHasIdLessThan1_ReturnsNull()
-        {
-            var mockDal = Substitute.For<IUserDal>();
-            var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
-            var mockCryptoSvc = Substitute.For<ICryptographyService>();
-
-            var user = new User()
+            var mockUser = new User()
             {
-                Id = 0,
-                Username = "name"
+                Username = "jsmith",
+                State = AccountState.Active
             };
-
-            mockDal.GetUserAsync("username").Returns(user);
-            mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword").Returns(true);
+            mockDal.GetUserAsync("username").Returns(mockUser);
+            mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "wrongPassword").Returns(false);
 
             var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
 
-            var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
-
-            Assert.That(result, Is.Null);
-            mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword");
+            var result = svc.Login("username", "wrongPassword").GetAwaiter().GetResult();
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ResultStatus, Is.EqualTo(ServiceResultStatusCode.Failed));
+            Assert.That(result.Message, Does.Contain("Account login failed. Username or password not recognised."));
         }
 
         [Test]
-        public void Login_UserFoundHasNullJobDescription_ReturnsNull()
-        {
-            var mockDal = Substitute.For<IUserDal>();
-            var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
-            var mockCryptoSvc = Substitute.For<ICryptographyService>();
-
-            var user = new User()
-            {
-                Id = 1,
-                Username = "name",
-                JobDescription = null
-            };
-
-            mockDal.GetUserAsync("username").Returns(user);
-            mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword").Returns(true);
-
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
-
-            var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
-
-            Assert.That(result, Is.Null);
-            mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword");
-        }
-
-        [Test]
-        public void Login_UserFoundHasUnknownRole_ReturnsNull()
+        public void Login_UserFoundHasUnknownRole_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
@@ -222,7 +168,10 @@
                 {
                     Description = "General Practitioner",
                     Role = UserRole.Unknown
-                }
+                },
+                State = AccountState.Active,
+                PasswordHash = new byte[8],
+                PasswordSalt = new byte[8],
             };
 
             mockDal.GetUserAsync("username").Returns(user);
@@ -232,7 +181,9 @@
 
             var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
 
-            Assert.That(result, Is.Null);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ResultStatus, Is.EqualTo(ServiceResultStatusCode.Failed));
+            Assert.That(result.Message, Does.Contain("Account login failed. Internal error."));
             mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword");
         }
 
@@ -246,12 +197,15 @@
             var user = new User()
             {
                 Id = 1,
-                Username = "name",
+                Username = "username",
                 JobDescription = new JobDescription()
                 {
                     Description = "General Practitioner",
                     Role = UserRole.MedicalPractitioner
-                }
+                },
+                State = AccountState.Active,
+                PasswordHash = new byte[8],
+                PasswordSalt = new byte[8],
             };
 
             mockDal.GetUserAsync("username").Returns(user);
@@ -262,7 +216,8 @@
             var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.TypeOf<ClaimsPrincipal>());
+            Assert.That(result.ResultStatus, Is.EqualTo(ServiceResultStatusCode.Success));
+            Assert.That(result.ClaimsPrincipal, Is.Not.Null);
         }
     }
 }

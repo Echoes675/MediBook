@@ -16,9 +16,18 @@ namespace MediBook.Web.Models
         /// <param name="userAccountDetails"></param>
         public UsersViewModel(List<UserAccountDetailsDto> userAccountDetails)
         {
-            ActiveUserAccounts = userAccountDetails.Where(x => x.State == AccountState.Active).ToList();
-            InactiveUserAccounts = userAccountDetails.Where(x => x.State == AccountState.Inactive).ToList();
-            DeletedUserAccounts = userAccountDetails.Where(x => x.State == AccountState.Deleted).ToList();
+            ActiveUserAccounts = userAccountDetails.Where(x => x.State == AccountState.Active)
+                .OrderBy(x => x.Lastname)
+                .ToList();
+
+            InactiveUserAccounts = userAccountDetails
+                .Where(x => x.State == AccountState.Inactive)
+                .OrderBy(x => x.Lastname)
+                .ToList();
+
+            DeletedUserAccounts = userAccountDetails.Where(x => x.State == AccountState.Deleted)
+                .OrderBy(x => x.Lastname)
+                .ToList();
         }
 
         /// <summary>

@@ -11,6 +11,6 @@
         /// <param name = "username" > String of the username</param>
         /// <param name = "password" > String of the submitted password</param>
         /// <returns>User object if authentication successful</returns>
-        Task<ClaimsPrincipal> Login(string username, string password);
+        Task<UserLoginResult> Login(string username, string password);
     }
 }

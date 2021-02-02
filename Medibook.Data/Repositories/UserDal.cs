@@ -36,7 +36,10 @@
                 throw new ArgumentNullException(nameof(username));
             }
 
-            return await Db.Set<User>().Include(x => x.JobDescription).FirstOrDefaultAsync(x => 
+            return await Db.Set<User>()
+                .Include(x => x.JobDescription)
+                .Include(x => x.EmployeeDetails)
+                .FirstOrDefaultAsync(x => 
                 x.Username.ToLower().CompareTo(username.Trim().ToLower()) == 0).ConfigureAwait(false);
         }
 
@@ -45,7 +48,7 @@
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<User> GetUserFullDetailsAsync(int id)
+        public override async Task<User> GetEntityAsync(int id)
         {
             if (id < 1)
             {
@@ -65,7 +68,10 @@
         /// <returns></returns>
         public override async Task<IEnumerable<User>> GetAllAsync()
         {
-            var retVal = await Db.Set<User>().Include(x => x.JobDescription).ToListAsync().ConfigureAwait(false);
+            var retVal = await Db.Set<User>()
+                .Include(x => x.JobDescription)
+                .Include(u => u.EmployeeDetails)
+                .ToListAsync().ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(User)}");
             return retVal;
         }
@@ -84,7 +90,10 @@
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return (Db.Set<User>().Include(x => x.JobDescription).AsEnumerable() ?? throw new InvalidOperationException(nameof(User))).Where(predicate);
+            return (Db.Set<User>()
+                .Include(x => x.JobDescription)
+                .Include(x => x.EmployeeDetails)
+                .AsEnumerable() ?? throw new InvalidOperationException(nameof(User))).Where(predicate);
         }
 
         /// <summary>
@@ -99,7 +108,7 @@
                 throw new ArgumentNullException(nameof(id));
             }
 
-            var entity = await GetEntityAsync(id).ConfigureAwait(false);
+            var entity = await base.GetEntityAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
                 entity.State = AccountState.Deleted;

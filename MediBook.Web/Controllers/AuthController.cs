@@ -8,9 +8,13 @@
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
+    using MediBook.Services.Enums;
     using MediBook.Services.UserAuthentication;
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// The Authentication Controller
+    /// </summary>
     public class AuthController : ControllerBase
     {
         /// <summary>
@@ -62,25 +66,28 @@
             }
 
             // check user exists in the db and that the details provided are valid for login purposes
-            var claimsPrincipal = await _svc.Login(userForLogin.Username.Trim(), userForLogin.Password).ConfigureAwait(false);
+            var result = await _svc.Login(userForLogin.Username.Trim(), userForLogin.Password).ConfigureAwait(false);
 
             // if user does not exist return Unauthorized
-            if (claimsPrincipal == null)
+            if (result.ResultStatus != ServiceResultStatusCode.Success)
             {
                 // if username or password not recognised, produce an alert and reload the view
-                var logMessage = $"Username and password combination not recognised. \"Username\"={userForLogin.Username}";
-                _logger.LogDebug(logMessage);
+                Alert(result.Message, AlertType.warning);
+                return View();
+            }
 
-                Alert(logMessage, AlertType.Warning);
+            // Make sure the ClaimsPrincipal was created
+            if (result.ClaimsPrincipal == null)
+            {
+                // if username or password not recognised, produce an alert and reload the view
+                _logger.LogError($"AuthController returned success but no ClaimsPrincipal. \"Username\"={userForLogin.Username}");
+                Alert("Account login failed due to an Internal Error", AlertType.danger);
                 return View();
             }
 
             // sign user in using cookie authentication to store principal
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal).ConfigureAwait(false);
-            
-            // record the login event in system logs and return to the Index page
-            _logger.LogInformation($"User logged in. \"Username\"={userForLogin.Username}");
+                CookieAuthenticationDefaults.AuthenticationScheme, result.ClaimsPrincipal).ConfigureAwait(false);
 
             return RedirectToAction("Index", "Home");
         }
