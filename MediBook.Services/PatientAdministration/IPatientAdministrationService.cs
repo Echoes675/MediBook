@@ -5,13 +5,13 @@
     using MediBook.Core.DTOs;
     using MediBook.Services.Enums;
 
-    public interface IPatientAdministration
+    public interface IPatientAdministrationService
     {
         /// <summary>
         /// Return a collection of summaries for all patients
         /// </summary>
         /// <returns></returns>
-        Task<List<PatientDetailsDto>> LoadUserAccounts();
+        Task<List<PatientDetailsDto>> LoadPatientsDetails();
 
         /// <summary>
         /// Return a collection of summaries for patients matching the search criteria

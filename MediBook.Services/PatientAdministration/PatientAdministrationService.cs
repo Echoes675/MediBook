@@ -13,22 +13,22 @@
     /// <summary>
     /// The Patient Administration class
     /// </summary>
-    public class PatientAdministration : IPatientAdministration
+    public class PatientAdministrationService : IPatientAdministrationService
     {
         /// <summary>
         /// The logger
         /// </summary>
-        private readonly ILogger<PatientAdministration> _log;
+        private readonly ILogger<PatientAdministrationService> _log;
         private readonly IPatientDal _patientDal;
         private readonly IUserDal _userDal;
 
         /// <summary>
-        /// Initializes an instance of the <see cref="PatientAdministration"/> class
+        /// Initializes an instance of the <see cref="PatientAdministrationService"/> class
         /// </summary>
         /// <param name="log"></param>
         /// <param name="patientDal"></param>
         /// <param name="userDal"></param>
-        public PatientAdministration(ILogger<PatientAdministration> log, IPatientDal patientDal, IUserDal userDal)
+        public PatientAdministrationService(ILogger<PatientAdministrationService> log, IPatientDal patientDal, IUserDal userDal)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _patientDal = patientDal ?? throw new ArgumentNullException(nameof(patientDal));
@@ -39,7 +39,7 @@
         /// Return a collection of summaries for all patients
         /// </summary>
         /// <returns></returns>
-        public async Task<List<PatientDetailsDto>> LoadUserAccounts()
+        public async Task<List<PatientDetailsDto>> LoadPatientsDetails()
         {
             var patients = await _patientDal.GetAllAsync();
 
