@@ -33,9 +33,9 @@
         public int MedicalPractitionerId { get; set; }
 
         /// <summary>
-        /// The MedicalPractitioner User navigation property
+        /// The MedicalPractitioner Employee navigation property
         /// </summary>
         [Required]
-        public User MedicalPractitioner { get; set; }
+        public Employee MedicalPractitioner { get; set; }
     }
 }
