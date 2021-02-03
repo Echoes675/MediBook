@@ -12,13 +12,13 @@
     </ol>
 </nav>
 <div class="container-fluid">
-
     <h3>@ViewData["Title"]</h3>
     <div class="container-fluid">
         <ul class="nav md-pills nav-justified table-blue-border">
-            <li class="nav-item"><a class="nav-link" asp-action="BookAppointment" asp-controller="AppointmentBook" asp-route="@Model.Id"><i class="far fa-calendar-plus fa-lg" title="Book Appointment"></i>Book Appointment</a></li>
-            <li class="nav-item"><a class="nav-link" asp-action="PatientAppointments" asp-controller="AppointmentBook" asp-route="@Model.Id"><i class="far fa-calendar fa-lg" title="Appointments"></i>View Patient Appointments</a></li>
-            <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="PatientRecord" asp-route="@Model.Id"><i class="fas fa-file-medical fa-lg" title="Patient Record"></i></a>Access Patient Record</li>
+            <li class="nav-item"><a class="nav-link" asp-action="Edit" asp-controller="Patient" asp-route-id="@Model.Id"><i class="fas fa-user-edit fa-lg rgba-blue-light" title="EditDetails"></i></a>Edit Patient Details</li>
+            <li class="nav-item"><a class="nav-link" asp-action="BookAppointment" asp-controller="AppointmentBook" asp-route-id="@Model.Id"><i class="far fa-calendar-plus fa-lg rgba-green-light" title="Book Appointment"></i></a>Book Appointment</li>
+            <li class="nav-item"><a class="nav-link" asp-action="PatientAppointments" asp-controller="AppointmentBook" asp-route-id="@Model.Id"><i class="far fa-calendar fa-lg rgba-blue-light" title="Appointments"></i></a>View Patient Appointments</li>
+            <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="PatientRecord" asp-route-id="@Model.Id"><i class="fas fa-file-medical fa-lg rgba-red-light" title="Patient Record"></i></a>Access Patient Record</li>
         </ul>
     </div>
 
@@ -35,7 +35,7 @@
             </div>
             <div class="row">
                 <div class="col-4"><strong>Name: </strong></div>
-                <div class="col-8">@(Model.Lastname + ", " + Model.Firstname)%</div>
+                <div class="col-8">@(Model.Lastname + ", " + Model.Firstname)</div>
             </div>
             <div class="row">
                 <div class="col-4"><strong>Patient Id: </strong></div>
@@ -55,7 +55,7 @@
             </div>
             <div class="row">
                 <div class="col-4"></div>
-                <div class="col-8">$@(Model.Address2) Million</div>
+                <div class="col-8">@(Model.Address2)</div>
             </div>
             <div class="row">
                 <div class="col-4"><strong>City: </strong></div>
@@ -85,12 +85,20 @@
         <div class="col-5"><strong>Medical Practitioner Name: </strong></div>
         <div class="col-5">Job Description</div>
     </div>
-    @foreach (var medicalPractitioner in Model.MedicalPractitioners)
+    @if (Model?.MedicalPractitioners != null)
     {
-        <div class="row">
-            <div class="col-5">@(medicalPractitioner.LastName + ", " + medicalPractitioner.FirstName)%</div>
-            <div class="col-5">@medicalPractitioner.JobDescription</div>
-        </div>
+
+        foreach (var medicalPractitioner in Model?.MedicalPractitioners)
+        {
+            <div class="row">
+                <div class="col-5">@(medicalPractitioner.LastName + ", " + medicalPractitioner.FirstName)</div>
+                <div class="col-5">@medicalPractitioner.JobDescription</div>
+            </div>
+        }
+        if (Model?.MedicalPractitioners.Count < 1)
+        {
+            <p>Patient not yet registered with any Medical Practitioners</p>
+        }
     }
 </div>
 

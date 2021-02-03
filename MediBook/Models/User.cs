@@ -31,7 +31,6 @@
             }
 
             Id = dto.UserId;
-            AccountGuid = dto.AccountGuid;
             Username = dto.Username;
             JobDescription.Description = dto.JobDescription;
             JobDescription.Role = dto.Role;
@@ -46,11 +45,6 @@
         /// The entity's Id in the Users table
         /// </summary>
         public int Id { get; set; }
-
-        /// <summary>
-        /// The Account Guid
-        /// </summary>
-        public string AccountGuid { get; set; } = new Guid().ToString();
 
         /// <summary>
         /// The Username

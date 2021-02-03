@@ -149,15 +149,16 @@
         }
         private async Task<List<Patient>> SearchPatientStringBasedProperty(string searchTerm)
         {
+            var searchPattern = "%" + searchTerm + "%";
             return await Db.Set<Patient>().Where(p =>
-                EF.Functions.Like(p.Address1, searchTerm) ||
-                EF.Functions.Like(p.Address2, searchTerm) ||
-                EF.Functions.Like(p.Email, searchTerm) ||
-                EF.Functions.Like(p.Firstname, searchTerm) ||
-                EF.Functions.Like(p.Lastname, searchTerm) ||
-                EF.Functions.Like(p.MobilePhone, searchTerm) ||
-                EF.Functions.Like(p.PhoneNumber, searchTerm) ||
-                EF.Functions.Like(p.PostCode, searchTerm)).ToListAsync();
+                EF.Functions.Like(p.Address1, searchPattern) ||
+                EF.Functions.Like(p.Address2, searchPattern) ||
+                EF.Functions.Like(p.Email, searchPattern) ||
+                EF.Functions.Like(p.Firstname, searchPattern) ||
+                EF.Functions.Like(p.Lastname, searchPattern) ||
+                EF.Functions.Like(p.MobilePhone, searchPattern) ||
+                EF.Functions.Like(p.PhoneNumber, searchPattern) ||
+                EF.Functions.Like(p.PostCode, searchPattern)).ToListAsync();
         }
     }
 }

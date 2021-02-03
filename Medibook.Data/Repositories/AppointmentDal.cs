@@ -7,7 +7,7 @@
     /// <summary>
     /// The AppointmentDal
     /// </summary>
-    public class AppointmentDal : RepositoryBase<Appointment>
+    public class AppointmentDal : RepositoryBase<Appointment>, IAppointmentDal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AppointmentDal"/> class

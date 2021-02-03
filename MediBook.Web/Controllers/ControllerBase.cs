@@ -3,8 +3,6 @@
     using MediBook.Web.Enums;
     using Microsoft.AspNetCore.Mvc;
 
-    // Enumeration of the different alert types
-
     /// <summary>
     /// ControllerBase provides alert functionality to the derived Controller classes
     /// </summary>

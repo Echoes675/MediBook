@@ -37,11 +37,11 @@
         /// The Employee navigation property
         /// </summary>
         [Required]
-        public Employee MedicalPractitioner { get; set; }
+        public User MedicalPractitioner { get; set; }
 
         /// <summary>
-        /// The associated appointments
+        /// The associated appointment slots
         /// </summary>
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<AppointmentSlot> AppointmentSlots { get; set; }
     }
 }

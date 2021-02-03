@@ -1,6 +1,7 @@
 ﻿namespace MediBook.Web.Extensions
 {
     using MediBook.Data.Repositories;
+    using MediBook.Services.AppointmentBook;
     using MediBook.Services.Cryptography;
     using MediBook.Services.PatientAdministration;
     using MediBook.Services.PatientRecord;
@@ -24,13 +25,13 @@
         public static void AddDataAccessors(this IServiceCollection services)
         {
             services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
-            //services.AddScoped<IAppointmentDal, AppointmentDal>();
-            //services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
+            services.AddScoped<IAppointmentDal, AppointmentDal>();
+            services.AddScoped<IAppointmentSlotDal, AppointmentSlotDal>();
+            services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
             services.AddScoped<IPatientDal, PatientDal>();
             services.AddScoped<IPatientNoteDal, PatientNoteDal>();
             services.AddScoped<IUserDal, UserDal>();
             services.AddScoped<IEmployeeDal, EmployeeDal>();
-            //services.AddScoped<IPatientsMedicalPractitionerDal, PatientsMedicalPractitionerDal>();
         }
 
         /// <summary>
@@ -47,7 +48,7 @@
             services.AddScoped<IPatientNoteProcessor, PatientNoteProcessor>();
             services.AddScoped<IPatientRecordProcessorFactory, PatientRecordProcessorFactory>();
             services.AddScoped<IPatientRecordService, PatientRecordService>();
-
+            //services.AddScoped<IAppointmentBookService, AppointmentBookService>();
         }
     }
 }

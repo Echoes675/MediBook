@@ -5,11 +5,12 @@
     /// </summary>
     public enum AppointmentState
     {
-        PendingPatientArrival = 0,
-        PatientArrived = 1,
-        PatientBeingSeen = 2,
-        Completed = 3,
-        DidNotArrive = 4,
-        Cancelled = 5
+        AvailableToBook = 0,
+        PendingPatientArrival = 1,
+        PatientArrived = 2,
+        PatientBeingSeen = 3,
+        Completed = 4,
+        DidNotArrive = 5,
+        Cancelled = 6
     }
 }

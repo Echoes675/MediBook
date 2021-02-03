@@ -12,80 +12,89 @@
     </ol>
 </nav>
 
-<div class="card table-blue-border w-50" style=" margin:auto;">
+<div class="card table-blue-border w-100" style=" margin:auto;">
     <h3 class="card-header thead-blue">@ViewData["Title"]</h3>
     <div class="card-body w-100" style="margin: 0 auto">
-        <div class="col-12">
-            <form asp-action="Register" class="md-form">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Status" value="@PatientStatus.Active" class="form-control" />
-                <div class="form-group">
-                    <select asp-for="Title" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetTitlesSelectList()">
-                        <option value="" selected>Select Title</option>
-                    </select>
-                    <span asp-validation-for="Title" class="text-danger"></span>
+        <form asp-action="Register" class="md-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Status" value="@PatientStatus.Active" class="form-control" />
+            <div class="row">
+                <div class="col-5">
+                    <div class="form-group">
+                        <select asp-for="Title" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetTitlesSelectList()">
+                            <option value="" selected>Select Title</option>
+                        </select>
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="Firstname" class="col-form-label">Firstname</label>
+                        <input asp-for="Firstname" class="form-control" id="Firstname" />
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="Lastname" class="col-form-label">Lastname</label>
+                        <input asp-for="Lastname" class="form-control" id="Lastname" />
+                        <span asp-validation-for="Lastname" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label class="col-form-label" for="DateOfBirth">Date of Birth</label>
+                        <input asp-for="DateOfBirth" class="form-control" id="DateOfBirth" name="DateOfBirth" placeholder="DD/MM/YYY" type="date" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="HealthAndCare" class="col-form-label">HealthAndCare</label>
+                        <input asp-for="HealthAndCare" class="form-control" id="HealthAndCare" />
+                        <span asp-validation-for="HealthAndCare" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="PhoneNumber" class="col-form-label">PhoneNumber</label>
+                        <input asp-for="PhoneNumber" class="form-control" id="PhoneNumber" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="MobilePhone" class="col-form-label">MobilePhone</label>
+                        <input asp-for="MobilePhone" class="form-control" id="MobilePhone" />
+                        <span asp-validation-for="MobilePhone" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="Email" class="col-form-label">Email</label>
+                        <input asp-for="Email" class="form-control" id="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="md-form">
-                    <label for="Firstname" class="col-form-label">Firstname</label>
-                    <input asp-for="Firstname" class="form-control" id="Firstname" />
-                    <span asp-validation-for="Firstname" class="text-danger"></span>
+                <div class="col-5">
+                    <div class="md-form">
+                        <label for="Address1" class="col-form-label">Address Line 1</label>
+                        <input asp-for="Address1" class="form-control" id="Address1" />
+                        <span asp-validation-for="Address1" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="Address2" class="col-form-label">Address Line 2</label>
+                        <input asp-for="Address2" class="form-control" id="Address2" />
+                        <span asp-validation-for="Address2" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="City" class="col-form-label">City</label>
+                        <input asp-for="City" class="form-control" id="City" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="County" class="col-form-label">County</label>
+                        <input asp-for="County" class="form-control" id="County" />
+                        <span asp-validation-for="County" class="text-danger"></span>
+                    </div>
+                    <div class="md-form">
+                        <label for="PostCode" class="col-form-label">PostCode</label>
+                        <input asp-for="PostCode" class="form-control" id="PostCode" />
+                        <span asp-validation-for="PostCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Register" class="btn table-blue-border" />
+                        <a class="btn btn-grey-cancel" asp-controller="UserAdmin" asp-action="Index">Cancel</a>
+                    </div>
                 </div>
-                <div class="md-form">
-                    <label for="Lastname" class="col-form-label">Lastname</label>
-                    <input asp-for="Lastname" class="form-control" id="Lastname" />
-                    <span asp-validation-for="Lastname" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="HealthAndCare" class="col-form-label">HealthAndCare</label>
-                    <input asp-for="HealthAndCare" class="form-control" id="HealthAndCare" />
-                    <span asp-validation-for="HealthAndCare" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="Address1" class="col-form-label">Address Line 1</label>
-                    <input asp-for="Address1" class="form-control" id="Address1" />
-                    <span asp-validation-for="Address1" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="Address2" class="col-form-label">Address Line 2</label>
-                    <input asp-for="Address2" class="form-control" id="Address2" />
-                    <span asp-validation-for="Address2" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="City" class="col-form-label">City</label>
-                    <input asp-for="City" class="form-control" id="City" />
-                    <span asp-validation-for="City" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="County" class="col-form-label">County</label>
-                    <input asp-for="County" class="form-control" id="County" />
-                    <span asp-validation-for="County" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="PostCode" class="col-form-label">PostCode</label>
-                    <input asp-for="PostCode" class="form-control" id="PostCode" />
-                    <span asp-validation-for="PostCode" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="PhoneNumber" class="col-form-label">PhoneNumber</label>
-                    <input asp-for="PhoneNumber" class="form-control" id="PhoneNumber" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="MobilePhone" class="col-form-label">MobilePhone</label>
-                    <input asp-for="MobilePhone" class="form-control" id="MobilePhone" />
-                    <span asp-validation-for="MobilePhone" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="Email" class="col-form-label">Email</label>
-                    <input asp-for="Email" class="form-control" id="Email" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-4">
-                    <input type="submit" value="Register" class="btn btn-green-add" />
-                    <a class="btn btn-grey-cancel" asp-controller="UserAdmin" asp-action="Index">Cancel</a>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 @section Scripts {
@@ -96,4 +105,10 @@
             $('.mdb-select').materialSelect();
         });
     </script>
+}
+@section Head
+{
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 }

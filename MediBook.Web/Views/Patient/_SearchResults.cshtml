@@ -26,7 +26,7 @@
                             <i class="fas fa-file-medical fa-lg" title="Patient Details"></i>
                         </a>
                         <a class="btn-sm" asp-action="Edit" asp-route-id="@patient.Id">
-                            <i class="fas fa-user-edit fa-lg" title="Edit User"></i>
+                            <i class="fas fa-user-edit fa-lg" title="Edit Patient"></i>
                         </a>
                     </td>
                 </tr>
@@ -36,6 +36,6 @@
     }
     else
     {
-        <p>No patients found matching the original search term:"@Model.SearchCriteria.SearchTerm"</p>
+        <p>No patients found matching the original search term:"@Model?.SearchCriteria?.SearchTerm"</p>
     }
 </div>

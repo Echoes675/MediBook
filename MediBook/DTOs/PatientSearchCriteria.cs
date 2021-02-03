@@ -1,5 +1,7 @@
 ﻿namespace MediBook.Core.DTOs
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// The patient search criteria
     /// </summary>
@@ -8,6 +10,7 @@
         /// <summary>
         /// Search criteria
         /// </summary>
+        [Required]
         public string SearchTerm { get; set; }
 
         /// <summary>

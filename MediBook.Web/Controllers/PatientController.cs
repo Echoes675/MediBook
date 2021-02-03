@@ -46,7 +46,7 @@
 
         [HttpGet("Search")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> Search()
+        public IActionResult Search()
         {
             return View(new PatientSearchViewModel());
         }
@@ -77,13 +77,6 @@
             return View(searchViewModel);
         }
 
-        //[HttpGet("SearchResults")]
-        ////[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        //public IActionResult SearchResults([FromBody] SearchResultsViewModel searchResults)
-        //{
-        //    return View(searchResults);
-        //}
-
         [HttpGet("Details")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public async Task<IActionResult> Details(int id)
@@ -99,12 +92,11 @@
             if (userId < 1)
             {
                 _log.LogError($"Authentication failure. Could not extract User's Id from Claims Principal.");
-                Alert("Failed to load logged in User authentication", AlertType.danger);
+                Alert("Failed to load logged in User for authorization", AlertType.danger);
                 return RedirectToAction(nameof(Index), "Patient");
             }
 
             var patientDetails = await _patientSvc.GetPatientDetailsAsync(id, userId);
-
             if (patientDetails != null)
             {
                 return View(patientDetails);
@@ -158,15 +150,15 @@
             {
                 _log.LogWarning($"Invalid Id passed to Patient/Edit view. \"id\"{id}");
                 Alert("Failed to load Patient Details due to invalid Id", AlertType.danger);
-                return RedirectToAction(nameof(Details), "Patient");
+                return RedirectToAction(nameof(Index), "Patient");
             }
 
             var userId = GetLoggedInUserId();
             if (userId < 1)
             {
                 _log.LogError($"Authentication failure. Could not extract User's Id from Claims Principal.");
-                Alert("Failed to load logged in User authentication", AlertType.danger);
-                return RedirectToAction(nameof(Details), "Patient");
+                Alert("Failed to identify current User for authorization", AlertType.danger);
+                return RedirectToAction(nameof(Index), "Patient");
             }
 
             var patientDetails = await _patientSvc.GetPatientDetailsAsync(id, userId);

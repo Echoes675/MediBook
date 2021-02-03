@@ -1,13 +1,10 @@
-﻿namespace MediBook.Core.DTOs
+﻿namespace MediBook.Web.Models
 {
     using System;
     using System.ComponentModel.DataAnnotations;
     using MediBook.Core.Enums;
 
-    /// <summary>
-    /// The Patient details for registration
-    /// </summary>
-    public class PatientForRegistration
+    public class PatientRegistrationViewModel
     {
         /// <summary>
         /// The Patient's Id
@@ -39,7 +36,7 @@
         /// </summary>
         [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
 
         /// <summary>
         /// The patient's Health and Care number
@@ -49,7 +46,7 @@
         /// <summary>
         /// The first line of the patient's address
         /// </summary>
-        [Required (ErrorMessage = "First Line of Address is required")]
+        [Required(ErrorMessage = "First Line of Address is required")]
         [MaxLength(50, ErrorMessage = "First line of Address must be less than 50 characters")]
         public string Address1 { get; set; }
 

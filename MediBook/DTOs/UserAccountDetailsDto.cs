@@ -21,7 +21,6 @@
         public UserAccountDetailsDto(User user)
         {
             Id = user.Id;
-            AccountGuid = user.AccountGuid;
             Username = user.Username;
             Firstname = user.EmployeeDetails.Firstname;
             Lastname = user.EmployeeDetails.Lastname;
@@ -33,11 +32,6 @@
         /// The entity's Id in the Users table
         /// </summary>
         public int Id { get; set; }
-
-        /// <summary>
-        /// The Account Guid
-        /// </summary>
-        public string AccountGuid { get; set; }
 
         /// <summary>
         /// The Username
