@@ -53,7 +53,7 @@
 
         [HttpPost("Search")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> Search([FromForm] PatientSearchCriteria searchCriteria)
+        public async Task<IActionResult> Search([FromForm]PatientSearchCriteria searchCriteria)
         {
             if (searchCriteria == null)
             {
@@ -120,7 +120,7 @@
 
         [HttpPost("Register")]
         //[Authorize(Roles = "Reception, PracticeAdmin")]
-        public async Task<IActionResult> Register(PatientForRegistration newPatientDetails)
+        public async Task<IActionResult> Register([FromForm] PatientForRegistration newPatientDetails)
         {
             if (newPatientDetails == null)
             {
@@ -179,7 +179,7 @@
 
         [HttpPost("Edit")]
         //[Authorize(Roles = "Reception, PracticeAdmin")]
-        public async Task<IActionResult> Edit(PatientDetailsDto updatedPatientDetails)
+        public async Task<IActionResult> Edit([FromForm] PatientDetailsDto updatedPatientDetails)
         {
             if (updatedPatientDetails == null)
             {
@@ -196,7 +196,7 @@
                     "Patient details updated successfully. " +
                     $"Name={updatedPatientDetails.Firstname + " " + updatedPatientDetails.Lastname}. PatientId={updatedPatientDetails.Id}",
                     AlertType.success);
-                return View("Details", result);
+                return View("Details", updatedPatientDetails);
             }
 
             Alert(
