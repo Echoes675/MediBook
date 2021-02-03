@@ -36,7 +36,7 @@
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <select asp-for="Title" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetTitlesSelectList()">
+                    <select asp-for="Title" class="browser-default custom-select" asp-items="@SelectListHelpers.GetTitlesSelectList()">
                         <option value="" selected>Select Title</option>
                     </select>
                     <span asp-validation-for="Title" class="text-danger"></span>
@@ -57,13 +57,13 @@
                     <span asp-validation-for="JobDescription" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <select asp-for="Role" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetRolesSelectList()">
+                    <select asp-for="Role" class="browser-default custom-select" asp-items="@SelectListHelpers.GetRolesSelectList()">
                         <option value="" selected>Select Role</option>
                     </select>
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <select asp-for="State" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetAccountStatesSelectList()">
+                    <select asp-for="State" class="browser-default custom-select" asp-items="@SelectListHelpers.GetAccountStatesSelectList()">
                         <option value="" selected>Select Account State</option>
                     </select>
                     <span asp-validation-for="State" class="text-danger"></span>

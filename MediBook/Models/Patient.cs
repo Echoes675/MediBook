@@ -1,7 +1,6 @@
 ﻿namespace MediBook.Core.Models
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using MediBook.Core.Enums;
@@ -92,6 +91,11 @@
         /// </summary>
         [MaxLength(50)]
         public string Email { get; set; }
+
+        /// <summary>
+        /// The patient's status
+        /// </summary>
+        public PatientStatus Status { get; set; }
 
         /// <summary>
         /// The many to many relationship between Patients and MedicalPractitioners

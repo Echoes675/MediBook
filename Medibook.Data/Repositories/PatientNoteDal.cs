@@ -7,7 +7,7 @@
     /// <summary>
     /// PatientNoteDal
     /// </summary>
-    public class PatientNoteDal : RepositoryBase<PatientNote>
+    public class PatientNoteDal : RepositoryBase<PatientNote>, IPatientNoteDal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PatientNoteDal"/> class

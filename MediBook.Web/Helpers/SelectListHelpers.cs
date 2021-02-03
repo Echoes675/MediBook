@@ -59,5 +59,22 @@
                     Value = ((int)v).ToString(CultureInfo.InvariantCulture)
                 }).ToList();
         }
+
+        /// <summary>
+        /// Gets the list of SelectListItems based on the PatientStatus enum for the drop down
+        /// </summary>
+        /// <param name="selectedState"></param>
+        /// <returns></returns>
+        public static List<SelectListItem> GetPatientStatesSelectList(PatientStatus selectedState = PatientStatus.Unknown)
+        {
+            return Enum.GetValues(typeof(PatientStatus))
+                .Cast<PatientStatus>()
+                .Select(v => new SelectListItem
+                {
+                    Selected = (v == selectedState),
+                    Text = v.ToString(),
+                    Value = ((int)v).ToString(CultureInfo.InvariantCulture)
+                }).ToList();
+        }
     }
 }

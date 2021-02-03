@@ -101,17 +101,7 @@
             var factory = Substitute.For<ICryptographyProcessorFactory>();
             var svc = new CryptographyService(factory);
 
-            var e = Assert.Throws<ArgumentNullException>(() => svc.Decrypt((string)null));
-            Assert.That(e.Message, Does.Contain("data"));
-        }
-
-        [Test]
-        public void Decrypt_DataEmpty_ThrowsArgumentNullException()
-        {
-            var factory = Substitute.For<ICryptographyProcessorFactory>();
-            var svc = new CryptographyService(factory);
-
-            var e = Assert.Throws<ArgumentNullException>(() => svc.Decrypt(string.Empty));
+            var e = Assert.Throws<ArgumentNullException>(() => svc.Decrypt((byte[])null));
             Assert.That(e.Message, Does.Contain("data"));
         }
 
@@ -121,7 +111,7 @@
             var factory = Substitute.For<ICryptographyProcessorFactory>();
             var svc = new CryptographyService(factory);
 
-            var e = Assert.Throws<ArgumentNullException>(() => svc.Decrypt((List<string>)null));
+            var e = Assert.Throws<ArgumentNullException>(() => svc.Decrypt((List<byte[]>)null));
             Assert.That(e.Message, Does.Contain("data"));
         }
 
@@ -133,10 +123,10 @@
             factory.GetEncryptionProcessor().Returns(encryptionProcessor);
 
             var svc = new CryptographyService(factory);
+            var testArray = new byte[8];
+            svc.Decrypt(testArray);
 
-            svc.Decrypt("Test Data");
-
-            encryptionProcessor.Received().Decrypt("Test Data");
+            encryptionProcessor.Received().Decrypt(testArray);
         }
 
         [Test]
@@ -148,16 +138,16 @@
 
             var svc = new CryptographyService(factory);
 
-            var strings = new List<string>()
+            var testList = new List<byte[]>()
             {
-                "one",
-                "two",
-                "three"
+                new byte[8],
+                new byte[8],
+                new byte[8],
             };
 
-            svc.Decrypt(strings);
+            svc.Decrypt(testList);
 
-            encryptionProcessor.Received(3).Decrypt(Arg.Any<string>());
+            encryptionProcessor.Received(3).Decrypt(Arg.Any<byte[]>());
         }
 
         [Test]

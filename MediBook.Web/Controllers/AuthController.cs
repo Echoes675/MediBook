@@ -15,6 +15,9 @@
     /// <summary>
     /// The Authentication Controller
     /// </summary>
+    //[Authorize]
+    [Route("[controller]")]
+    [ApiController]
     public class AuthController : ControllerBase
     {
         /// <summary>

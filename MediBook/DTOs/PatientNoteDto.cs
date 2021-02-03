@@ -6,7 +6,7 @@
     /// The Patient note
     /// </summary>
     [Serializable]
-    public class PatientNoteDto
+    public class PatientNoteDto : IPatientRecordEntry
     {
         /// <summary>
         /// The PatientNote Id

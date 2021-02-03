@@ -24,6 +24,11 @@
         public DbSet<Appointment> Appointments { get; set; }
 
         /// <summary>
+        /// The DbSet of AppointmentSlots table in the Database
+        /// </summary>
+        public DbSet<AppointmentSlot> AppointmentSlots { get; set; }
+
+        /// <summary>
         /// The DbSet of AppointmentSessions table in the Database
         /// </summary>
         public DbSet<AppointmentSession> AppointmentSessions { get; set; }
@@ -107,16 +112,6 @@
                 .WithMany(p => p.Appointments)
                 .HasForeignKey(pt => pt.MedicalPractitionerId)
                 .OnDelete(DeleteBehavior.ClientCascade);
-
-            modelBuilder.Entity<Appointment>()
-                .HasOne(pt => pt.AppointmentSession)
-                .WithMany(p => p.Appointments)
-                .HasForeignKey(pt => pt.AppointmentSessionId);
-
-            modelBuilder.Entity<AppointmentSession>()
-                .HasOne(pt => pt.MedicalPractitioner)
-                .WithMany(p => p.AppointmentSessions)
-                .HasForeignKey(pt => pt.MedicalPractitionerId);
 
             modelBuilder.Entity<PatientsMedicalPractitioner>()
                 .HasOne(pt => pt.MedicalPractitioner)

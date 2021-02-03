@@ -12,28 +12,28 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        string Encrypt(string data);
+        byte[] Encrypt(string data);
 
         /// <summary>
         /// Encrypt multiple strings at a time
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        List<string> Encrypt(List<string> data);
+        List<byte[]> Encrypt(List<string> data);
 
         /// <summary>
         /// Decrypts a string
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        string Decrypt(string data);
+        string Decrypt(byte[] data);
 
         /// <summary>
         /// Decrypt multiple strings at a time
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        List<string> Decrypt(List<string> data);
+        List<string> Decrypt(List<byte[]> data);
 
         /// <summary>
         /// Generates new hash and salt from plain text string

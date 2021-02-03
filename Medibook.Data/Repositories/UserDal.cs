@@ -63,6 +63,25 @@
         }
 
         /// <summary>
+        /// Returns a list Users from the supplied list of Ids
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<List<User>> GetEntitiesAsync(List<int> ids)
+        {
+            if (ids == null)
+            {
+                throw new ArgumentNullException(nameof(ids));
+            }
+
+            return await Db.Set<User>()
+                .Include(x => x.JobDescription)
+                .Include(x => x.EmployeeDetails)
+                .Where(x => ids.Contains(x.Id)).ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Returns all the entities in a particular DbSet
         /// </summary>
         /// <returns></returns>

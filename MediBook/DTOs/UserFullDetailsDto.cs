@@ -34,7 +34,6 @@
             }
 
             UserId = user.Id;
-            AccountGuid = user.AccountGuid;
             Username = user.Username;
             JobDescription = user.JobDescription.Description;
             Role = user.JobDescription.Role;
@@ -49,11 +48,6 @@
         /// The entity's Id in the Users table
         /// </summary>
         public int UserId { get; set; }
-
-        /// <summary>
-        /// The Account Guid
-        /// </summary>
-        public string AccountGuid { get; set; }
 
         /// <summary>
         /// The Username

@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Add Patient Note";
+}
+@model PatientNoteDto
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item text-white"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item text-white"><a asp-controller="PatientRecord" asp-action="Index" asp-route-id="@Model.PatientId">Patient Record</a></li>
+        <li class="breadcrumb-item text-white active" aria-current="page">@ViewData["Title"]</li>
+    </ol>
+</nav>
+
+<h3>@ViewData["Title"]</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <form asp-action="AddPatientNote">
+                <input type="hidden" asp-for="Id" class="form-control" />
+                <input type="hidden" asp-for="PatientId" class="form-control" />
+                <input type="hidden" asp-for="MedicalPractitionerFirstname" class="form-control" />
+                <input type="hidden" asp-for="MedicalPractitionerLastname" class="form-control" />
+                <input type="hidden" asp-for="MedicalPractitionerId" class="form-control" />
+                <input type="hidden" asp-for="MedicalPractitionerTitle" class="form-control" />
+                <input type="hidden" asp-for="Timestamp" class="form-control" />
+
+
+                <!-- Form group for comment with label, textarea field and span for validation-->
+                <div class="form-group">
+                    <label asp-for="Content" class="col-form-label"></label>
+                    <textarea rows="5" asp-for="Content" class="form-control"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                <!-- Add review and cancel buttons-->
+                <div class="form-group">
+                    <input type="submit" value="save" class="btn btn-green-add" />
+                    <a class="btn btn-grey-cancel" asp-action="Index" asp-route-id="Id">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

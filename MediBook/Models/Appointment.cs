@@ -19,22 +19,6 @@
         public int Id { get; set; }
 
         /// <summary>
-        /// The Appointment State
-        /// </summary>
-        [Required]
-        public AppointmentState State { get; set; }
-
-        /// <summary>
-        /// The day and time of the appointment
-        /// </summary>
-        public DateTime AppointmentDateTime { get; set; }
-
-        /// <summary>
-        /// The Appointment duration in minutes
-        /// </summary>
-        public int AppointmentDurationInMins { get; set; }
-
-        /// <summary>
         /// The Patient Id
         /// </summary>
         public int PatientId { get; set; }
@@ -60,12 +44,12 @@
         /// <summary>
         /// The Id of the AppointmentSession
         /// </summary>
-        public int AppointmentSessionId { get; set; }
+        public int AppointmentSlotId { get; set; }
 
         /// <summary>
-        /// The AppointmentSession navigation property
+        /// The AppointmentSlot navigation property
         /// </summary>
         [Required]
-        public AppointmentSession AppointmentSession { get; set; }
+        public AppointmentSession AppointmentSlot { get; set; }
     }
 }

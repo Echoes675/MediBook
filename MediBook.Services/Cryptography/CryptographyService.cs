@@ -39,7 +39,7 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Encrypt(string data)
+        public byte[] Encrypt(string data)
         {
             if (string.IsNullOrEmpty(data))
             {
@@ -54,7 +54,7 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<string> Encrypt(List<string> data)
+        public List<byte[]> Encrypt(List<string> data)
         {
             if (data == null)
             {
@@ -69,9 +69,9 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string Decrypt(string data)
+        public string Decrypt(byte[] data)
         {
-            if (string.IsNullOrEmpty(data))
+            if (data == null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
@@ -84,7 +84,7 @@
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public List<string> Decrypt(List<string> data)
+        public List<string> Decrypt(List<byte[]> data)
         {
             if (data == null)
             {

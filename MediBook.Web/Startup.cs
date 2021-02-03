@@ -1,11 +1,7 @@
 namespace MediBook.Web
 {
-    using System;
     using AutoMapper;
     using MediBook.Data.DataAccess;
-    using MediBook.Data.Repositories;
-    using MediBook.Services.Cryptography;
-    using MediBook.Services.UserAuthentication;
     using MediBook.Web.Extensions;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
@@ -16,6 +12,7 @@ namespace MediBook.Web
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using System;
 
     public class Startup
     {
