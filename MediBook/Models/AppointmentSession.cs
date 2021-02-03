@@ -4,10 +4,12 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The Appointment Session
     /// </summary>
+    [Index(nameof(MedicalPractitionerId))]
     public class AppointmentSession : IDbEntity
     {
         /// <summary>

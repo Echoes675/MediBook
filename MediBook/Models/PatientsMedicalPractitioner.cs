@@ -28,7 +28,6 @@
         /// <summary>
         /// The Id of the associated Medical Practitioner Employee account
         /// </summary>
-        [ForeignKey("UserId")]
         public int MedicalPractitionerId { get; set; }
 
         /// <summary>

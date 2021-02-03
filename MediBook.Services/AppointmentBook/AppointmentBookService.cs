@@ -243,5 +243,45 @@
 
             return session;
         }
+
+        /// <summary>
+        /// Book a new appointment for a patient
+        /// </summary>
+        /// <returns></returns>
+        public async Task<AppointmentBookResults> BookAppointmentAsync(BookAppointmentData data)
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            throw new NotImplementedException();
+            // Get Appointment Slot
+
+            // Get Medical Practitioner
+
+            // Get 
+        }
+    }
+
+    /// <summary>
+    /// Data required to book a new appointment
+    /// </summary>
+    public class BookAppointmentData
+    {
+        /// <summary>
+        /// The patient Id
+        /// </summary>
+        public int PatientId { get; set; }
+
+        /// <summary>
+        /// The Id of the selected slot
+        /// </summary>
+        public int SlotId { get; set; }
+
+        /// <summary>
+        /// The Medical Practitioner Id
+        /// </summary>
+        public int MedicalPractitionerId { get; set; }
     }
 }

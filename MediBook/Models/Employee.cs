@@ -33,11 +33,6 @@
         public string Lastname { get; set; }
 
         /// <summary>
-        /// The many to many relationship between Patients and MedicalPractitioners
-        /// </summary>
-        public ICollection<PatientsMedicalPractitioner> PatientsMedicalPractitioners { get; set; } = new List<PatientsMedicalPractitioner>();
-
-        /// <summary>
         /// Navigation property for patient notes this user has made
         /// </summary>
         public ICollection<PatientNote> PatientNotes { get; set; } = new List<PatientNote>();
@@ -45,11 +40,11 @@
         /// <summary>
         /// Navigation property for the associated AppointmentSessions
         /// </summary>
-        public ICollection<AppointmentSession> AppointmentSessions { get; set; } = new List<AppointmentSession>();
+        public ICollection<AppointmentSession> AppointmentSessions { get; set; }
 
         /// <summary>
         /// Navigation property for the associated Appointments
         /// </summary>
-        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

@@ -1,10 +1,8 @@
 ﻿namespace MediBook.Core.Models
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using MediBook.Core.Enums;
-    using IndexAttribute = Microsoft.EntityFrameworkCore.IndexAttribute;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The booked Appointment
@@ -30,26 +28,14 @@
         public Patient Patient { get; set; }
 
         /// <summary>
-        /// The Id of the associated Medical Practitioner Employee account
+        /// The Id of the associated Medical Practitioner MedicalPractitioner account
         /// </summary>
-        [ForeignKey("UserId")]
         public int MedicalPractitionerId { get; set; }
 
         /// <summary>
-        /// The Employee navigation property
+        /// The MedicalPractitioner User navigation property
         /// </summary>
         [Required]
-        public Employee MedicalPractitioner { get; set; }
-
-        /// <summary>
-        /// The Id of the AppointmentSession
-        /// </summary>
-        public int AppointmentSlotId { get; set; }
-
-        /// <summary>
-        /// The AppointmentSlot navigation property
-        /// </summary>
-        [Required]
-        public AppointmentSession AppointmentSlot { get; set; }
+        public User MedicalPractitioner { get; set; }
     }
 }
