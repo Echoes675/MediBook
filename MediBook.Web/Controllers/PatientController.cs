@@ -48,18 +48,20 @@
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public async Task<IActionResult> Search()
         {
-            return View(new PatientSearchCriteria());
+            return View(new PatientSearchViewModel());
         }
 
         [HttpPost("Search")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> Search([FromForm]PatientSearchCriteria searchCriteria)
+        public async Task<IActionResult> Search([FromForm] PatientSearchViewModel searchViewModel)
         {
-            if (searchCriteria == null)
+            if (searchViewModel == null)
             {
-                throw new ArgumentNullException(nameof(searchCriteria));
+                throw new ArgumentNullException(nameof(searchViewModel));
             }
 
+            var searchCriteria = searchViewModel.SearchCriteria ?? throw new ArgumentNullException(nameof(searchViewModel.SearchCriteria));
+            
             var searchResults = await _patientSvc.PerformPatientSearchAsync(searchCriteria);
 
             if (searchResults == null)
@@ -70,15 +72,17 @@
                 return RedirectToAction(nameof(Index), "Patient");
             }
 
-            var searchViewModel = new SearchResultsViewModel()
-            {
-                OriginalSearchTerm = searchCriteria.SearchTerm,
-                IncludeLeftAndDeceased = searchCriteria.IncludeLeftDeceasedAndUnknown,
-                Patients = searchResults.Patients.OrderByDescending(n => n.Lastname).ToList()
-            };
+            searchViewModel.SearchResults = searchResults;
 
             return View(searchViewModel);
         }
+
+        //[HttpGet("SearchResults")]
+        ////[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
+        //public IActionResult SearchResults([FromBody] SearchResultsViewModel searchResults)
+        //{
+        //    return View(searchResults);
+        //}
 
         [HttpGet("Details")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]

@@ -2,7 +2,7 @@
     ViewData["Title"] = "Patient Search";
 }
 
-@model PatientSearchCriteria
+@model PatientSearchViewModel
 <!--Breadcrumb navigation-->
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -12,25 +12,41 @@
     </ol>
 </nav>
 
-<div class="card table-blue-border w-50" style=" margin:auto;">
+<div class="card table-blue-border w-100" style=" margin:auto;">
     <h3 class="card-header thead-blue">@ViewData["Title"]</h3>
-    <div class="card-body w-100" style="margin: 0 auto">
+    <div class="card-body w-75" style="margin: 0 auto">
         <div class="col-12">
             <form asp-action="Search" class="md-form">
-                <div class="md-form">
-                    <label for="SearchTerm" class="col-form-label">Search</label>
-                    <input asp-for="SearchTerm" type="text" class="form-control" id="SearchTerm" />
+                <div class="row">
+                    <div class="col-6">
+                        <div class="md-form">
+                            <label for="SearchTerm" class="col-form-label">Search</label>
+                            <input asp-for="@Model.SearchCriteria.SearchTerm" type="text" class="form-control" id="SearchTerm" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group mt-4">
+                            <button type="submit" value="search" class="btn table-blue-border">
+                                <i class="fas fa-search fa-lg"></i> Search
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-check d-flex justify-content-center mb-4">
-                    <input asp-for="IncludeLeftDeceasedAndUnknown"class="form-check-input" type="checkbox" id="IncludeLeftDeceasedAndUnknown"unchecked/>
-                    <label class="form-check-label" for="IncludeLeftDeceasedAndUnknown">
-                        Include patients who have left or are deceased
-                    </label>
-                </div>
-                <div class="form-group mt-4">
-                    <input type="submit" value="search" class="btn btn-green-add" />
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-check d-flex justify-content-center mb-4">
+                            <input asp-for="@Model.SearchCriteria.IncludeLeftDeceasedAndUnknown" class="form-check-input" type="checkbox" id="IncludeLeftDeceasedAndUnknown" unchecked />
+                            <label class="form-check-label" for="IncludeLeftDeceasedAndUnknown">
+                                Include patients who have left or are deceased
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
+    @if (@Model?.SearchResults?.Patients != null)
+    {
+        <partial name="_SearchResults" />
+    }
 </div>

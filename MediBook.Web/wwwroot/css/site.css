@@ -377,3 +377,7 @@ input:valid {
 .card-deck {
     width: 100% !important;
 }
+
+.fa-input {
+    font-family: FontAwesome,"Helvetica Neue", Helvetica, Arial, sans-serif;
+}
