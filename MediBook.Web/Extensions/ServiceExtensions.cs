@@ -2,6 +2,7 @@
 {
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
+    using MediBook.Services.PatientAdministration;
     using MediBook.Services.PatientRecord;
     using MediBook.Services.PatientRecord.Processors;
     using MediBook.Services.UserAdministration;
@@ -42,6 +43,7 @@
             services.AddScoped<ICryptographyService, CryptographyService>();
             services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             services.AddScoped<IUserAdministrationService, UserAdministrationService>();
+            services.AddScoped<IPatientAdministrationService, PatientAdministrationService>();
             services.AddScoped<IPatientNoteProcessor, PatientNoteProcessor>();
             services.AddScoped<IPatientRecordProcessorFactory, PatientRecordProcessorFactory>();
             services.AddScoped<IPatientRecordService, PatientRecordService>();

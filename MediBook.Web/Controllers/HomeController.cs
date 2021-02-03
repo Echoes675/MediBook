@@ -4,8 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
     using Microsoft.Extensions.Logging;
-
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
         private readonly ILogger _log;
 
@@ -21,7 +20,6 @@
 
         public IActionResult Privacy()
         {
-            _log.LogInformation("This is an info log");
             return View();
         }
 

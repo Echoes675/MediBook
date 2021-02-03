@@ -1,0 +1,40 @@
+﻿<div class="container container-fluid">
+    <div class="thead-dark"><h4>Patient Notes</h4></div>
+    <div class="row mb-4">
+        <div class="col">
+            <a class="btn table-blue-border" asp-controller="PatientRecord" asp-action="AddPatientNote">
+                <i class="fas fa-plus-circle fa-lg"></i> New Patient Note
+            </a>
+        </div>
+    </div>
+    @if (Model.PatientNotes > 0)
+    {
+        @foreach (PatientNoteDto patientNote in Model.PatientNotes)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <!--MedicalPractitioner name-->
+                        <div class="col col-4 text-primary align-content-center">
+                            <i class="far fa-user fa-lg"></i>
+                            @("\t" + patientNote.MedicalPractitionerTitle + "\t" + patientNote.MedicalPractitionerLastname + ", " + patientNote.MedicalPractitionerLastname)%
+                        </div>
+                        <!-- Patient Note timestamp-->
+                        <div class="col-4">@patientNote.Timestamp.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+                <!-- Patient Note content -->
+                <div class="card-body">
+                    <div class="col">@patientNote.Content</div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <!-- if no reviews created display appropriate message -->
+        <div class="row">
+            <div class="col">No Patient Notes yet.</div>
+        </div>
+    }
+</div>

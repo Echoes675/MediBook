@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Patient Details";
+}
+
+@model PatientDetailsDto
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Patient" asp-action="Index">Patient Administration</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">Patient Details</li>
+    </ol>
+</nav>
+<div class="container-fluid">
+
+    <h3>@ViewData["Title"]</h3>
+    <div class="container-fluid">
+        <ul class="nav md-pills nav-justified table-blue-border">
+            <li class="nav-item"><a class="nav-link" asp-action="BookAppointment" asp-controller="AppointmentBook" asp-route="@Model.Id"><i class="far fa-calendar-plus fa-lg" title="Book Appointment"></i>Book Appointment</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="PatientAppointments"><i class="far fa-calendar fa-lg" title="Appointments"></i>View Patient Appointments</a></li>
+            <li class="nav-item"><a class="nav-link" asp-action="PatientRecord"><i class="fas fa-file-medical fa-lg" title="Patient Record"></i></a>Access Patient Record</li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <!-- Column to display details about the movie: Title, rating, budget etc...-->
+        <div class="col-7">
+            <div class="row">
+                <div class="col-4"><strong>Patient Status: </strong></div>
+                <div class="col-8">@Model.PatientStatus</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>Title: </strong></div>
+                <div class="col-8">@Model.Title</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>Name: </strong></div>
+                <div class="col-8">@(Model.Lastname + ", " + Model.Firstname)%</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>Patient Id: </strong></div>
+                <div class="col-8">@Model.Id</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>Health and Care Number: </strong></div>
+                <div class="col-8">@Model.HealthAndCare</div>
+            </div>
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <div class="col-4"><strong>Address: </strong> </div>
+                <div class="col-8">@(Model.Address1)</div>
+            </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-8">$@(Model.Address2) Million</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>City: </strong></div>
+                <div class="col-8">@Model.City</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>County: </strong></div>
+                <div class="col-8">@Model.County</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>PostCode: </strong></div>
+                <div class="col-8">@Model.City</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>Phone: </strong></div>
+                <div class="col-8">@Model.PhoneNumber</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>Mobile: </strong></div>
+                <div class="col-8">@Model.MobilePhone</div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Patient's registered Medical Practitioners</h4>
+    <div class="row">
+        <div class="col-5"><strong>Medical Practitioner Name: </strong></div>
+        <div class="col-5">Job Description</div>
+    </div>
+    @foreach (var medicalPractitioner in Model.MedicalPractitioners)
+    {
+        <div class="row">
+            <div class="col-5">@(medicalPractitioner.LastName + ", " + medicalPractitioner.FirstName)%</div>
+            <div class="col-5">@medicalPractitioner.JobDescription</div>
+        </div>
+    }
+</div>
+

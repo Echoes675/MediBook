@@ -14,6 +14,9 @@
     /// <summary>
     /// The User Administration Controller
     /// </summary>
+    //[Authorize]
+    [Route("[controller]")]
+    [ApiController]
     public class UserAdminController : ControllerBase
     {
         /// <summary>
