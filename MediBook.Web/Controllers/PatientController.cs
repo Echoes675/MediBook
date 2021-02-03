@@ -10,8 +10,6 @@
     using MediBook.Services.PatientRecord;
     using MediBook.Web.Enums;
     using MediBook.Web.Models;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -25,16 +23,14 @@
     {
         private readonly ILogger<PatientController> _log;
         private readonly IPatientAdministrationService _patientSvc;
-        private readonly IPatientRecordService _patientRecordSvc;
 
         /// <summary>
         /// Initializes an instance of the <see cref="PatientController"/>
         /// </summary>
-        public PatientController(ILogger<PatientController> log, IPatientAdministrationService patientSvc, IPatientRecordService patientRecordSvc)
+        public PatientController(ILogger<PatientController> log, IPatientAdministrationService patientSvc)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _patientSvc = patientSvc ?? throw new ArgumentNullException(nameof(patientSvc));
-            _patientRecordSvc = patientRecordSvc ?? throw new ArgumentNullException(nameof(patientRecordSvc));
         }
 
         [HttpGet]
@@ -186,7 +182,7 @@
             // Send the newPatientDetails to the Patient service to be processed
             var result = await _patientSvc.UpdatePatientDetailsAsync(updatedPatientDetails);
 
-            if (result != ServiceResultStatusCode.Success)
+            if (result == ServiceResultStatusCode.Success)
             {
                 Alert(
                     "Patient details updated successfully. " +

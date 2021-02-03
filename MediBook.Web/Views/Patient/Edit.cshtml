@@ -12,20 +12,21 @@
     </ol>
 </nav>
 
-<div class="card table-blue-border w-50" style=" margin:auto;">
+<div class="card table-blue-border w-100" style=" margin:auto;">
     <h3 class="card-header thead-blue">@ViewData["Title"]</h3>
     <div class="card-body w-100" style="margin: 0 auto">
-        <div class="col-12">
-            <form asp-action="Edit" class="md-form">
+
+        <form asp-action="Edit" class="md-form">
+            <div class="col-5">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" class="form-control" />
                 <div class="form-group">
-                    <select asp-for="PatientStatus" class="browser-default custom-select" asp-items="@SelectListHelpers.GetPatientStatesSelectList()">
+                    <select asp-for="PatientStatus" class="browser-default custom-select" asp-items="@SelectListHelpers.GetPatientStatesSelectList(Model.PatientStatus)">
                     </select>
                     <span asp-validation-for="PatientStatus" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <select asp-for="Title" class="mdb-select colorful-select dropdown-main-nav" asp-items="@SelectListHelpers.GetTitlesSelectList()">
-                        <option value="" selected>Select Title</option>
+                    <select asp-for="Title" class="browser-default custom-select" asp-items="@SelectListHelpers.GetTitlesSelectList(Model.Title)">
                     </select>
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
@@ -44,6 +45,23 @@
                     <input asp-for="HealthAndCare" class="form-control" id="HealthAndCare" />
                     <span asp-validation-for="HealthAndCare" class="text-danger"></span>
                 </div>
+                <div class="md-form">
+                    <label for="PhoneNumber" class="col-form-label">PhoneNumber</label>
+                    <input asp-for="PhoneNumber" class="form-control" id="PhoneNumber" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label for="MobilePhone" class="col-form-label">MobilePhone</label>
+                    <input asp-for="MobilePhone" class="form-control" id="MobilePhone" />
+                    <span asp-validation-for="MobilePhone" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label for="Email" class="col-form-label">Email</label>
+                    <input asp-for="Email" class="form-control" id="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-5">
                 <div class="md-form">
                     <label for="Address1" class="col-form-label">Address Line 1</label>
                     <input asp-for="Address1" class="form-control" id="Address1" />
@@ -69,29 +87,16 @@
                     <input asp-for="PostCode" class="form-control" id="PostCode" />
                     <span asp-validation-for="PostCode" class="text-danger"></span>
                 </div>
-                <div class="md-form">
-                    <label for="PhoneNumber" class="col-form-label">PhoneNumber</label>
-                    <input asp-for="PhoneNumber" class="form-control" id="PhoneNumber" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="MobilePhone" class="col-form-label">MobilePhone</label>
-                    <input asp-for="MobilePhone" class="form-control" id="MobilePhone" />
-                    <span asp-validation-for="MobilePhone" class="text-danger"></span>
-                </div>
-                <div class="md-form">
-                    <label for="Email" class="col-form-label">Email</label>
-                    <input asp-for="Email" class="form-control" id="Email" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
                 <div class="form-group mt-4">
                     <input type="submit" value="Save Changes" class="btn table-blue-border" />
                     <a class="btn btn-grey-cancel" asp-controller="UserAdmin" asp-action="Index">Cancel</a>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 

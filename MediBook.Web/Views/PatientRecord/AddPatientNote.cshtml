@@ -5,9 +5,9 @@
 <!--Breadcrumb navigation-->
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="breadcrumb-item"><a asp-controller="PatientRecord" asp-action="Index">Movies</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+        <li class="breadcrumb-item text-white"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item text-white"><a asp-controller="PatientRecord" asp-action="Index" asp-route-id="@Model.PatientId">Patient Record</a></li>
+        <li class="breadcrumb-item text-white active" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
 
@@ -35,7 +35,7 @@
                 <!-- Add review and cancel buttons-->
                 <div class="form-group">
                     <input type="submit" value="save" class="btn btn-green-add" />
-                    <a class="btn btn-grey-cancel" asp-action="Index" asp-route="Id">Cancel</a>
+                    <a class="btn btn-grey-cancel" asp-action="Index" asp-route-id="Id">Cancel</a>
                 </div>
             </form>
         </div>

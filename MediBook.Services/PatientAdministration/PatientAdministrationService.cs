@@ -149,10 +149,10 @@
             patient.Address2 = updatedDetails.Address2;
             patient.City = updatedDetails.City;
             patient.County = updatedDetails.County;
-            patient.PostCode = updatedDetails.PostCode;
+            patient.PostCode = updatedDetails.PostCode.ToUpper();
             patient.PhoneNumber = updatedDetails.PhoneNumber;
             patient.MobilePhone = updatedDetails.MobilePhone;
-            patient.Email = updatedDetails.Email;
+            patient.Email = updatedDetails.Email.ToLower();
             patient.Status = updatedDetails.PatientStatus;
         }
     }

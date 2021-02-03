@@ -31,6 +31,11 @@
         /// <returns></returns>
         public Task<Patient> AddAsync(PatientForRegistration newPatientDetails)
         {
+            if (newPatientDetails == null)
+            {
+                throw new ArgumentNullException(nameof(newPatientDetails));
+            }
+
             var patient = new Patient
             {
                 Title = newPatientDetails.Title,

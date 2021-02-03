@@ -6,37 +6,44 @@
 <!--Breadcrumb navigation-->
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item text-white"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
         <li class="breadcrumb-item active text-white" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
-
-<div class="row mb-4">
-    <div class="col">
-        <a class="btn table-blue-border" asp-controller="Patient" asp-action="Search">
-            <i class="fas fa-search fa-lg"></i> Find a Patient
-        </a>
-    </div>
-    <div class="col">
-        <a class="btn table-blue-border" asp-controller="Patient" asp-action="Details" asp-route="@Model.PatientId">
-            <i class="fas fa-search fa-lg"></i> View Patient Registration Details
-        </a>
-    </div>
-</div>
-
-<h3>@ViewData["Title"]</h3>
-<div class="row">
-    <!-- Column to display details about the movie: Title, rating, budget etc...-->
-    <div class="col-7">
-        <div class="row">
-            <div class="col-4"><strong>Patient Id: </strong></div>
-            <div class="col-8">@Model.PatientId</div>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <a class="btn table-blue-border" asp-controller="Patient" asp-action="Search">
+                <i class="fas fa-search fa-lg"></i> Find a Patient
+            </a>
         </div>
-        <div class="row">
-            <div class="col-4"><strong>Name: </strong></div>
-            <div class="col-8">@(Model.PatientLastName + ", " + Model.PatientFirstName)%</div>
+        <div class="col">
+            <a class="btn table-blue-border" asp-controller="Patient" asp-action="Details" asp-route-id="@Model.PatientId">View Patient Details
+            </a>
+        </div>
+    </div>
+    <h3>@ViewData["Title"]</h3>
+    <div class="row">
+        <div class="col-7">
+            <div class="row">
+                <div class="col-4"><strong>Patient Id: </strong></div>
+                <div class="col-8">@Model.PatientId</div>
+            </div>
+            <div class="row">
+                <div class="col-4"><strong>Name: </strong></div>
+                <div class="col-8">@(Model.PatientLastName + ", " + Model.PatientFirstName)</div>
+            </div>
         </div>
     </div>
 </div>
-
-<partial name="_PatientNotes" />
+<div class="container-fluid">
+    <ul class="nav md-pills nav-justified table-blue-border">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#patientNotes">Patient Notes</a></li>
+    </ul>
+</div>
+<div class="tab-content">
+    <div id="patientNotes" class="tab-pane active">
+        <!-- Patient Notes -->
+        <partial name="_PatientNotes" />
+    </div>
+</div>

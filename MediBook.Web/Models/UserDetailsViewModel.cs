@@ -31,7 +31,6 @@
             }
 
             UserId = userFullDetails.UserId;
-            AccountGuid = userFullDetails.AccountGuid;
             Username = userFullDetails.Username;
             JobDescription = userFullDetails.JobDescription ?? throw new ArgumentNullException(nameof(userFullDetails.JobDescription));
             Role = userFullDetails.Role;
@@ -70,11 +69,6 @@
         /// The entity's Id in the Users table
         /// </summary>
         public int UserId { get; set; }
-
-        /// <summary>
-        /// The Account Guid
-        /// </summary>
-        public string AccountGuid { get; set; }
 
         /// <summary>
         /// The Username
@@ -121,7 +115,6 @@
             return new UserFullDetailsDto()
             {
                 UserId = UserId,
-                AccountGuid = AccountGuid,
                 Username = Username,
                 Role = Role,
                 State = State,

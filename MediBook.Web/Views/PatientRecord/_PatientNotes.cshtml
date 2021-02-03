@@ -2,12 +2,12 @@
     <div class="thead-dark"><h4>Patient Notes</h4></div>
     <div class="row mb-4">
         <div class="col">
-            <a class="btn table-blue-border" asp-controller="PatientRecord" asp-action="AddPatientNote">
+            <a class="btn table-blue-border" asp-controller="PatientRecord" asp-action="AddPatientNote" asp-route-id="@Model.PatientId">
                 <i class="fas fa-plus-circle fa-lg"></i> New Patient Note
             </a>
         </div>
     </div>
-    @if (Model.PatientNotes > 0)
+    @if (Model.PatientNotes.Count > 0)
     {
         @foreach (PatientNoteDto patientNote in Model.PatientNotes)
         {
@@ -17,7 +17,7 @@
                         <!--MedicalPractitioner name-->
                         <div class="col col-4 text-primary align-content-center">
                             <i class="far fa-user fa-lg"></i>
-                            @("\t" + patientNote.MedicalPractitionerTitle + "\t" + patientNote.MedicalPractitionerLastname + ", " + patientNote.MedicalPractitionerLastname)%
+                            @("\t" + patientNote.MedicalPractitionerTitle + "\t" + patientNote.MedicalPractitionerLastname + ", " + patientNote.MedicalPractitionerFirstname)
                         </div>
                         <!-- Patient Note timestamp-->
                         <div class="col-4">@patientNote.Timestamp.ToString("dd/MM/yyyy HH:mm")</div>

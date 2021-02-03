@@ -149,13 +149,13 @@
             if (result != null)
             {
                 Alert(
-                    $"Patient note successfully saved to the patient's record. \"PatientId\"={newPatientNote.PatientId}");
-                return RedirectToAction("Index", newPatientNote.Id);
+                    $"Patient note successfully saved to the patient's record. \"PatientId\"={newPatientNote.PatientId}", AlertType.success);
+                return RedirectToAction("Index", newPatientNote.PatientId);
             }
 
             _log.LogError($"Failed to save new Patient note. \"PatientId\"={newPatientNote.PatientId}, \"MedicalPractitionerId\"={newPatientNote.MedicalPractitionerId}");
-            Alert("Failed to save new Patient note.");
-            return RedirectToAction("Index", newPatientNote.Id);
+            Alert("Failed to save new Patient note.", AlertType.danger);
+            return RedirectToAction("Index", newPatientNote.PatientId);
         }
 
         /// <summary>
