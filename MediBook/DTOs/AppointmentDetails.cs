@@ -32,19 +32,18 @@
                 throw new ArgumentNullException(nameof(appointmentSlot));
             }
 
-            AppointmentId = appointmentSlot.AppointmentId;
             State = appointmentSlot.State;
             AppointmentDateTime = appointmentSlot.AppointmentDateTime;
             AppointmentDurationInMins = appointmentSlot.AppointmentDurationInMins;
             AppointmentSlotId = appointmentSlot.Id;
-            
-            
-            if (appointmentSlot.Appointment != null)
+
+            if (appointmentSlot.PatientId != null)
             {
-                PatientId = appointmentSlot.Appointment.PatientId;
-                PatientFirstname = appointmentSlot?.Appointment?.Patient?.Firstname;
-                PatientLastname = appointmentSlot?.Appointment?.Patient?.Lastname;
+                PatientId = (int)appointmentSlot.PatientId;
             }
+            PatientFirstname = appointmentSlot?.Patient?.Firstname;
+            PatientLastname = appointmentSlot?.Patient?.Lastname;
+
 
             if (medicalPractitioner.JobDescription != null & medicalPractitioner.EmployeeDetails != null)
             {

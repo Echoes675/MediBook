@@ -33,11 +33,6 @@
         private readonly IAppointmentSlotDal _apptSlotDal;
 
         /// <summary>
-        /// The Appointment Dal
-        /// </summary>
-        private readonly IAppointmentDal _apptDal;
-
-        /// <summary>
         /// The Patient Dal
         /// </summary>
         private readonly IPatientDal _patientDal;
@@ -58,8 +53,7 @@
         public AppointmentBookingManager(
             ILogger<AppointmentBookingManager> log, 
             IUserDal userDal, 
-            IAppointmentSlotDal apptSlotDal, 
-            IAppointmentDal apptDal, 
+            IAppointmentSlotDal apptSlotDal,
             IPatientDal patientDal, 
             IPatientsMedicalPractitionerDal patientsMedicalPractitionerDal,
             IAppointmentSessionDal sessionDal)
@@ -67,7 +61,6 @@
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _userDal = userDal ?? throw new ArgumentNullException(nameof(userDal));
             _apptSlotDal = apptSlotDal ?? throw new ArgumentNullException(nameof(apptSlotDal));
-            _apptDal = apptDal ?? throw new ArgumentNullException(nameof(apptDal));
             _patientDal = patientDal ?? throw new ArgumentNullException(nameof(patientDal));
             _patientsMedicalPractitionerDal = patientsMedicalPractitionerDal ?? throw new ArgumentNullException(nameof(patientsMedicalPractitionerDal));
             _sessionDal = sessionDal ?? throw new ArgumentNullException(nameof(sessionDal));
@@ -98,13 +91,10 @@
                 };
             }
 
-            List<AppointmentSlot> appointmentSlots;
             if (callingUser.JobDescription.Role == UserRole.MedicalPractitioner)
             {
-                // If this has been called by a Medical Practitioner, only return their own sessions for the specified day
-                appointmentSlots = _apptSlotDal.Filter(x => x.Appointment.PatientId == patientId && x.Appointment.MedicalPractitionerId == userId).ToList();
-
-
+                var appointmentSlots = await
+                    _sessionDal.GetPatientAppointmentSlotsAssociatedWithMedicalPractitionerSessions(userId, patientId);
                 var appointmentDetails = appointmentSlots.Select(x => new AppointmentDetails(callingUser, x)).OrderByDescending(x => x.AppointmentDateTime).ToList();
                 return new AppointmentBookResults()
                 {
@@ -130,22 +120,8 @@
                 throw new ArgumentNullException(nameof(data));
             }
 
-            // Get Appointment Slot
-            var appointmentSlotTask = _apptSlotDal.GetEntityAsync(data.SlotId);
-
-            // Get Medical Practitioner user account
-            var medicalPractitionerTask = _userDal.GetEntityAsync(data.MedicalPractitionerId);
-
-            // Get Patient details
-            var patientTask = _patientDal.GetEntityAsync(data.PatientId);
-
-            //Check PatientsMedicalPractitioners to see if this user is registered with this Medical Practitioner
-            var patientMedicalPractitionerTask =
-                _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
-            Task.WaitAll(appointmentSlotTask, medicalPractitionerTask, patientTask, patientMedicalPractitionerTask);
-
             // Get the results of the completed tasks
-            var appointmentSlot = await appointmentSlotTask;
+            var appointmentSlot = await _apptSlotDal.GetEntityAsync(data.SlotId);
             if (appointmentSlot == null)
             {
                 _log.LogError($"Unable to load AppointmentSlot for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -155,7 +131,7 @@
                 };
             }
 
-            var medicalPractitioner = await medicalPractitionerTask;
+            var medicalPractitioner = await _userDal.GetEntityAsync(data.MedicalPractitionerId);
             if (medicalPractitioner == null)
             {
                 _log.LogError($"Unable to load MedicalPractitioner for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -165,7 +141,7 @@
                 };
             }
 
-            var patient = await patientTask;
+            var patient = await _patientDal.GetEntityAsync(data.PatientId);
             if (patient == null)
             {
                 _log.LogError($"Unable to load Patient for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -175,28 +151,22 @@
                 };
             }
 
-            var patientRegisteredWithMedicalPractitioner = await patientMedicalPractitionerTask;
+            var patientRegisteredWithMedicalPractitioner = _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
 
             // Create a new Appointment and add it to the AppointmentSlot to make the booking
-            appointmentSlot.Appointment = new Appointment()
-            {
-                Patient = patient,
-                MedicalPractitioner = medicalPractitioner.EmployeeDetails
-            };
+            appointmentSlot.Patient = patient;
+            appointmentSlot.AppointmentState = AppointmentState.PendingPatientArrival;
 
             // update the status of the slot to pending patient arrival to indicate it is booked
             appointmentSlot.State = SlotState.Booked;
-
-            var slotUpdateResultTask = _apptSlotDal.UpdateAsync(appointmentSlot);
 
             if (!patientRegisteredWithMedicalPractitioner)
             {
                 await RegisterPatientIfNotRegisteredToMedicalPractitioner(data, patient, medicalPractitioner);
             }
 
-
             // Collect the result of the slot update task
-            var slotUpdateResult = await slotUpdateResultTask;
+            var slotUpdateResult = await _apptSlotDal.UpdateAsync(appointmentSlot);
 
             if (slotUpdateResult != null)
             {
@@ -227,25 +197,8 @@
                 throw new ArgumentNullException(nameof(data));
             }
 
-            // Get current Appointment Slot
-            var currentAppointmentSlotTask = _apptSlotDal.FilterAsync(x => x.Id == data.SlotId);
-
-            // Get the proposed new Appointment Slot
-            var newAppointmentSlotTask = _apptSlotDal.GetEntityAsync(data.SlotId);
-
-            // Get Medical Practitioner Employee Id
-            var medicalPractitionerTask = _userDal.GetEntityAsync(data.MedicalPractitionerId);
-
-            // Get Patient details
-            var patientTask = _patientDal.GetEntityAsync(data.PatientId);
-
-            //Check PatientsMedicalPractitioners to see if this user is registered with this Medical Practitioner
-            var patientMedicalPractitionerTask =
-                _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
-            Task.WaitAll(currentAppointmentSlotTask, newAppointmentSlotTask, medicalPractitionerTask, patientTask, patientMedicalPractitionerTask);
-
             // Get the results of the completed tasks
-            var currentAppointmentSlotFiltered = await currentAppointmentSlotTask;
+            var currentAppointmentSlotFiltered = await _apptSlotDal.FilterAsync(x => x.Id == data.SlotId); ;
             var currentAppointmentSlot = currentAppointmentSlotFiltered.FirstOrDefault();
             if (currentAppointmentSlot == null)
             {
@@ -256,7 +209,7 @@
                 };
             }
 
-            var newAppointmentSlot = await newAppointmentSlotTask;
+            var newAppointmentSlot = await _apptSlotDal.GetEntityAsync(data.SlotId);
             if (newAppointmentSlot == null)
             {
                 _log.LogError($"Unable to load proposed new AppointmentSlot for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -266,7 +219,7 @@
                 };
             }
 
-            var medicalPractitioner = await medicalPractitionerTask;
+            var medicalPractitioner = await _userDal.GetEntityAsync(data.MedicalPractitionerId);
             if (medicalPractitioner == null)
             {
                 _log.LogError($"Unable to load MedicalPractitioner for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -276,7 +229,7 @@
                 };
             }
 
-            var patient = await patientTask;
+            var patient = await _patientDal.GetEntityAsync(data.PatientId);
             if (patient == null)
             {
                 _log.LogError($"Unable to load Patient for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -286,12 +239,15 @@
                 };
             }
 
-            var patientRegisteredWithMedicalPractitioner = await patientMedicalPractitionerTask;
+            var patientRegisteredWithMedicalPractitioner = _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
 
-            newAppointmentSlot.Appointment = currentAppointmentSlot.Appointment;
+            newAppointmentSlot.Patient = currentAppointmentSlot.Patient;
+            newAppointmentSlot.AppointmentState = AppointmentState.PendingPatientArrival;
             newAppointmentSlot.State = SlotState.Booked;
-            currentAppointmentSlot.Appointment = null;
+            currentAppointmentSlot.Patient = null;
             currentAppointmentSlot.State = SlotState.Available;
+            currentAppointmentSlot.AppointmentState = AppointmentState.Available;
+
 
             var appointmentSlots = new List<AppointmentSlot>
             {
@@ -353,26 +309,16 @@
                 throw new ArgumentNullException(nameof(slot));
             }
 
-            if (await _apptDal.DeleteAsync(slot.AppointmentId))
-            {
-                // If the Appointment was marked as Cancelled/Deleted remove the association with the slot
-                slot.Appointment = null;
-
-                // Reset the slot status to Available
-                slot.State = SlotState.Available;
-
-                // Update the slot in the Db
-                await _apptSlotDal.UpdateAsync(slot);
-
-                return new AppointmentBookResults()
-                {
-                    ResultCode = ServiceResultStatusCode.Success
-                };
-            }
+            // Reset the slot status to Available
+            slot.State = SlotState.Available;
+            slot.AppointmentState = AppointmentState.Available;
+            slot.Patient = null;
+            // Update the slot in the Db
+            await _apptSlotDal.UpdateAsync(slot);
 
             return new AppointmentBookResults()
             {
-                ResultCode = ServiceResultStatusCode.Failed
+                ResultCode = ServiceResultStatusCode.Success
             };
         }
 

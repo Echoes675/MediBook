@@ -8,7 +8,6 @@
     using MediBook.Services.Enums;
     using MediBook.Web.Enums;
     using MediBook.Web.Models;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -28,8 +27,7 @@
         private readonly IAppointmentBookService _apptSvc;
 
         public AppointmentBookController(ILogger<AppointmentBookController> log,
-            IAppointmentBookService apptSvc,
-            IHttpContextAccessor httpContextAccessor)
+            IAppointmentBookService apptSvc)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _apptSvc = apptSvc ?? throw new ArgumentNullException(nameof(apptSvc));
@@ -274,18 +272,18 @@
 
         [HttpGet("BookAppointment")]
         //[Authorize(Roles = "Reception, PracticeAdmin")]
-        public async Task<IActionResult> BookAppointment(int patientId)
+        public async Task<IActionResult> BookAppointment(int id)
         {
-            if (patientId <= 0)
+            if (id <= 0)
             {
-                _log.LogError($"Invalid Patient received for appointment booking. \"PatientId\"={patientId}");
+                _log.LogError($"Invalid Patient received for appointment booking. \"PatientId\"={id}");
                 Alert("Invalid Patient received for appointment booking.", AlertType.danger);
                 return RedirectToAction(nameof(Index));
             }
 
             var apptData = new AddOrUpdateAppointmentData()
             {
-                PatientId = patientId
+                PatientId = id
             };
 
             var freeSlotsResults = await _apptSvc.GetAppointmentBookSessionsFreeSlots(DateTime.UtcNow.Date);

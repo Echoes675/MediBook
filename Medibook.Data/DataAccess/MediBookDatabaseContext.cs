@@ -19,11 +19,6 @@
         }
 
         /// <summary>
-        /// The DbSet of Appointments table in the Database
-        /// </summary>
-        public DbSet<Appointment> Appointments { get; set; }
-
-        /// <summary>
         /// The DbSet of AppointmentSlots table in the Database
         /// </summary>
         public DbSet<AppointmentSlot> AppointmentSlots { get; set; }
@@ -102,26 +97,26 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Set up relationships between tables
-            modelBuilder.Entity<Appointment>()
-                .HasOne(pt => pt.Patient)
-                .WithMany(p => p.Appointments)
-                .HasForeignKey(pt => pt.PatientId);
-
             //modelBuilder.Entity<Appointment>()
-            //    .HasOne(pt => pt.MedicalPractitioner)
+            //    .HasOne(pt => pt.Patient)
             //    .WithMany(p => p.Appointments)
-            //    .HasForeignKey(pt => pt.MedicalPractitionerId)
-            //    .OnDelete(DeleteBehavior.ClientCascade);
+            //    .HasForeignKey(pt => pt.PatientId);
+
+            ////modelBuilder.Entity<Appointment>()
+            ////    .HasOne(pt => pt.MedicalPractitioner)
+            ////    .WithMany(p => p.Appointments)
+            ////    .HasForeignKey(pt => pt.MedicalPractitionerId)
+            ////    .OnDelete(DeleteBehavior.ClientCascade);
+
+            ////modelBuilder.Entity<PatientsMedicalPractitioner>()
+            ////    .HasOne(pt => pt.MedicalPractitioner)
+            ////    .WithMany(p => p.PatientsMedicalPractitioners)
+            ////    .HasForeignKey(pt => pt.MedicalPractitionerId);
 
             //modelBuilder.Entity<PatientsMedicalPractitioner>()
-            //    .HasOne(pt => pt.MedicalPractitioner)
+            //    .HasOne(pt => pt.Patient)
             //    .WithMany(p => p.PatientsMedicalPractitioners)
-            //    .HasForeignKey(pt => pt.MedicalPractitionerId);
-
-            modelBuilder.Entity<PatientsMedicalPractitioner>()
-                .HasOne(pt => pt.Patient)
-                .WithMany(p => p.PatientsMedicalPractitioners)
-                .HasForeignKey(pt => pt.PatientId);
+            //    .HasForeignKey(pt => pt.PatientId);
         }
     }
 }

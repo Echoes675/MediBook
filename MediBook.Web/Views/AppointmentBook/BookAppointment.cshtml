@@ -25,9 +25,6 @@
                             <div class="card-body">
                                 <h5 class="card-title">
                                     @(session?.MedicalPractitioner?.LastName + ", " + session?.MedicalPractitioner?.FirstName)
-                                    <a class="btn-sm ml-4" data-toggle="modal" data-target="#deletesession" data-id="@session?.Id">
-                                        <i class="far fa-trash-alt fa-lg rgba-red-strong" title="Delete Session"></i>
-                                    </a>
                                 </h5>
                                 @if (@session?.AppointmentSlots?.Count > 0)
                                 {
@@ -37,11 +34,11 @@
                                             <li class="list-group-item">
                                                 <asp-appointment-slot-text slot="@slot"></asp-appointment-slot-text>
                                                 <div class="form-group mt-4">
-                                                    <form asp-action="GetSessionsForDay">
+                                                    <form asp-action="BookAppointment">
                                                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                                        <input asp-for="MedicalPractitionerId" type="hidden" class="form-control" name="Date" value="@Model.MedicalPractitionerId" />
-                                                        <input asp-for="PatientId" type="hidden" class="form-control" name="Date" value="@Model.PatientId" />
-                                                        <input asp-for="SlotId" type="hidden" class="form-control" name="Date" value="@slot.Id" />
+                                                        <input asp-for="MedicalPractitionerId" type="hidden" class="form-control" value="@session?.MedicalPractitioner?.Id" />
+                                                        <input asp-for="PatientId" type="hidden" class="form-control" value="@Model.PatientId" />
+                                                        <input asp-for="SlotId" type="hidden" class="form-control" value="@slot.Id" />
                                                         <div class="form-group mt-4">
                                                             <input type="submit" value="Book Appointment" class="btn btn-blue-grey" />
                                                         </div>

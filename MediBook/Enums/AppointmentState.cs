@@ -5,7 +5,7 @@
     /// </summary>
     public enum AppointmentState
     {
-        Unknown = 0,
+        Available = 0,
         PendingPatientArrival = 1,
         PatientArrived = 2,
         PatientBeingSeen = 3,

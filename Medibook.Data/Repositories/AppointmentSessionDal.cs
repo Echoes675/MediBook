@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using MediBook.Core.DTOs;
     using MediBook.Core.Models;
     using MediBook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,6 @@
             var retVal = await Db.Set<AppointmentSession>()
                 .Include(m => m.MedicalPractitioner)
                 .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
                 .ToListAsync().ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(AppointmentSession)}");
             return retVal;
@@ -52,7 +52,7 @@
             var retVal = await Db.Set<AppointmentSession>()
                 .Include(m => m.MedicalPractitioner)
                 .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
+                .ThenInclude(p => p.Patient)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 .ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(AppointmentSession)}");
@@ -80,7 +80,7 @@
             return await Task.Run(() => (Db.Set<AppointmentSession>()
                     .Include(m => m.MedicalPractitioner)
                     .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
+                .ThenInclude(p => p.Patient)
                 .AsEnumerable() ?? throw new InvalidOperationException(nameof(AppointmentSession)))
                 .Where(appointmentSessionWhere).OrderBy(appointmentSessionOrderBy).ToList());
         }
@@ -126,6 +126,20 @@
             }
 
             return await CheckEntityExistsAsync(entity.MedicalPractitionerId, entity.StartDateTime, entity.DurationInMins);
+        }
+
+        /// <summary>
+        /// Returns a list of a patient's appointment slots filtered to the calling Medical Practitioner's Id
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AppointmentSlot>> GetPatientAppointmentSlotsAssociatedWithMedicalPractitionerSessions(int userId, int patientId)
+        {
+            var appointmentSessions = Db.Set<AppointmentSession>().Where(x => x.MedicalPractitionerId == userId).Include(m => m.MedicalPractitioner)
+                .Include(x => x.AppointmentSlots)
+                .ThenInclude(p => p.Patient);
+            
+            return await appointmentSessions.SelectMany(x =>
+                x.AppointmentSlots.Where(y => y.PatientId == patientId)).ToListAsync();
         }
     }
 }

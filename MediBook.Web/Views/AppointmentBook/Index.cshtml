@@ -84,9 +84,12 @@
                                         {
                                             <li class="list-group-item">
                                                 <asp-appointment-slot-text slot="@slot"></asp-appointment-slot-text>
-                                                <a class="btn" asp-roles="PracticeAdmin, Reception" asp-controller="AppointmentBook" asp-action="CancelAppointment" asp-route-id="@slot.Id">
-                                                    <asp-appointment-slot-icon status="@slot.State"></asp-appointment-slot-icon>
-                                                </a>
+                                                @if (slot.State == SlotState.Booked)
+                                                {
+                                                    <a class="btn" asp-roles="PracticeAdmin, Reception" asp-controller="AppointmentBook" asp-action="CancelAppointment" asp-route-id="@slot.Id">
+                                                        Cancel Appointment
+                                                    </a>
+                                                }
                                             </li>
                                         }
                                     </ul>

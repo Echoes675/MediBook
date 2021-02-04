@@ -4,20 +4,47 @@ using MediBook.Data.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MediBook.Data.Migrations
 {
     [DbContext(typeof(MediBookDatabaseContext))]
-    partial class MediBookDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210204205624_FKAppointmentIssue")]
+    partial class FKAppointmentIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
+
+            modelBuilder.Entity("MediBook.Core.Models.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appointments");
+                });
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
                 {
@@ -60,13 +87,10 @@ namespace MediBook.Data.Migrations
                     b.Property<int>("AppointmentDurationInMins")
                         .HasColumnType("int");
 
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("AppointmentSessionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AppointmentState")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PatientId")
                         .HasColumnType("int");
 
                     b.Property<int>("State")
@@ -74,9 +98,9 @@ namespace MediBook.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppointmentSessionId");
+                    b.HasIndex("AppointmentId");
 
-                    b.HasIndex("PatientId");
+                    b.HasIndex("AppointmentSessionId");
 
                     b.ToTable("AppointmentSlots");
                 });
@@ -285,6 +309,21 @@ namespace MediBook.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MediBook.Core.Models.Appointment", b =>
+                {
+                    b.HasOne("MediBook.Core.Models.Employee", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("EmployeeId");
+
+                    b.HasOne("MediBook.Core.Models.Patient", "Patient")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
                 {
                     b.HasOne("MediBook.Core.Models.Employee", null)
@@ -302,15 +341,17 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSlot", b =>
                 {
+                    b.HasOne("MediBook.Core.Models.Appointment", "Appointment")
+                        .WithMany()
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MediBook.Core.Models.AppointmentSession", null)
                         .WithMany("AppointmentSlots")
                         .HasForeignKey("AppointmentSessionId");
 
-                    b.HasOne("MediBook.Core.Models.Patient", "Patient")
-                        .WithMany("AppointmentSlots")
-                        .HasForeignKey("PatientId");
-
-                    b.Navigation("Patient");
+                    b.Navigation("Appointment");
                 });
 
             modelBuilder.Entity("MediBook.Core.Models.PatientNote", b =>
@@ -381,6 +422,8 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.Employee", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("AppointmentSessions");
 
                     b.Navigation("PatientNotes");
@@ -388,7 +431,7 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.Patient", b =>
                 {
-                    b.Navigation("AppointmentSlots");
+                    b.Navigation("Appointments");
 
                     b.Navigation("PatientNotes");
 

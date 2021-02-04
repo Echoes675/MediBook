@@ -45,7 +45,7 @@
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        public override Task<bool> CheckEntityExistsAsync(PatientsMedicalPractitioner entity)
+        public new bool CheckEntityExistsAsync(PatientsMedicalPractitioner entity)
         {
             if (entity == null)
             {
@@ -61,7 +61,7 @@
         /// <param name="patientId"></param>
         /// <param name="medicalPractitionerId"></param>
         /// <returns></returns>
-        public async Task<bool> CheckEntityExistsAsync(int patientId, int medicalPractitionerId)
+        public bool CheckEntityExistsAsync(int patientId, int medicalPractitionerId)
         {
             if (patientId <= 0)
             {
@@ -73,7 +73,7 @@
                 throw new ArgumentOutOfRangeException(nameof(medicalPractitionerId));
             }
 
-            var foundEntities = await FilterAsync(x =>
+            var foundEntities = Filter(x =>
                 x.MedicalPractitionerId == medicalPractitionerId && x.PatientId == patientId);
             return foundEntities.Any();
         }

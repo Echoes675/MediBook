@@ -49,7 +49,7 @@
         /// <param name="patientId"></param>
         /// <param name="medicalPractitionerId"></param>
         /// <returns></returns>
-        Task<bool> CheckEntityExistsAsync(int patientId, int medicalPractitionerId);
+        bool CheckEntityExistsAsync(int patientId, int medicalPractitionerId);
 
         /// <summary>
         /// Check if entity exists in the database
@@ -57,7 +57,7 @@
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="entity"/> is <see langword="null"/></exception>
-        Task<bool> CheckEntityExistsAsync(PatientsMedicalPractitioner entity);
+        bool CheckEntityExistsAsync(PatientsMedicalPractitioner entity);
 
         /// <summary>
         /// Check if entity exists in the database

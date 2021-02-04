@@ -18,14 +18,14 @@
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var time = Slot.AppointmentDateTime.TimeOfDay.ToString("HH:mm");
+            var time = Slot.AppointmentDateTime.ToString("HH:mm");
             var slotTextSB = new StringBuilder();
             slotTextSB.Append(time + " - ");
 
-            if (Slot.State == SlotState.Available)
+            if (Slot.State != SlotState.Available)
             {
-                var patientFirstName = Slot.Appointment.Patient.Firstname;
-                var patientLastName = Slot.Appointment.Patient.Lastname;
+                var patientFirstName = Slot.Patient.Firstname;
+                var patientLastName = Slot.Patient.Lastname;
 
                 slotTextSB.Append(patientLastName + ", ");
                 slotTextSB.Append(patientFirstName);
