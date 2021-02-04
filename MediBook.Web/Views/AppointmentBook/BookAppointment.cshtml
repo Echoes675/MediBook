@@ -1,5 +1,58 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Book Appointment";
 }
+
+@model AddOrUpdateAppointmentData
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">@ViewData["Title"]</li>
+    </ol>
+</nav>
+
+<div class="container-fluid">
+    <h3>@ViewData["Title"]</h3>
+    <div class="row mb-4">
+        <div class="col">
+            <!-- Loop for each appointment session returned in the ViewModel -->
+            @if (Model?.SessionsWithFreeSlots?.Count > 0)
+            {
+                <div class="row card-group" style="">
+                    @foreach (var session in Model.SessionsWithFreeSlots)
+                    {
+                        <div class="card m-0 table-blue-border">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    @(session?.MedicalPractitioner?.LastName + ", " + session?.MedicalPractitioner?.FirstName)
+                                </h5>
+                                @if (@session?.AppointmentSlots?.Count > 0)
+                                {
+                                    <ul class="list-group list-group-flush">
+                                        @foreach (var slot in session?.AppointmentSlots)
+                                        {
+                                            <li class="list-group-item">
+                                                <asp-appointment-slot-text slot="@slot"></asp-appointment-slot-text>
+                                                <div class="form-group mt-4">
+                                                    <form asp-action="BookAppointment">
+                                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                        <input asp-for="MedicalPractitionerId" type="hidden" class="form-control" value="@session?.MedicalPractitioner?.Id" />
+                                                        <input asp-for="PatientId" type="hidden" class="form-control" value="@Model.PatientId" />
+                                                        <input asp-for="SlotId" type="hidden" class="form-control" value="@slot.Id" />
+                                                        <div class="form-group mt-4">
+                                                            <input type="submit" value="Book Appointment" class="btn btn-blue-grey" />
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,16 +1,13 @@
 ﻿namespace MediBook.Services.UserAuthentication
 {
-    using System;
-    using System.Globalization;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
+    using MediBook.Core.DTOs;
     using MediBook.Core.Enums;
-    using MediBook.Core.Models;
     using MediBook.Data.Repositories;
     using MediBook.Services.Cryptography;
     using MediBook.Services.Enums;
-    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.Extensions.Logging;
+    using System;
+    using System.Threading.Tasks;
 
     public class UserAuthenticationService : IUserAuthenticationService
     {
@@ -78,6 +75,12 @@
                 return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
             }
 
+            if (user.JobDescription.Role == UserRole.Unknown)
+            {
+                message = $"Account login failed. Account role is unknown \"Username\"={username}, \"AccountRole\"={user.JobDescription.Role}";
+                return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
+            }
+
             // user found, check the password is correct and build the ClaimsPrincipal, if not, return null
             if (!_cryptographyService.VerifyPasswordHash(user.PasswordHash, user.PasswordSalt, password))
             {
@@ -85,43 +88,11 @@
                 _log.LogInformation(message);
                 return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
             }
-            
-            var claimsPrincipal = BuildClaimsPrincipal(user);
 
-            if (claimsPrincipal != null)
-            {
-                message = "Account login Success.";
-                _log.LogInformation(message);
-                return new UserLoginResult(ServiceResultStatusCode.Success, message, claimsPrincipal);
-            }
-            
-            _log.LogError($"Failed to build ClaimsPrincipal as malformed User received from Db. \"Username\"={username}");
-            message = $"Account login failed. Internal error. \"Username\"={username}";
-            return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
-        }
-
-        // Build a claims principal from authenticated user
-        private ClaimsPrincipal BuildClaimsPrincipal(User user)
-        {
-
-            if (string.IsNullOrEmpty(user.Username) || user.Id < 1 || 
-                user.JobDescription == null || user.JobDescription.Role == UserRole.Unknown)
-            {
-                return null;
-            }
-
-            // define user claims including a custom claim for user Id
-            // this would be useful if any future queries/actions required
-            // user Id to be submitted with requests
-            var claims = new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim("Id", user.Id.ToString(CultureInfo.InvariantCulture)),
-                new Claim(ClaimTypes.Role, user.JobDescription.Role.ToString())
-            }, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // build principal using claims
-            return new ClaimsPrincipal(claims);
+            var userAccountDetails = new UserAccountDetailsDto(user);
+            message = "Account login Success.";
+            _log.LogInformation(message);
+            return new UserLoginResult(ServiceResultStatusCode.Success, message, userAccountDetails);
         }
     }
 }

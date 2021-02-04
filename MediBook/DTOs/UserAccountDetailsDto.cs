@@ -1,5 +1,6 @@
 ﻿namespace MediBook.Core.DTOs
 {
+    using System;
     using MediBook.Core.Enums;
     using MediBook.Core.Models;
 
@@ -20,6 +21,21 @@
         /// </summary>
         public UserAccountDetailsDto(User user)
         {
+            if (user.EmployeeDetails?.Firstname == null)
+            {
+                throw new ArgumentNullException(nameof(user.EmployeeDetails.Firstname));
+            }
+
+            if (user.EmployeeDetails?.Lastname == null)
+            {
+                throw new ArgumentNullException(nameof(user.EmployeeDetails.Lastname));
+            }
+
+            if (user.JobDescription == null)
+            {
+                throw new ArgumentNullException(nameof(user.JobDescription));
+            }
+
             Id = user.Id;
             Username = user.Username;
             Firstname = user.EmployeeDetails.Firstname;

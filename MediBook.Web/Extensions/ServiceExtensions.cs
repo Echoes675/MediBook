@@ -15,9 +15,6 @@
     /// </summary>
     public static class ServiceExtensions
     {
-        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
-            services.AddScoped<IRepositoryManager, RepositoryManager>();
-
         /// <summary>
         /// Adds the Data Accessors to the Service Collection
         /// </summary>
@@ -25,10 +22,10 @@
         public static void AddDataAccessors(this IServiceCollection services)
         {
             services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
-            services.AddScoped<IAppointmentDal, AppointmentDal>();
             services.AddScoped<IAppointmentSlotDal, AppointmentSlotDal>();
             services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
             services.AddScoped<IPatientDal, PatientDal>();
+            services.AddScoped<IPatientsMedicalPractitionerDal, PatientsMedicalPractitionerDal>();
             services.AddScoped<IPatientNoteDal, PatientNoteDal>();
             services.AddScoped<IUserDal, UserDal>();
             services.AddScoped<IEmployeeDal, EmployeeDal>();
@@ -48,7 +45,9 @@
             services.AddScoped<IPatientNoteProcessor, PatientNoteProcessor>();
             services.AddScoped<IPatientRecordProcessorFactory, PatientRecordProcessorFactory>();
             services.AddScoped<IPatientRecordService, PatientRecordService>();
-            //services.AddScoped<IAppointmentBookService, AppointmentBookService>();
+            services.AddScoped<IAppointmentSessionManager, AppointmentSessionManager>();
+            services.AddScoped<IAppointmentBookingManager, AppointmentBookingManager>();
+            services.AddScoped<IAppointmentBookService, AppointmentBookService>();
         }
     }
 }

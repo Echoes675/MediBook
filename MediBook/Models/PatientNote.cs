@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using IndexAttribute = Microsoft.EntityFrameworkCore.IndexAttribute;
 
     /// <summary>
@@ -41,12 +40,11 @@
         /// <summary>
         /// The Id of the associated Medical Practitioner Employee account
         /// </summary>
-        [ForeignKey("UserId")]
         public int MedicalPractitionerId { get; set; }
 
         /// <summary>
         /// The Employee navigation property
         /// </summary>
-        public Employee MedicalPractitioner { get; set; }
+        public User MedicalPractitioner { get; set; }
     }
 }

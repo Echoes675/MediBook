@@ -60,15 +60,6 @@
         Task<Patient> GetEntityAsync(int id);
 
         /// <summary>
-        /// Return the Patient including all of their registered MedicalPractitioners and
-        /// the Appointments filtered to the calling user's Id
-        /// </summary>
-        /// <param name="patientId"></param>
-        /// <param name="callingUserId"></param>
-        /// <returns></returns>
-        Task<Patient> GetEntityAsync(int patientId, int callingUserId);
-
-        /// <summary>
         /// Check if entity exists in the database
         /// </summary>
         /// <param name="entity"></param>

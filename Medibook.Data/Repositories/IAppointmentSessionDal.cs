@@ -83,5 +83,11 @@
         /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
         /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
         IEnumerable<AppointmentSession> Filter(Func<AppointmentSession, bool> predicate);
+
+        /// <summary>
+        /// Returns a list of a patient's appointment slots filtered to the calling Medical Practitioner's Id
+        /// </summary>
+        /// <returns></returns>
+        Task<List<AppointmentSlot>> GetPatientAppointmentSlotsAssociatedWithMedicalPractitionerSessions(int userId, int patientId);
     }
 }
