@@ -22,7 +22,6 @@
         public static void AddDataAccessors(this IServiceCollection services)
         {
             services.AddScoped<IJobDescriptionDal, JobDescriptionDal>();
-            services.AddScoped<IAppointmentDal, AppointmentDal>();
             services.AddScoped<IAppointmentSlotDal, AppointmentSlotDal>();
             services.AddScoped<IAppointmentSessionDal, AppointmentSessionDal>();
             services.AddScoped<IPatientDal, PatientDal>();

@@ -4,14 +4,16 @@ using MediBook.Data.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MediBook.Data.Migrations
 {
     [DbContext(typeof(MediBookDatabaseContext))]
-    partial class MediBookDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210204215403_FKAppointmentIssueAgainAndAgainTimesTwo")]
+    partial class FKAppointmentIssueAgainAndAgainTimesTwo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

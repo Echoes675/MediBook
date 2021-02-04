@@ -19,11 +19,6 @@
         }
 
         /// <summary>
-        /// The DbSet of Appointments table in the Database
-        /// </summary>
-        public DbSet<Appointment> Appointments { get; set; }
-
-        /// <summary>
         /// The DbSet of AppointmentSlots table in the Database
         /// </summary>
         public DbSet<AppointmentSlot> AppointmentSlots { get; set; }

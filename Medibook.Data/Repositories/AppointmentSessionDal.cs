@@ -32,7 +32,6 @@
             var retVal = await Db.Set<AppointmentSession>()
                 .Include(m => m.MedicalPractitioner)
                 .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
                 .ToListAsync().ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(AppointmentSession)}");
             return retVal;
@@ -53,7 +52,7 @@
             var retVal = await Db.Set<AppointmentSession>()
                 .Include(m => m.MedicalPractitioner)
                 .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
+                .ThenInclude(p => p.Patient)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 .ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(AppointmentSession)}");
@@ -81,7 +80,7 @@
             return await Task.Run(() => (Db.Set<AppointmentSession>()
                     .Include(m => m.MedicalPractitioner)
                     .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
+                .ThenInclude(p => p.Patient)
                 .AsEnumerable() ?? throw new InvalidOperationException(nameof(AppointmentSession)))
                 .Where(appointmentSessionWhere).OrderBy(appointmentSessionOrderBy).ToList());
         }
@@ -137,10 +136,10 @@
         {
             var appointmentSessions = Db.Set<AppointmentSession>().Where(x => x.MedicalPractitionerId == userId).Include(m => m.MedicalPractitioner)
                 .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient);
+                .ThenInclude(p => p.Patient);
             
             return await appointmentSessions.SelectMany(x =>
-                x.AppointmentSlots.Where(y => y.Appointment.PatientId == patientId)).ToListAsync();
+                x.AppointmentSlots.Where(y => y.PatientId == patientId)).ToListAsync();
         }
     }
 }

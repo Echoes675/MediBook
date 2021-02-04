@@ -33,11 +33,6 @@
         private readonly IAppointmentSlotDal _apptSlotDal;
 
         /// <summary>
-        /// The Appointment Dal
-        /// </summary>
-        private readonly IAppointmentDal _apptDal;
-
-        /// <summary>
         /// The Patient Dal
         /// </summary>
         private readonly IPatientDal _patientDal;
@@ -58,8 +53,7 @@
         public AppointmentBookingManager(
             ILogger<AppointmentBookingManager> log, 
             IUserDal userDal, 
-            IAppointmentSlotDal apptSlotDal, 
-            IAppointmentDal apptDal, 
+            IAppointmentSlotDal apptSlotDal,
             IPatientDal patientDal, 
             IPatientsMedicalPractitionerDal patientsMedicalPractitionerDal,
             IAppointmentSessionDal sessionDal)
@@ -67,7 +61,6 @@
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _userDal = userDal ?? throw new ArgumentNullException(nameof(userDal));
             _apptSlotDal = apptSlotDal ?? throw new ArgumentNullException(nameof(apptSlotDal));
-            _apptDal = apptDal ?? throw new ArgumentNullException(nameof(apptDal));
             _patientDal = patientDal ?? throw new ArgumentNullException(nameof(patientDal));
             _patientsMedicalPractitionerDal = patientsMedicalPractitionerDal ?? throw new ArgumentNullException(nameof(patientsMedicalPractitionerDal));
             _sessionDal = sessionDal ?? throw new ArgumentNullException(nameof(sessionDal));
@@ -175,10 +168,8 @@
             var patientRegisteredWithMedicalPractitioner = await patientMedicalPractitionerTask;
 
             // Create a new Appointment and add it to the AppointmentSlot to make the booking
-            appointmentSlot.Appointment = new Appointment()
-            {
-                Patient = patient
-            };
+            appointmentSlot.Patient = patient;
+            appointmentSlot.AppointmentState = AppointmentState.PendingPatientArrival;
 
             // update the status of the slot to pending patient arrival to indicate it is booked
             appointmentSlot.State = SlotState.Booked;
@@ -284,10 +275,13 @@
 
             var patientRegisteredWithMedicalPractitioner = await patientMedicalPractitionerTask;
 
-            newAppointmentSlot.Appointment = currentAppointmentSlot.Appointment;
+            newAppointmentSlot.Patient = currentAppointmentSlot.Patient;
+            newAppointmentSlot.AppointmentState = AppointmentState.PendingPatientArrival;
             newAppointmentSlot.State = SlotState.Booked;
-            currentAppointmentSlot.Appointment = null;
+            currentAppointmentSlot.Patient = null;
             currentAppointmentSlot.State = SlotState.Available;
+            currentAppointmentSlot.AppointmentState = AppointmentState.Available;
+
 
             var appointmentSlots = new List<AppointmentSlot>
             {
@@ -349,26 +343,16 @@
                 throw new ArgumentNullException(nameof(slot));
             }
 
-            if (await _apptDal.DeleteAsync(slot.AppointmentId))
-            {
-                // If the Appointment was marked as Cancelled/Deleted remove the association with the slot
-                slot.Appointment = null;
-
-                // Reset the slot status to Available
-                slot.State = SlotState.Available;
-
-                // Update the slot in the Db
-                await _apptSlotDal.UpdateAsync(slot);
-
-                return new AppointmentBookResults()
-                {
-                    ResultCode = ServiceResultStatusCode.Success
-                };
-            }
+            // Reset the slot status to Available
+            slot.State = SlotState.Available;
+            slot.AppointmentState = AppointmentState.Available;
+            slot.Patient = null;
+            // Update the slot in the Db
+            await _apptSlotDal.UpdateAsync(slot);
 
             return new AppointmentBookResults()
             {
-                ResultCode = ServiceResultStatusCode.Failed
+                ResultCode = ServiceResultStatusCode.Success
             };
         }
 

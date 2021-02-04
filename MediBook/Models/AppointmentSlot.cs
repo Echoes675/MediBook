@@ -33,15 +33,29 @@
         [Required]
         public int AppointmentDurationInMins { get; set; }
 
-        /// <summary>
-        /// The Id of the booked Appointment
-        /// </summary>
-        public int AppointmentId { get; set; }
+        ///// <summary>
+        ///// The Id of the booked Appointment
+        ///// </summary>
+        //public int AppointmentId { get; set; }
+
+        ///// <summary>
+        ///// The navigation property for the booked appointment
+        ///// </summary>
+        //public Appointment Appointment { get; set; }
 
         /// <summary>
-        /// The navigation property for the booked appointment
+        /// The Appointment state
         /// </summary>
-        public Appointment Appointment { get; set; }
+        public AppointmentState AppointmentState { get; set; }
 
+        /// <summary>
+        /// The Patient Id
+        /// </summary>
+        public int? PatientId { get; set; }
+
+        /// <summary>
+        /// The Patient navigation property
+        /// </summary>
+        public Patient Patient { get; set; }
     }
 }

@@ -41,10 +41,5 @@
         /// Navigation property for the associated AppointmentSessions
         /// </summary>
         public ICollection<AppointmentSession> AppointmentSessions { get; set; }
-
-        /// <summary>
-        /// Navigation property for the associated Appointments
-        /// </summary>
-        public ICollection<Appointment> Appointments { get; set; }
     }
 }

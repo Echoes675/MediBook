@@ -28,7 +28,7 @@
         /// <returns></returns>
         public override async Task<IEnumerable<AppointmentSlot>> GetAllAsync()
         {
-            var retVal = await Db.Set<AppointmentSlot>().Include(x => x.Appointment).ToListAsync().ConfigureAwait(false);
+            var retVal = await Db.Set<AppointmentSlot>().Include(x => x.Patient).ToListAsync().ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(AppointmentSlot)}");
             return retVal;
         }
@@ -47,7 +47,7 @@
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return (Db.Set<AppointmentSlot>().Include(x => x.Appointment).AsEnumerable() ??
+            return (Db.Set<AppointmentSlot>().Include(x => x.Patient).AsEnumerable() ??
                     throw new InvalidOperationException(nameof(AppointmentSlot))).Where(predicate);
         }
 

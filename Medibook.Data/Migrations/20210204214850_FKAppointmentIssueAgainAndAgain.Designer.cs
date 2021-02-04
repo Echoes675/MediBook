@@ -4,14 +4,16 @@ using MediBook.Data.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MediBook.Data.Migrations
 {
     [DbContext(typeof(MediBookDatabaseContext))]
-    partial class MediBookDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210204214850_FKAppointmentIssueAgainAndAgain")]
+    partial class FKAppointmentIssueAgainAndAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +68,7 @@ namespace MediBook.Data.Migrations
                     b.Property<int>("AppointmentState")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PatientId")
+                    b.Property<int>("PatientId")
                         .HasColumnType("int");
 
                     b.Property<int>("State")
@@ -308,7 +310,9 @@ namespace MediBook.Data.Migrations
 
                     b.HasOne("MediBook.Core.Models.Patient", "Patient")
                         .WithMany("AppointmentSlots")
-                        .HasForeignKey("PatientId");
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Patient");
                 });

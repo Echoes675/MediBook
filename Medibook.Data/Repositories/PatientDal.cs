@@ -66,7 +66,6 @@
         public override async Task<Patient> GetEntityAsync(int id)
         {
             return await Db.Set<Patient>()
-                .Include(a => a.Appointments)
                 .Include(m => m.PatientsMedicalPractitioners).ThenInclude(m => m.MedicalPractitioner)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
