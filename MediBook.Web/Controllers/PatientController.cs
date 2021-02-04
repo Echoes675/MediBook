@@ -196,28 +196,5 @@
                 AlertType.danger);
             return View("Edit", updatedPatientDetails);
         }
-
-        /// <summary>
-        /// Extract the logged in user's Id from the Claims Principal
-        /// </summary>
-        /// <returns></returns>
-        private int GetLoggedInUserId()
-        {
-            // extracting the custom user claim here
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity?.Claims.FirstOrDefault(x => x.Type == "Id");
-
-            // extract user id from claim
-            var idString = claim != null ? claim.Value : string.Empty;
-
-            // Try to parse idString to an int
-            if (int.TryParse(idString, out var id))
-            {
-                return id;
-            }
-
-            // Failed to parse the idString. Return -1 as a number that could never be an Id
-            return -1;
-        }
     }
 }

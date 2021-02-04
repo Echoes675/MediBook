@@ -116,6 +116,23 @@
         }
 
         /// <summary>
+        /// Filter entities in a DbSet based on predicate
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
+        /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
+        public Task<IEnumerable<User>> FilterAsync(Func<User, bool> predicate)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return Task.Run(() => Filter(predicate));
+        }
+
+        /// <summary>
         /// Method to soft delete a User from the database if it exists
         /// </summary>
         /// <param name="id"></param>

@@ -1,4 +1,4 @@
-﻿namespace MediBook.Services.AppointmentBook
+﻿namespace MediBook.Core.DTOs
 {
     using System;
     using System.ComponentModel.DataAnnotations;

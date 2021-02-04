@@ -7,7 +7,11 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using System.Globalization;
+    using System.Security.Claims;
     using System.Threading.Tasks;
+    using MediBook.Core.Enums;
+    using MediBook.Core.Models;
     using MediBook.Services.Enums;
     using MediBook.Services.UserAuthentication;
     using Microsoft.Extensions.Logging;
@@ -79,18 +83,28 @@
                 return View();
             }
 
+            if (result.UserAccountDetails == null)
+            {
+                _logger.LogError($"User account passed authentication checks but UserDetails were not returned to build ClaimsPrincipal." +
+                                 $"\"Username\"={userForLogin.Username}");
+                Alert("Account login failed due to an Internal Error", AlertType.danger);
+                return View();
+            }
+
+            var claimsPrincipal = BuildClaimsPrincipal(result.UserAccountDetails);
+
             // Make sure the ClaimsPrincipal was created
-            if (result.ClaimsPrincipal == null)
+            if (claimsPrincipal == null)
             {
                 // if username or password not recognised, produce an alert and reload the view
-                _logger.LogError($"AuthController returned success but no ClaimsPrincipal. \"Username\"={userForLogin.Username}");
+                _logger.LogError($"AuthController returned success but failed to build ClaimsPrincipal. \"Username\"={userForLogin.Username}");
                 Alert("Account login failed due to an Internal Error", AlertType.danger);
                 return View();
             }
 
             // sign user in using cookie authentication to store principal
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme, result.ClaimsPrincipal).ConfigureAwait(false);
+                CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal).ConfigureAwait(false);
 
             return RedirectToAction("Index", "Home");
         }
@@ -102,6 +116,30 @@
             // delete the login cookie and redirect to login page
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
             return RedirectToAction(nameof(Login), "Auth");
+        }
+
+        // Build a claims principal from authenticated user
+        private ClaimsPrincipal BuildClaimsPrincipal(UserAccountDetailsDto user)
+        {
+
+            if (string.IsNullOrEmpty(user.Username) || user.Id < 1 ||
+                user.JobDescription == null || user.JobDescription.Role == UserRole.Unknown)
+            {
+                return null;
+            }
+
+            // define user claims including a custom claim for user Id
+            // this would be useful if any future queries/actions required
+            // user Id to be submitted with requests
+            var claims = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim("Id", user.Id.ToString(CultureInfo.InvariantCulture)),
+                new Claim(ClaimTypes.Role, user.JobDescription.Role.ToString())
+            }, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // build principal using claims
+            return new ClaimsPrincipal(claims);
         }
     }
 }

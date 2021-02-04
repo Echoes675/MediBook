@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using MediBook.Core.DTOs;
-    using MediBook.Core.Models;
     using MediBook.Services.Enums;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The results AppointmentBook operations
@@ -24,5 +24,10 @@
         /// The Appointments Details
         /// </summary>
         public List<AppointmentDetails> AppointmentsDetails { get; set; }
+
+        /// <summary>
+        /// The list of SelectList items intended for use in a View
+        /// </summary>
+        public List<SelectListItem> SelectList { get; set; }
     }
 }

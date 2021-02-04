@@ -4,10 +4,12 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The Appointment Session
     /// </summary>
+    [Index(nameof(MedicalPractitionerId))]
     public class AppointmentSession : IDbEntity
     {
         /// <summary>
@@ -30,7 +32,6 @@
         /// <summary>
         /// The Id of the associated Medical Practitioner Employee account
         /// </summary>
-        [ForeignKey("UserId")]
         public int MedicalPractitionerId { get; set; }
 
         /// <summary>

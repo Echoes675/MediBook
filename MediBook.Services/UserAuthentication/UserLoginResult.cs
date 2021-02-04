@@ -1,6 +1,6 @@
 ﻿namespace MediBook.Services.UserAuthentication
 {
-    using System.Security.Claims;
+    using MediBook.Core.DTOs;
     using MediBook.Services.Enums;
 
     /// <summary>
@@ -13,12 +13,12 @@
         /// </summary>
         /// <param name="resultStatus"></param>
         /// <param name="message"></param>
-        /// <param name="claimsPrincipal"></param>
-        public UserLoginResult(ServiceResultStatusCode resultStatus, string message, ClaimsPrincipal claimsPrincipal)
+        /// <param name="userAccountDetails"></param>
+        public UserLoginResult(ServiceResultStatusCode resultStatus, string message, UserAccountDetailsDto userAccountDetails)
         {
             ResultStatus = resultStatus;
             Message = message;
-            ClaimsPrincipal = claimsPrincipal;
+            UserAccountDetails = userAccountDetails;
         }
 
         /// <summary>
@@ -32,8 +32,8 @@
         public string Message { get; }
 
         /// <summary>
-        /// The ClaimsPrincipal
+        /// The UserAccountDetails
         /// </summary>
-        public ClaimsPrincipal ClaimsPrincipal { get; }
+        public UserAccountDetailsDto UserAccountDetails { get; }
     }
 }

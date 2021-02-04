@@ -110,6 +110,6 @@
         /// <summary>
         /// The patient's appointments
         /// </summary>
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<AppointmentSlot> AppointmentSlots { get; set; }
     }
 }

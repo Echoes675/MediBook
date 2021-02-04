@@ -1,11 +1,11 @@
 ﻿namespace MediBook.Core.Enums
 {
     /// <summary>
-    /// The Appointment State
+    /// The appointment state
     /// </summary>
     public enum AppointmentState
     {
-        AvailableToBook = 0,
+        Available = 0,
         PendingPatientArrival = 1,
         PatientArrived = 2,
         PatientBeingSeen = 3,

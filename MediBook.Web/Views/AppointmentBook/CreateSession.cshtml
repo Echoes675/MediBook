@@ -1,5 +1,81 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Create Appointment Book Session";
+}
+
+@model CreateAppointmentSessionViewModel
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="AppointmentBook" asp-action="Index">Appointment Book</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">@ViewData["Title"]</li>
+    </ol>
+</nav>
+<div class="card table-blue-border w-50" style=" margin:auto;">
+    <h3 class="card-header thead-blue">@ViewData["Title"]</h3>
+    <div class="card-body w-100" style="margin: 0 auto">
+        <div class="col-12">
+            <form asp-action="CreateSession" class="md-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <select asp-for="MedicalPractitionerId" class="browser-default custom-select" asp-items="@Model.MedicalPractitioners">
+                    </select>
+                    <span asp-validation-for="MedicalPractitionerId" class="text-danger"></span>
+                </div>
+                <div class="md-form">
+                    <label class="col-form-label" for="Date">Date</label>
+                    <input asp-for="Date" class="form-control" id="Date" name="Date" placeholder="DD/MM/YYY" type="date" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                    <small>Surgery opening hours are 8am to 6pm</small>
+                </div>
+                @*<div class="md-form">
+                    <label class="col-form-label" for="StartTime">StartTime</label>
+                    <input asp-for="StartTime" class="form-control" id="StartTime" name="StartTime" type="time" asp-format="{0:HH:mm}" />
+                    <input type="text" value="9/23/2009" style="width: 100px;" readonly="readonly" name="Date" id="Date" class="hasDatepicker" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                    <small>Surgery opening hours are 8am to 6pm</small>
+                </div>*@
+                <div class="md-form">
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input asp-for="StartTime" type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="md-form">
+                    <label for="DurationInMins" class="col-form-label">Duration In Mins</label>
+                    <input asp-for="DurationInMins" class="form-control" type="number" id="DurationInMins" />
+                    <span asp-validation-for="DurationInMins" class="text-danger"></span>
+                    <small>Note: Duration will be rounded to the nearest 5 minutes</small>
+                </div>
+                <div class="md-form">
+                    <label for="NumberOfAppointmentSlots" class="col-form-label">Number of AppointmentSlots</label>
+                    <input asp-for="NumberOfAppointmentSlots" class="form-control" type="number" id="NumberOfAppointmentSlots" />
+                    <span asp-validation-for="NumberOfAppointmentSlots" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-4">
+                    <input type="submit" value="Create" class="btn table-blue-border" />
+                    <a class="btn btn-grey-cancel" asp-controller="AppointmentBook" asp-action="Index">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('.mdb-select').materialSelect();
+        });
+    </script>
+    
+
+}
+@section Head
+{
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 }

@@ -80,5 +80,14 @@
         /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
         /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
         IEnumerable<User> Filter(Func<User, bool> predicate);
+
+        /// <summary>
+        /// Filter entities in a DbSet based on predicate
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
+        /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
+        Task<IEnumerable<User>> FilterAsync(Func<User, bool> predicate);
     }
 }

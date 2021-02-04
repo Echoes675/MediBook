@@ -1,0 +1,27 @@
+﻿<table class="table table-striped">
+    <thead class="">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">Duration (mins)</th>
+            <th scope="col">Medical Practitioner</th>
+            <th scope="col">Appointment State</th>
+        </tr>
+    </thead>
+    <tbody class="bg-white">
+        <!-- Loop to print out the user accounts -->
+        @for (int i = 0; i < Model?.PatientAppointments?.Count; i++)
+        {
+        <tr>
+            <td>@Model?.PatientAppointments?.AppointmentDateTime.ToString("dd/MM/yyyy")</td>
+            <td>@Model?.PatientAppointments?.AppointmentDateTime.ToString("HH:mm")</td>
+            <td>@Model?.PatientAppointments?.AppointmentDurationInMins</td>
+            <td>
+                @(Model?.PatientAppointments?.MedicalPractitionerDetails?.Lastname + ","
+                      + Model?.PatientAppointments?.MedicalPractitionerDetails?.Firstname)
+            </td>
+            <td>@Model?.PatientAppointments?.State</td>
+        </tr>
+        }
+    </tbody>
+</table>
