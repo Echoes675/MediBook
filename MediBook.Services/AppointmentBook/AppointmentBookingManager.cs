@@ -98,13 +98,10 @@
                 };
             }
 
-            List<AppointmentSlot> appointmentSlots;
             if (callingUser.JobDescription.Role == UserRole.MedicalPractitioner)
             {
-                // If this has been called by a Medical Practitioner, only return their own sessions for the specified day
-                appointmentSlots = _apptSlotDal.Filter(x => x.Appointment.PatientId == patientId && x.Appointment.MedicalPractitionerId == userId).ToList();
-
-
+                var appointmentSlots = await
+                    _sessionDal.GetPatientAppointmentSlotsAssociatedWithMedicalPractitionerSessions(userId, patientId);
                 var appointmentDetails = appointmentSlots.Select(x => new AppointmentDetails(callingUser, x)).OrderByDescending(x => x.AppointmentDateTime).ToList();
                 return new AppointmentBookResults()
                 {
@@ -180,8 +177,7 @@
             // Create a new Appointment and add it to the AppointmentSlot to make the booking
             appointmentSlot.Appointment = new Appointment()
             {
-                Patient = patient,
-                MedicalPractitioner = medicalPractitioner.EmployeeDetails
+                Patient = patient
             };
 
             // update the status of the slot to pending patient arrival to indicate it is booked

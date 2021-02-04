@@ -58,21 +58,6 @@
         }
 
         /// <summary>
-        /// Return the Patient including all of their associated MedicalPractitioners with
-        /// the Appointments filtered to the calling user's Id
-        /// </summary>
-        /// <param name="patientId"></param>
-        /// <param name="callingUserId"></param>
-        /// <returns></returns>
-        public async Task<Patient> GetEntityAsync(int patientId, int callingUserId)
-        {
-            return await Db.Set<Patient>()
-                .Include(a => a.Appointments.Where(o => o.MedicalPractitionerId == callingUserId))
-                .Include(m => m.PatientsMedicalPractitioners)
-                .FirstOrDefaultAsync(p => p.Id == patientId);
-        }
-
-        /// <summary>
         /// Return the Patient including all of their registered MedicalPractitioners and
         /// all of their Appointments
         /// </summary>

@@ -102,26 +102,26 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Set up relationships between tables
-            modelBuilder.Entity<Appointment>()
-                .HasOne(pt => pt.Patient)
-                .WithMany(p => p.Appointments)
-                .HasForeignKey(pt => pt.PatientId);
-
             //modelBuilder.Entity<Appointment>()
-            //    .HasOne(pt => pt.MedicalPractitioner)
+            //    .HasOne(pt => pt.Patient)
             //    .WithMany(p => p.Appointments)
-            //    .HasForeignKey(pt => pt.MedicalPractitionerId)
-            //    .OnDelete(DeleteBehavior.ClientCascade);
+            //    .HasForeignKey(pt => pt.PatientId);
+
+            ////modelBuilder.Entity<Appointment>()
+            ////    .HasOne(pt => pt.MedicalPractitioner)
+            ////    .WithMany(p => p.Appointments)
+            ////    .HasForeignKey(pt => pt.MedicalPractitionerId)
+            ////    .OnDelete(DeleteBehavior.ClientCascade);
+
+            ////modelBuilder.Entity<PatientsMedicalPractitioner>()
+            ////    .HasOne(pt => pt.MedicalPractitioner)
+            ////    .WithMany(p => p.PatientsMedicalPractitioners)
+            ////    .HasForeignKey(pt => pt.MedicalPractitionerId);
 
             //modelBuilder.Entity<PatientsMedicalPractitioner>()
-            //    .HasOne(pt => pt.MedicalPractitioner)
+            //    .HasOne(pt => pt.Patient)
             //    .WithMany(p => p.PatientsMedicalPractitioners)
-            //    .HasForeignKey(pt => pt.MedicalPractitionerId);
-
-            modelBuilder.Entity<PatientsMedicalPractitioner>()
-                .HasOne(pt => pt.Patient)
-                .WithMany(p => p.PatientsMedicalPractitioners)
-                .HasForeignKey(pt => pt.PatientId);
+            //    .HasForeignKey(pt => pt.PatientId);
         }
     }
 }

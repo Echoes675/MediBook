@@ -8,7 +8,6 @@
     /// The booked Appointment
     /// </summary>
     [Index(nameof(PatientId))]
-    [Index(nameof(MedicalPractitionerId))]
     public class Appointment : IDbEntity
     {
         /// <summary>
@@ -31,16 +30,5 @@
         /// </summary>
         [Required]
         public Patient Patient { get; set; }
-
-        /// <summary>
-        /// The Id of the associated Medical Practitioner MedicalPractitioner account
-        /// </summary>
-        public int MedicalPractitionerId { get; set; }
-
-        /// <summary>
-        /// The MedicalPractitioner Employee navigation property
-        /// </summary>
-        [Required]
-        public Employee MedicalPractitioner { get; set; }
     }
 }

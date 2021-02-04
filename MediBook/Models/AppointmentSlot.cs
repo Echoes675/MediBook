@@ -42,5 +42,6 @@
         /// The navigation property for the booked appointment
         /// </summary>
         public Appointment Appointment { get; set; }
+
     }
 }

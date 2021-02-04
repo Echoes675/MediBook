@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using MediBook.Core.DTOs;
     using MediBook.Core.Models;
     using MediBook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
@@ -126,6 +127,20 @@
             }
 
             return await CheckEntityExistsAsync(entity.MedicalPractitionerId, entity.StartDateTime, entity.DurationInMins);
+        }
+
+        /// <summary>
+        /// Returns a list of a patient's appointment slots filtered to the calling Medical Practitioner's Id
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AppointmentSlot>> GetPatientAppointmentSlotsAssociatedWithMedicalPractitionerSessions(int userId, int patientId)
+        {
+            var appointmentSessions = Db.Set<AppointmentSession>().Where(x => x.MedicalPractitionerId == userId).Include(m => m.MedicalPractitioner)
+                .Include(x => x.AppointmentSlots)
+                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient);
+            
+            return await appointmentSessions.SelectMany(x =>
+                x.AppointmentSlots.Where(y => y.Appointment.PatientId == patientId)).ToListAsync();
         }
     }
 }

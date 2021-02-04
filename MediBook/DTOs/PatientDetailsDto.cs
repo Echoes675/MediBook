@@ -43,7 +43,6 @@
             MobilePhone = patient.MobilePhone;
             Email = patient.Email;
             PatientNotes = patient.PatientNotes;
-            Appointments = patient.Appointments;
             PatientStatus = patient.Status;
         }
 
@@ -141,10 +140,5 @@
         /// The patient's notes
         /// </summary>
         public ICollection<PatientNote> PatientNotes { get; set; }
-
-        /// <summary>
-        /// The patient's appointments
-        /// </summary>
-        public ICollection<Appointment> Appointments { get; set; }
     }
 }

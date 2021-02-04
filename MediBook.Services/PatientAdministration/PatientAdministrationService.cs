@@ -94,7 +94,7 @@
                 throw new ArgumentOutOfRangeException(nameof(callingUserId));
             }
 
-            var patient = await _patientDal.GetEntityAsync(patientId, callingUserId);
+            var patient = await _patientDal.GetEntityAsync(patientId);
 
             var patientDetails = new PatientDetailsDto(patient);
 
