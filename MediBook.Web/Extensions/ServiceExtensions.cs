@@ -51,7 +51,7 @@
             services.AddScoped<IPatientRecordService, PatientRecordService>();
             services.AddScoped<IAppointmentSessionManager, AppointmentSessionManager>();
             services.AddScoped<IAppointmentBookingManager, AppointmentBookingManager>();
-            //services.AddScoped<IAppointmentBookService, AppointmentBookService>();
+            services.AddScoped<IAppointmentBookService, AppointmentBookService>();
         }
     }
 }

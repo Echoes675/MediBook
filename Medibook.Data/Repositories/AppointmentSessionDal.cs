@@ -31,7 +31,7 @@
             var retVal = await Db.Set<AppointmentSession>()
                 .Include(m => m.MedicalPractitioner)
                 .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment)
+                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
                 .ToListAsync().ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(AppointmentSession)}");
             return retVal;
@@ -52,7 +52,7 @@
             var retVal = await Db.Set<AppointmentSession>()
                 .Include(m => m.MedicalPractitioner)
                 .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment)
+                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 .ConfigureAwait(false);
             _log.LogDebug($"All Entities returned of type. \"EntityType\"={typeof(AppointmentSession)}");
@@ -80,7 +80,7 @@
             return await Task.Run(() => (Db.Set<AppointmentSession>()
                     .Include(m => m.MedicalPractitioner)
                     .Include(x => x.AppointmentSlots)
-                .ThenInclude(y => y.Appointment)
+                .ThenInclude(y => y.Appointment).ThenInclude(p => p.Patient)
                 .AsEnumerable() ?? throw new InvalidOperationException(nameof(AppointmentSession)))
                 .Where(appointmentSessionWhere).OrderBy(appointmentSessionOrderBy).ToList());
         }

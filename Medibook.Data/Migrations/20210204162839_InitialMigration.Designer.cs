@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MediBook.Data.Migrations
 {
     [DbContext(typeof(MediBookDatabaseContext))]
-    [Migration("20210203234529_Appointment-EmployeeFK")]
-    partial class AppointmentEmployeeFK
+    [Migration("20210204162839_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,9 @@ namespace MediBook.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -23,6 +23,11 @@
         /// <returns></returns>
         Task<AppointmentBookResults> GetAppointmentBookSessions(int userId, DateTime date);
 
+        /// <summary>
+        /// Cancels a given AppointmentBook Session
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <returns></returns>
         Task<AppointmentBookResults> CancelAppointmentBookSession(int sessionId);
 
         /// <summary>

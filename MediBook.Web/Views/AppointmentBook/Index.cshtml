@@ -12,36 +12,91 @@
 </nav>
 
 <div class="container-fluid">
-
     <h3>@ViewData["Title"]</h3>
-    <h5></h5>
     <div class="row mb-4">
         <div class="col">
-            <a class="btn" asp-controller="UserAdmin" asp-action="CreateUser">
-                <i class="fas fa-plus-circle fa-lg"></i> Add User
+            <a class="btn" asp-roles="PracticeAdmin" asp-controller="AppointmentBook" asp-action="CreateSession">
+                <i class="fas fa-calendar-week fa-lg"></i> Create Appointment Session
             </a>
         </div>
     </div>
-    <div class="container-fluid">
-        <ul class="nav md-pills nav-justified table-blue-border">
-            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#activeUsers">Active Users</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#inactiveUsers">Inactive Users</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#deletedUsers">Deleted Users</a></li>
-        </ul>
+    <div class="row mb-4">
+        <h4>Showing sessions from:<strong> @Model.Date</strong></h4>
     </div>
-</div>
-<div class="tab-content">
-    <div id="activeUsers" class="tab-pane active">
-        <!-- Active Users table -->
-        <partial name="_ActiveUsers" />
+    <div class="row mb-4">
+        <div class="col-2">
+            <div class="form-group mt-4">
+                <form asp-action="GetSessionsForDay">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Date" type="hidden" class="form-control" name="Date" value="@Model.Date.AddDays(-1)" />
+                    <div class="form-group mt-4">
+                        <input type="submit" value="<< Previous Day" class="btn btn-blue-grey" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-3">
+            <div class="form-group mt-4">
+                <form asp-action="GetSessionsForDay">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <label class="col-form-label" for="Date">Go to Date</label>
+                    <input asp-for="Date" class="form-control" id="Date" name="Date" placeholder="DD/MM/YYY" type="date" />
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Go" class="btn btn-blue-grey" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-2">
+            <div class="form-group mt-4">
+                <form asp-action="GetSessionsForDay">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Date" type="hidden" class="form-control" name="Date" value="@Model.Date.AddDays(1)" />
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Next Day >>" class="btn btn-blue-grey" />
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div id="inactiveUsers" class="tab-pane">
-        <!-- Inactive Users table -->
-        <partial name="_InactiveUsers" />
-    </div>
-    <div id="deletedUsers" class="tab-pane">
-        <!-- Deleted Users table -->
-        <partial name="_DeletedUsers" />
+    <div class="row mb-4">
+        <div class="col">
+            <!-- Loop for each appointment session returned in the ViewModel -->
+            @if (Model?.AppointmentSessions?.Count > 0)
+            {
+                <div class="row card-group" style="">
+                    @foreach (var session in Model.AppointmentSessions)
+                    {
+                        <div class="card m-0 table-blue-border">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    @(session?.MedicalPractitioner?.LastName + ", " + session?.MedicalPractitioner?.FirstName)
+                                    <a class="btn-sm ml-4" data-toggle="modal" data-target="#deletesession" data-id="@session?.Id">
+                                        <i class="far fa-trash-alt fa-lg rgba-red-strong" title="Delete Session"></i>
+                                    </a>
+                                </h5>
+                                @if (@session?.AppointmentSlots?.Count > 0)
+                                {
+                                    <ul class="list-group list-group-flush">
+                                        @foreach (var slot in session?.AppointmentSlots)
+                                        {
+                                            <li class="list-group-item">
+                                                <asp-appointment-slot-text slot="@slot"></asp-appointment-slot-text>
+                                                <a class="btn" asp-roles="PracticeAdmin, Reception" asp-controller="AppointmentBook" asp-action="CancelAppointment" asp-route-id="@slot.Id">
+                                                    <asp-appointment-slot-icon status="@slot.State"></asp-appointment-slot-icon>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </div>
 <div class="modal fade" id="deletesession" tabindex="-1" role="dialog" aria-labelledby="deletesessionLabel" aria-hidden="true">
@@ -78,10 +133,9 @@
         $('#deletesession').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var id = button.data('id') // Extract info from data-* attributes
-            var name = button.data('username')
             var modal = $(this)
             modal.find('.modal-title').text('Confirm Delete Appointment Session')
-            modal.find('.modal-body #message-text').text('Are you sure you want to delete the session. Note, this will cancel any appointments currently booked to this session: \"' + name + '\" (Id:' + id + ')')
+            modal.find('.modal-body #message-text').text('Are you sure you want to delete the session. Note that this will also cancel any appointments currently booked to this session')
             modal.find('.modal-footer #deletesession').html('<input type="hidden" class="form-control" data-val="true" data-val-required="The Id field is required." id="Id" name="Id" value="' + id + '" />')
         })
     </script>

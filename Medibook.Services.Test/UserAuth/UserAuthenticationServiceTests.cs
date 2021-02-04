@@ -140,7 +140,12 @@
             var mockUser = new User()
             {
                 Username = "jsmith",
-                State = AccountState.Active
+                State = AccountState.Active,
+                JobDescription = new JobDescription()
+                {
+                    Role = UserRole.MedicalPractitioner,
+                    Description = "GP"
+                }
             };
             mockDal.GetUserAsync("username").Returns(mockUser);
             mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "wrongPassword").Returns(false);
@@ -175,7 +180,6 @@
             };
 
             mockDal.GetUserAsync("username").Returns(user);
-            mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword").Returns(true);
 
             var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
 
@@ -183,12 +187,11 @@
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ResultStatus, Is.EqualTo(ServiceResultStatusCode.Failed));
-            Assert.That(result.Message, Does.Contain("Account login failed. Internal error."));
-            mockCryptoSvc.Received().VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword");
+            Assert.That(result.Message, Does.Contain("Account login failed. Account role is unknown"));
         }
 
         [Test]
-        public void Login_UserFoundHasValidDetails_ReturnsClaimsPrincipal()
+        public void Login_UserFoundHasValidDetails_ReturnsUserDetailsDto()
         {
             var mockDal = Substitute.For<IUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
@@ -206,6 +209,12 @@
                 State = AccountState.Active,
                 PasswordHash = new byte[8],
                 PasswordSalt = new byte[8],
+                EmployeeDetails = new Employee()
+                {
+                    Firstname = "James",
+                    Lastname = "Smith",
+                    Title = Title.Dr
+                }
             };
 
             mockDal.GetUserAsync("username").Returns(user);
@@ -217,7 +226,7 @@
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ResultStatus, Is.EqualTo(ServiceResultStatusCode.Success));
-            Assert.That(result.ClaimsPrincipal, Is.Not.Null);
+            Assert.That(result.UserAccountDetails, Is.Not.Null);
         }
     }
 }

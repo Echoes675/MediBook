@@ -75,6 +75,12 @@
                 return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
             }
 
+            if (user.JobDescription.Role == UserRole.Unknown)
+            {
+                message = $"Account login failed. Account role is unknown \"Username\"={username}, \"AccountRole\"={user.JobDescription.Role}";
+                return new UserLoginResult(ServiceResultStatusCode.Failed, message, null);
+            }
+
             // user found, check the password is correct and build the ClaimsPrincipal, if not, return null
             if (!_cryptographyService.VerifyPasswordHash(user.PasswordHash, user.PasswordSalt, password))
             {

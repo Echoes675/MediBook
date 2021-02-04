@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using MediBook.Core.DTOs;
     using MediBook.Data.Repositories;
     using MediBook.Services.AppointmentBook;
     using MediBook.Services.Enums;
@@ -123,9 +124,9 @@
             return View(nameof(Index), appointmentBookViewModel);
         }
 
-        [HttpPost("GetDay")]
+        [HttpPost("GetSessionsForDay")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> GetDay(AppointmentBookViewModel model)
+        public async Task<IActionResult> GetSessionsForDay(AppointmentBookViewModel model)
         {
             var currentLoggedInUser = GetLoggedInUserId();
             if (currentLoggedInUser < 1)
@@ -152,22 +153,25 @@
             return View(nameof(Index), appointmentBookViewModel);
         }
 
-        [HttpGet("BookAppointment")]
-        //[Authorize(Roles = "Reception, PracticeAdmin")]
-        public IActionResult BookAppointment(int slotId)
-        {
-            return View();
-        }
-
         [HttpGet("CancelAppointment")]
-        //[Authorize(Roles = "MedicalPractitioner")]
-        public IActionResult CancelAppointment(int id)
+        //[Authorize(Roles = "Reception,PracticeAdmin")]
+        public async Task<IActionResult> CancelAppointment(int id)
         {
             if (id <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(id));
             }
 
+            var result = await _apptSvc.CancelAppointmentAsync(id);
+
+            if (result.ResultCode != ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to cancel Appointment. \"SlotId\"={id}");
+                Alert("Failed to cancel Appointment.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            Alert("Successfully cancelled Appointment.", AlertType.success);
             return RedirectToAction(nameof(Index));
         }
 
@@ -175,15 +179,79 @@
         //[Authorize(Roles = "PracticeAdmin")]
         public IActionResult CreateSession()
         {
+            return View(new CreateAppointmentSessionViewModel());
+        }
 
-            return View();
+        [HttpPost("CreateSession")]
+        //[Authorize(Roles = "PracticeAdmin")]
+        public async Task<IActionResult> CreateSession([FromForm] CreateAppointmentSessionViewModel createSessionDetails)
+        {
+            if (createSessionDetails == null)
+            {
+                _log.LogError($"Failed to create Appointment Session. No Create Session Details received.");
+                Alert("Failed to create Appointment Session due to an internal error.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Round up the session duration to the next 5 mins
+            var validSessionDuration = createSessionDetails.DurationInMins;
+            if (validSessionDuration % 5 != 0)
+            {
+                var remainder = validSessionDuration % 5;
+
+                validSessionDuration = remainder >= 3 ? 
+                    validSessionDuration + (5 - remainder) : 
+                    validSessionDuration - remainder;
+            }
+
+            var newSessionConfig = new AppointmentSessionConfiguration()
+            {
+                DurationInMins = validSessionDuration,
+                StartDateTime = createSessionDetails.StartTime,
+                NumberOfAppointmentSlots = createSessionDetails.NumberOfAppointmentSlots,
+                MedicalPractitionerId = createSessionDetails.MedicalPractitionerId
+            };
+
+            var result = await _apptSvc.CreateNewAppointmentSession(newSessionConfig);
+            if (result.ResultCode != ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to create Appointment Session.");
+                Alert("Failed to create Appointment Session.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            Alert("Successfully created Appointment Session.", AlertType.success);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet("DeleteSession")]
         //[Authorize(Roles = "PracticeAdmin")]
-        public IActionResult DeleteSession()
+        public async Task<IActionResult> DeleteSession(int id)
         {
-            return View("Index");
+            if (id <= 0)
+            {
+                _log.LogError($"Failed to delete Appointment Session. \"SessionId\"={id}");
+                Alert("Failed to delete Appointment Session.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var result = await _apptSvc.CancelAppointmentBookSession(id);
+            if (result.ResultCode != ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to delete Appointment Session. \"SessionId\"={id}");
+                Alert("Failed to delete Appointment Session.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            Alert("Successfully deleted Appointment Session.", AlertType.success);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet("BookAppointment")]
+        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        public IActionResult BookAppointment(int slotId)
+        {
+            return View();
         }
     }
 }

@@ -26,6 +26,9 @@
         /// </summary>
         private readonly IAppointmentSessionDal _apptSessionDal;
 
+        /// <summary>
+        /// The Appointment Slot Dal
+        /// </summary>
         private readonly IAppointmentSlotDal _apptSlotDal;
 
         /// <summary>

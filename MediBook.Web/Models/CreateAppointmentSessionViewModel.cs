@@ -37,11 +37,14 @@
         /// <summary>
         /// The duration in Minutes
         /// </summary>
+        [Required]
         public int DurationInMins { get; set; }
 
         /// <summary>
-        /// 
+        /// The number of AppointmentSlots
         /// </summary>
+        [Required]
+        [Range(1,120)]
         public int NumberOfAppointmentSlots { get; set; }
     }
 }
