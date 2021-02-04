@@ -50,5 +50,57 @@
             return (Db.Set<AppointmentSlot>().Include(x => x.Appointment).AsEnumerable() ??
                     throw new InvalidOperationException(nameof(AppointmentSlot))).Where(predicate);
         }
+
+        public Task<IEnumerable<AppointmentSlot>> FilterAsync(Func<AppointmentSlot, bool> predicate)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return Task.Run(() => Filter(predicate));
+        }
+
+        /// <summary>
+        /// Method to Update a list of AppointmentSlots after confirming they already exist
+        /// </summary>
+        /// <param name="appointmentSlots"></param>
+        /// <returns></returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="appointmentSlots"/> is <see langword="null"/></exception>
+        public async Task Update(List<AppointmentSlot> appointmentSlots)
+        {
+            if (appointmentSlots == null)
+            {
+                throw new ArgumentNullException(nameof(appointmentSlots));
+            }
+
+            foreach(var slot in appointmentSlots)
+            {
+                if (await CheckEntityExistsAsync(slot.Id))
+                {
+                    Db.Set<AppointmentSlot>().Update(slot);
+                }
+            }
+
+            await Db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Method to delete an entity from the database if it exists
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAsync(AppointmentSlot slot)
+        {
+            var entity = await DbGetByIdAsync(slot.Id).ConfigureAwait(false);
+            if (entity == null)
+            {
+                return false;
+            }
+
+            Db.Set<AppointmentSlot>().Remove(entity);
+            await Db.SaveChangesAsync().ConfigureAwait(false);
+            return true;
+        }
     }
 }

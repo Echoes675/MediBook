@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using MediBook.Core.Enums;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -15,6 +16,11 @@
         /// The Appointment Id
         /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// The Appointment state
+        /// </summary>
+        public AppointmentState State { get; set; }
 
         /// <summary>
         /// The Patient Id

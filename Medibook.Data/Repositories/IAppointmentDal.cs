@@ -16,7 +16,7 @@
         Task<Appointment> AddAsync(Appointment entity);
 
         /// <summary>
-        /// Method to delete an entity from the database if it exists
+        /// Method to soft delete an Appointment if it exists
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

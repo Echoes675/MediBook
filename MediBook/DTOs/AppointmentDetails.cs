@@ -63,7 +63,7 @@
         /// <summary>
         /// The Appointment State
         /// </summary>
-        public AppointmentState State { get; set; }
+        public SlotState State { get; set; }
 
         /// <summary>
         /// The day and time of the appointment

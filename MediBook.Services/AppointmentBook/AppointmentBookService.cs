@@ -1,12 +1,7 @@
 ﻿namespace MediBook.Services.AppointmentBook
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using MediBook.Core.DTOs;
-    using MediBook.Core.Enums;
-    using MediBook.Core.Models;
     using MediBook.Data.Repositories;
     using MediBook.Services.Enums;
     using Microsoft.Extensions.Logging;
@@ -14,7 +9,7 @@
     /// <summary>
     /// The Appointment Book Service
     /// </summary>
-    public class AppointmentBookService
+    public class AppointmentBookService : IAppointmentBookService
     {
         /// <summary>
         /// The logger
@@ -22,35 +17,33 @@
         private readonly ILogger<AppointmentBookService> _log;
 
         /// <summary>
-        /// The Appointment Session Dal
+        /// The AppointmentSession Manager
+        /// </summary>
+        private readonly IAppointmentSessionManager _sessionMgr;
+
+        /// <summary>
+        /// The AppointmentBookingManager
+        /// </summary>
+        private readonly IAppointmentBookingManager _apptBooking;
+
+        /// <summary>
+        /// The AppointmentSession Dal
         /// </summary>
         private readonly IAppointmentSessionDal _apptSessionDal;
 
         /// <summary>
-        /// The user dal
-        /// </summary>
-        private readonly IUserDal _userDal;
-
-        /// <summary>
-        /// The Appointment Dal
-        /// </summary>
-        private readonly IAppointmentDal _apptDal;
-
-        /// <summary>
-        /// The Appointment Slot Dal
-        /// </summary>
-        private readonly IAppointmentSlotDal _apptSlotDal;
-
-        /// <summary>
         /// Initializes an instance of the <see cref="AppointmentBookService"/>
         /// </summary>
-        public AppointmentBookService(ILogger<AppointmentBookService> log, IAppointmentSessionDal apptSessionDal, IUserDal userDal, IAppointmentDal apptDal, IAppointmentSlotDal apptSlotDal)
+        public AppointmentBookService(
+            ILogger<AppointmentBookService> log,
+            IAppointmentSessionManager sessionMgr,
+            IAppointmentBookingManager apptBooking,
+            IAppointmentSessionDal apptSessionDal)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
+            _sessionMgr = sessionMgr ?? throw new ArgumentNullException(nameof(sessionMgr));
+            _apptBooking = apptBooking ?? throw new ArgumentNullException(nameof(apptBooking));
             _apptSessionDal = apptSessionDal ?? throw new ArgumentNullException(nameof(apptSessionDal));
-            _userDal = userDal ?? throw new ArgumentNullException(nameof(userDal));
-            _apptDal = apptDal ?? throw new ArgumentNullException(nameof(apptDal));
-            _apptSlotDal = apptSlotDal ?? throw new ArgumentNullException(nameof(apptSlotDal));
         }
 
         /// <summary>
@@ -58,40 +51,14 @@
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        public async Task<AppointmentBookResults> CreateNewAppointmentSession(AppointmentSessionConfiguration config)
+        public Task<AppointmentBookResults> CreateNewAppointmentSession(AppointmentSessionConfiguration config)
         {
             if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
-            // Generate the new session and slots per the config
-            var newSession = GenerateNewAppointmentSession(config);
-
-            //Attempt to save the new session to the db
-            var result = await _apptSessionDal.AddAsync(newSession);
-
-            if (result == null)
-            {
-                // Could not create the new session as another already exists in the same time block for the same Medical Practitioner
-                return new AppointmentBookResults()
-                {
-                    ResultCode = ServiceResultStatusCode.AlreadyExists
-                };
-            }
-
-            // Convert the saved session to an AppointmentSessionDetails object for return
-            var sessionDetails = new AppointmentSessionDetails(newSession);
-
-            // Return results
-            return new AppointmentBookResults()
-            {
-                ResultCode = ServiceResultStatusCode.Success,
-                AppointmentSessionDetails = new List<AppointmentSessionDetails>()
-                {
-                    sessionDetails
-                }
-            };
+            return _sessionMgr.CreateNewAppointmentSessionAsync(config);
         }
 
         /// <summary>
@@ -102,65 +69,52 @@
         /// <param name="userId"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public async Task<AppointmentBookResults> GetAppointmentBookSessions(int userId, DateTime date)
+        public Task<AppointmentBookResults> GetAppointmentBookSessions(int userId, DateTime date)
         {
             if (userId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
 
-            // Get the account of the calling user so we can determine their role
-            var callingUser = await _userDal.GetEntityAsync(userId);
+            return _sessionMgr.GetAppointmentBookSessionsAsync(userId, date);
+        }
 
-            if (callingUser.JobDescription == null)
+        public async Task<AppointmentBookResults> CancelAppointmentBookSession(int sessionId)
+        {
+            if (sessionId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+
+            var session = await _apptSessionDal.GetEntityAsync(sessionId);
+            if (session == null)
             {
                 return new AppointmentBookResults()
                 {
-                    ResultCode = ServiceResultStatusCode.Failed
+                    ResultCode = ServiceResultStatusCode.NotFound
                 };
             }
 
-            List<AppointmentSession> sessions;
-            if (callingUser.JobDescription.Role == UserRole.MedicalPractitioner)
+            AppointmentBookResults result;
+            var appointmentsCancelSuccess = true;
+            foreach (var slot in session?.AppointmentSlots)
             {
-                // If this has been called by a Medical Practitioner, only return their own sessions for the specified day
-                sessions = await _apptSessionDal.FilterAndOrderAsync((x =>
-                    x.StartDateTime.Date == date.Date && x.MedicalPractitionerId == userId), s => s.StartDateTime);
-            }
-            else
-            {
-                // If this has been called by Reception or Practice Admin staff, return all sessions  the specified day
-                sessions = await _apptSessionDal.FilterAndOrderAsync((x =>
-                    x.StartDateTime.Date == date.Date), s => s.StartDateTime);
-            }
-
-            if (!sessions.Any())
-            {
-                // no sessions found for the given date (and Medical practitioner)
-                // return success and no sessions
-                return new AppointmentBookResults()
+                result = await _apptBooking.CancelAppointmentAsync(slot);
+                if (result.ResultCode != ServiceResultStatusCode.Success)
                 {
-                    ResultCode = ServiceResultStatusCode.Success
-                };
+                    appointmentsCancelSuccess = false;
+                }
             }
 
-            // Get the details of the Medical Practitioners associated with these sessions
-                var medicalPractitionersIds = sessions.Select(i => i.MedicalPractitionerId).ToList();
-            var medicalPractitioners = await _userDal.GetEntitiesAsync(medicalPractitionersIds);
+            // Once cancellation of the booked appointments is successful, then delete the Session and slots
+            if (appointmentsCancelSuccess)
+            {
+                return await _sessionMgr.DeleteAppointmentSessionAsync(session);
+            }
 
-            // Join the list of Appointment Sessions with the list of Medical Practitioner's User accounts and create a list of
-            // AppointmentSessionDetails ready for return
-            var sessionDetails = sessions.Join(
-                medicalPractitioners,
-                session => session.MedicalPractitionerId,
-                medicalPractitioner => medicalPractitioner.Id,
-                (session, medicalPractitioner) => new AppointmentSessionDetails(session, medicalPractitioner)).ToList();
-
-            // return success and the sessionDetails
             return new AppointmentBookResults()
             {
-                ResultCode = ServiceResultStatusCode.Success,
-                AppointmentSessionDetails = sessionDetails
+                ResultCode = ServiceResultStatusCode.Failed
             };
         }
 
@@ -171,117 +125,63 @@
         /// <param name="patientId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<AppointmentBookResults> GetPatientAppointmentHistory(int patientId, int userId)
+        public Task<AppointmentBookResults> GetPatientAppointmentHistory(int patientId, int userId)
         {
             if (userId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
 
-            // Get the account of the calling user so we can determine their role
-            var callingUser = await _userDal.GetEntityAsync(userId);
-
-            if (callingUser.JobDescription == null)
+            if (patientId <= 0)
             {
-                return new AppointmentBookResults()
-                {
-                    ResultCode = ServiceResultStatusCode.Failed
-                };
+                throw new ArgumentOutOfRangeException(nameof(patientId));
             }
 
-            List<AppointmentSlot> appointmentSlots;
-            if (callingUser.JobDescription.Role == UserRole.MedicalPractitioner)
-            {
-                // If this has been called by a Medical Practitioner, only return their own sessions for the specified day
-                appointmentSlots = _apptSlotDal.Filter(x => x.Appointment.PatientId == patientId && x.Appointment.MedicalPractitionerId == userId).ToList();
-
-
-                var appointmentDetails = appointmentSlots.Select(x => new AppointmentDetails(callingUser, x)).OrderByDescending(x => x.AppointmentDateTime).ToList();
-                var result = new AppointmentBookResults()
-                {
-                    ResultCode = ServiceResultStatusCode.Success,
-                    AppointmentsDetails = appointmentDetails
-                };
-            }
-
-            return new AppointmentBookResults()
-            {
-                ResultCode = ServiceResultStatusCode.Failed
-            };
+            return _apptBooking.GetPatientAppointmentHistory(patientId, userId);
         }
 
-        /// <summary>
-        /// Generates the Appointment Session and Appointment Slots per the config specification
-        /// </summary>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        private AppointmentSession GenerateNewAppointmentSession(AppointmentSessionConfiguration config)
-        {
-            var slotDuration = config.DurationInMins / config.NumberOfAppointmentSlots;
-            var slots = new List<AppointmentSlot>();
-            var appointmentDateTime = config.StartDateTime;
-            for (var i = 0; i < config.NumberOfAppointmentSlots; i++)
-            {
-                slots.Add(new AppointmentSlot()
-                {
-                    State = AppointmentState.AvailableToBook,
-                    AppointmentDateTime = appointmentDateTime,
-                    AppointmentDurationInMins = slotDuration,
-                });
 
-                //Advance the start time of the next appointment
-                appointmentDateTime = appointmentDateTime.AddMinutes(slotDuration);
-            }
-
-            var session = new AppointmentSession()
-            {
-                DurationInMins = config.DurationInMins,
-                StartDateTime = config.StartDateTime,
-                MedicalPractitionerId = config.MedicalPractitionerId,
-                AppointmentSlots = slots
-            };
-
-            return session;
-        }
 
         /// <summary>
         /// Book a new appointment for a patient
         /// </summary>
         /// <returns></returns>
-        public async Task<AppointmentBookResults> BookAppointmentAsync(BookAppointmentData data)
+        public Task<AppointmentBookResults> BookAppointmentAsync(AddOrUpdateAppointmentData data)
         {
             if (data == null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
 
-            throw new NotImplementedException();
-            // Get Appointment Slot
-
-            // Get Medical Practitioner
-
-            // Get 
+            return _apptBooking.BookAppointmentAsync(data);
         }
-    }
-
-    /// <summary>
-    /// Data required to book a new appointment
-    /// </summary>
-    public class BookAppointmentData
-    {
-        /// <summary>
-        /// The patient Id
-        /// </summary>
-        public int PatientId { get; set; }
 
         /// <summary>
-        /// The Id of the selected slot
+        /// Update an existing appointment for a patient
         /// </summary>
-        public int SlotId { get; set; }
+        /// <returns></returns>
+        public Task<AppointmentBookResults> UpdateAppointmentAsync(AddOrUpdateAppointmentData data)
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            return _apptBooking.UpdateAppointmentAsync(data);
+        }
 
         /// <summary>
-        /// The Medical Practitioner Id
+        /// Cancel a booked appointment for a patient
         /// </summary>
-        public int MedicalPractitionerId { get; set; }
+        /// <returns></returns>
+        public Task<AppointmentBookResults> CancelAppointmentAsync(int slotId)
+        {
+            if (slotId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(slotId));
+            }
+
+            return _apptBooking.CancelAppointmentAsync(slotId);
+        }
     }
 }
