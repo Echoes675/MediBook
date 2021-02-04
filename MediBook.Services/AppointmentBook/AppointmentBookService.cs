@@ -91,6 +91,21 @@
             return _sessionMgr.GetAppointmentBookSessionsAsync(userId, date);
         }
 
+        /// <summary>
+        /// Gets the sessions and only their free slots
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public Task<AppointmentBookResults> GetAppointmentBookSessionsFreeSlots(DateTime date)
+        {
+            return _sessionMgr.GetAppointmentBookSessionsFreeSlots(date);
+        }
+
+        /// <summary>
+        /// Cancels an appointment book session
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <returns></returns>
         public async Task<AppointmentBookResults> CancelAppointmentBookSession(int sessionId)
         {
             if (sessionId <= 0)

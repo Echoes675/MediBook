@@ -80,7 +80,7 @@
             {
                 _log.LogError($"Authentication failure. Could not extract User's Id from Claims Principal.");
                 Alert("Failed to authorize current User access to the Patient Record", AlertType.danger);
-                return RedirectToAction("Details", "Patient", id);
+                return RedirectToAction("Details", "Patient", new { id = id });
             }
 
             var patientDetails = await _patientAdminSvc.GetPatientDetailsAsync(id, userId);
@@ -88,7 +88,7 @@
             {
                 _log.LogError($"Failed to load the Patient's details");
                 Alert("Failed to load the Patient", AlertType.danger);
-                return RedirectToAction("Details", "Patient", id);
+                return RedirectToAction("Details", "Patient", new { id = id });
             }
 
             // Retrieve the patient notes authored by the calling MedicalPractitioner
@@ -98,7 +98,7 @@
             {
                 _log.LogError($"Failed to load the Patient Notes from the Patients Record");
                 Alert("Failed to load the Patient Notes from the Patients Record", AlertType.danger);
-                return RedirectToAction("Details", "Patient", id);
+                return RedirectToAction("Details", "Patient", new { id = id });
             }
 
             // Set up the PatientRecord
@@ -113,11 +113,11 @@
             // Retrieve the patient appointments associated by the calling MedicalPractitioner
             var patientAppointmentsResult = await _appointmentBookService.GetPatientAppointmentHistory(id, userId);
 
-            if (patientAppointmentsResult.ResultCode == ServiceResultStatusCode.Success)
+            if (patientAppointmentsResult.ResultCode != ServiceResultStatusCode.Success)
             {
                 _log.LogError($"Failed to load the Patient Appointment History from the Patient's Record");
                 Alert("Failed to load the Patient Appointment History from the Patient's Record", AlertType.danger);
-                return RedirectToAction("Details", "Patient", id);
+                return RedirectToAction("Details", "Patient", new { id = id });
             }
 
             // Add the Patient's Appointments to the PatientRecord
@@ -135,7 +135,7 @@
             {
                 _log.LogError($"Authentication failure. Could not extract User's Id from Claims Principal.");
                 Alert("Failed to authorize current User access to the Patient Record", AlertType.danger);
-                return RedirectToAction("Details", "Patient", id);
+                return RedirectToAction("Details", "Patient", new { id = id });
             }
 
             var medicalPractitioner = await _userAdminSvc.GetUserFullDetailsAsync(userId);
@@ -143,7 +143,7 @@
             {
                 _log.LogError($"Failed to load Medical Practitioner's account. \"Id\"={userId}");
                 Alert("Failed to authorize current User access to the Patient Record", AlertType.danger);
-                return RedirectToAction("Details", "Patient", id);
+                return RedirectToAction("Details", "Patient", new { id = id });
             }
 
             var newPatientNote = new PatientNoteDto()
@@ -176,12 +176,12 @@
             {
                 Alert(
                     $"Patient note successfully saved to the patient's record. \"PatientId\"={newPatientNote.PatientId}", AlertType.success);
-                return RedirectToAction("Index", newPatientNote.PatientId);
+                return RedirectToAction("Index",new { id = newPatientNote.PatientId});
             }
 
             _log.LogError($"Failed to save new Patient note. \"PatientId\"={newPatientNote.PatientId}, \"MedicalPractitionerId\"={newPatientNote.MedicalPractitionerId}");
             Alert("Failed to save new Patient note.", AlertType.danger);
-            return RedirectToAction("Index", newPatientNote.PatientId);
+            return RedirectToAction("Index", new { id = newPatientNote.PatientId });
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿namespace MediBook.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.DTOs;
-    using MediBook.Data.Repositories;
     using MediBook.Services.AppointmentBook;
     using MediBook.Services.Enums;
     using MediBook.Web.Enums;
     using MediBook.Web.Models;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -26,7 +27,9 @@
         /// </summary>
         private readonly IAppointmentBookService _apptSvc;
 
-        public AppointmentBookController(ILogger<AppointmentBookController> log, IAppointmentBookService apptSvc, IUserDal userDal)
+        public AppointmentBookController(ILogger<AppointmentBookController> log,
+            IAppointmentBookService apptSvc,
+            IHttpContextAccessor httpContextAccessor)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _apptSvc = apptSvc ?? throw new ArgumentNullException(nameof(apptSvc));
@@ -64,7 +67,7 @@
 
         [HttpPost("GetNextDay")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> GetNextDay(AppointmentBookViewModel model)
+        public async Task<IActionResult> GetNextDay([FromForm] AppointmentBookViewModel model)
         {
             var nextDate = model.Date.AddDays(1);
 
@@ -95,7 +98,7 @@
 
         [HttpPost("GetPreviousDay")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> GetPreviousDay(AppointmentBookViewModel model)
+        public async Task<IActionResult> GetPreviousDay([FromForm] AppointmentBookViewModel model)
         {
             var previousDate = model.Date.AddDays(-1);
 
@@ -126,7 +129,7 @@
 
         [HttpPost("GetSessionsForDay")]
         //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> GetSessionsForDay(AppointmentBookViewModel model)
+        public async Task<IActionResult> GetSessionsForDay([FromForm] AppointmentBookViewModel model)
         {
             var currentLoggedInUser = GetLoggedInUserId();
             if (currentLoggedInUser < 1)
@@ -177,9 +180,21 @@
 
         [HttpGet("CreateSession")]
         //[Authorize(Roles = "PracticeAdmin")]
-        public IActionResult CreateSession()
+        public async Task<IActionResult> CreateSession()
         {
-            return View(new CreateAppointmentSessionViewModel());
+            var medicalPractitioners = await _apptSvc.GetMedicalPractitionerSelectList();
+
+            if (medicalPractitioners == null || medicalPractitioners.ResultCode != ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to load list of Medical Practitioners. Cannot create appointment session");
+                Alert("Failed to load list of Medical Practitioners. Cannot create appointment session", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(new CreateAppointmentSessionViewModel()
+            {
+                MedicalPractitioners = medicalPractitioners.SelectList
+            });
         }
 
         [HttpPost("CreateSession")]
@@ -195,6 +210,11 @@
 
             // Round up the session duration to the next 5 mins
             var validSessionDuration = createSessionDetails.DurationInMins;
+            if (createSessionDetails.DurationInMins < 5)
+            {
+                validSessionDuration = 5;
+            }
+
             if (validSessionDuration % 5 != 0)
             {
                 var remainder = validSessionDuration % 5;
@@ -204,10 +224,15 @@
                     validSessionDuration - remainder;
             }
 
+            var validStartDateTime = 
+                new DateTime(createSessionDetails.Date.Year, createSessionDetails.Date.Month, 
+                    createSessionDetails.Date.Day, createSessionDetails.StartTime.Hour, 
+                    createSessionDetails.StartTime.Minute, createSessionDetails.StartTime.Second);
+
             var newSessionConfig = new AppointmentSessionConfiguration()
             {
                 DurationInMins = validSessionDuration,
-                StartDateTime = createSessionDetails.StartTime,
+                StartDateTime = validStartDateTime,
                 NumberOfAppointmentSlots = createSessionDetails.NumberOfAppointmentSlots,
                 MedicalPractitionerId = createSessionDetails.MedicalPractitionerId
             };
@@ -249,9 +274,57 @@
 
         [HttpGet("BookAppointment")]
         //[Authorize(Roles = "Reception, PracticeAdmin")]
-        public IActionResult BookAppointment(int slotId)
+        public async Task<IActionResult> BookAppointment(int patientId)
         {
-            return View();
+            if (patientId <= 0)
+            {
+                _log.LogError($"Invalid Patient received for appointment booking. \"PatientId\"={patientId}");
+                Alert("Invalid Patient received for appointment booking.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var apptData = new AddOrUpdateAppointmentData()
+            {
+                PatientId = patientId
+            };
+
+            var freeSlotsResults = await _apptSvc.GetAppointmentBookSessionsFreeSlots(DateTime.UtcNow.Date);
+            if (freeSlotsResults.ResultCode != ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to load available Appointment slots.");
+                Alert("Failed to load available Appointment slots.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (freeSlotsResults.AppointmentSessionDetails.Any())
+            {
+                apptData.SessionsWithFreeSlots = freeSlotsResults.AppointmentSessionDetails;
+            }
+            
+            return View(apptData);
+        }
+
+        [HttpPost("BookAppointment")]
+        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        public async Task<IActionResult> BookAppointment([FromForm] AddOrUpdateAppointmentData apptData)
+        {
+            if (apptData == null)
+            {
+                _log.LogError($"Failed to book new Appointment. No data received.");
+                Alert("Failed to book new Appointment.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var result = await _apptSvc.BookAppointmentAsync(apptData);
+
+            if (result.ResultCode == ServiceResultStatusCode.Success)
+            {
+                Alert("Successfully added Appointment.", AlertType.success);
+                return RedirectToAction(nameof(Index));
+            }
+
+            Alert("Failed to add new Appointment.", AlertType.danger);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

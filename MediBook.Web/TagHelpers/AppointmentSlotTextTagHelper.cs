@@ -19,21 +19,23 @@
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var time = Slot.AppointmentDateTime.TimeOfDay.ToString("HH:mm");
-            var status = Slot.State;
-            var patientFirstName = Slot.Appointment.Patient.Firstname;
-            var patientLastName = Slot.Appointment.Patient.Lastname;
-
             var slotTextSB = new StringBuilder();
             slotTextSB.Append(time + " - ");
 
-            if (status == SlotState.Available)
+            if (Slot.State == SlotState.Available)
             {
-                slotTextSB.Append("Available");
+                var patientFirstName = Slot.Appointment.Patient.Firstname;
+                var patientLastName = Slot.Appointment.Patient.Lastname;
+
+                slotTextSB.Append(patientLastName + ", ");
+                slotTextSB.Append(patientFirstName);
+
+                output.TagName = "p";
+                output.Content.SetContent(slotTextSB.ToString());
             }
             else
             {
-                slotTextSB.Append(patientLastName + ", ");
-                slotTextSB.Append(patientFirstName);
+                slotTextSB.Append("Available");
             }
 
             output.TagName = "p";

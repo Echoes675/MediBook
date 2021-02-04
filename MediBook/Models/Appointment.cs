@@ -1,7 +1,6 @@
 ﻿namespace MediBook.Core.Models
 {
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using MediBook.Core.Enums;
     using Microsoft.EntityFrameworkCore;
 

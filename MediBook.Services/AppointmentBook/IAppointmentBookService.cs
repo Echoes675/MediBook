@@ -24,6 +24,13 @@
         Task<AppointmentBookResults> GetAppointmentBookSessions(int userId, DateTime date);
 
         /// <summary>
+        /// Gets the AppointmentBookSessions showing only free slots on a given day.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        Task<AppointmentBookResults> GetAppointmentBookSessionsFreeSlots(DateTime date);
+
+        /// <summary>
         /// Cancels a given AppointmentBook Session
         /// </summary>
         /// <param name="sessionId"></param>
@@ -56,5 +63,11 @@
         /// </summary>
         /// <returns></returns>
         Task<AppointmentBookResults> CancelAppointmentAsync(int slotId);
+
+        /// <summary>
+        /// Returns a list of SelectListItems representing the active Medical Practitioners
+        /// </summary>
+        /// <returns></returns>
+        Task<AppointmentBookResults> GetMedicalPractitionerSelectList();
     }
 }

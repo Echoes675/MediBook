@@ -3,12 +3,10 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using MediBook.Core.Enums;
-    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The Appointment slot
     /// </summary>
-    [Index(nameof(AppointmentId))]
     public class AppointmentSlot : IDbEntity
     {
         /// <summary>

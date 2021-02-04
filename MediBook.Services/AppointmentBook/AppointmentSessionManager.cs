@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using MediBook.Core.DTOs;
     using MediBook.Core.Enums;
@@ -153,6 +154,65 @@
             // Join the list of Appointment Sessions with the list of Medical Practitioner's User accounts and create a list of
             // AppointmentSessionDetails ready for return
             var sessionDetails = sessions.Join(
+                medicalPractitioners,
+                session => session.MedicalPractitionerId,
+                medicalPractitioner => medicalPractitioner.Id,
+                (session, medicalPractitioner) => new AppointmentSessionDetails(session, medicalPractitioner))
+                .OrderBy(x => x.MedicalPractitioner.LastName).ToList();
+
+            // return success and the sessionDetails
+            return new AppointmentBookResults()
+            {
+                ResultCode = ServiceResultStatusCode.Success,
+                AppointmentSessionDetails = sessionDetails
+            };
+        }
+
+        /// <summary>
+        /// Gets the Free slots and their session for a given date for all medical practitioners
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<AppointmentBookResults> GetAppointmentBookSessionsFreeSlots(DateTime date)
+        {
+
+            List<AppointmentSession> sessions = await _apptSessionDal.FilterAndOrderAsync((x =>
+                x.StartDateTime.Date == date.Date), s => s.StartDateTime);
+
+            if (!sessions.Any())
+            {
+                // no sessions found for the given date (and Medical practitioner)
+                // return success and no sessions
+                return new AppointmentBookResults()
+                {
+                    ResultCode = ServiceResultStatusCode.Success
+                };
+            }
+
+            // Filter out the already booked slots
+            List<AppointmentSession> sessionsFreeSlot = new List<AppointmentSession>();
+            foreach (var session in sessions)
+            {
+                var freeSlots = session.AppointmentSlots.Where(x => x.State == SlotState.Available).ToList();
+                sessionsFreeSlot.Add(new AppointmentSession()
+                {
+                    AppointmentSlots = new List<AppointmentSlot>(freeSlots),
+                    DurationInMins = session.DurationInMins,
+                    Id = session.Id,
+                    MedicalPractitionerId = session.MedicalPractitionerId,
+                    MedicalPractitioner = session.MedicalPractitioner,
+                    StartDateTime = session.StartDateTime
+
+                });
+            }
+
+            // Get the details of the Medical Practitioners associated with these sessions
+            var medicalPractitionersIds = sessionsFreeSlot.Select(i => i.MedicalPractitionerId).ToList();
+            var medicalPractitioners = await _userDal.GetEntitiesAsync(medicalPractitionersIds);
+
+            // Join the list of Appointment Sessions with the list of Medical Practitioner's User accounts and create a list of
+            // AppointmentSessionDetails ready for return
+            var sessionDetails = sessionsFreeSlot.Join(
                 medicalPractitioners,
                 session => session.MedicalPractitionerId,
                 medicalPractitioner => medicalPractitioner.Id,

@@ -25,6 +25,13 @@
         Task<AppointmentBookResults> GetAppointmentBookSessionsAsync(int userId, DateTime date);
 
         /// <summary>
+        /// Returns the Appointment Sessions showing only the free slots
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        Task<AppointmentBookResults> GetAppointmentBookSessionsFreeSlots(DateTime date);
+
+        /// <summary>
         /// Deletes the selected AppointmentSession and any associated AppointmentSlots and booked Appointments
         /// </summary>
         /// <param name="sessionId"></param>
