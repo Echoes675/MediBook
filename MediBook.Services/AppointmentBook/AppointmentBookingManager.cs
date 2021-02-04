@@ -120,22 +120,8 @@
                 throw new ArgumentNullException(nameof(data));
             }
 
-            // Get Appointment Slot
-            var appointmentSlotTask = _apptSlotDal.GetEntityAsync(data.SlotId);
-
-            // Get Medical Practitioner user account
-            var medicalPractitionerTask = _userDal.GetEntityAsync(data.MedicalPractitionerId);
-
-            // Get Patient details
-            var patientTask = _patientDal.GetEntityAsync(data.PatientId);
-
-            //Check PatientsMedicalPractitioners to see if this user is registered with this Medical Practitioner
-            var patientMedicalPractitionerTask =
-                _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
-            Task.WaitAll(appointmentSlotTask, medicalPractitionerTask, patientTask, patientMedicalPractitionerTask);
-
             // Get the results of the completed tasks
-            var appointmentSlot = await appointmentSlotTask;
+            var appointmentSlot = await _apptSlotDal.GetEntityAsync(data.SlotId);
             if (appointmentSlot == null)
             {
                 _log.LogError($"Unable to load AppointmentSlot for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -145,7 +131,7 @@
                 };
             }
 
-            var medicalPractitioner = await medicalPractitionerTask;
+            var medicalPractitioner = await _userDal.GetEntityAsync(data.MedicalPractitionerId);
             if (medicalPractitioner == null)
             {
                 _log.LogError($"Unable to load MedicalPractitioner for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -155,7 +141,7 @@
                 };
             }
 
-            var patient = await patientTask;
+            var patient = await _patientDal.GetEntityAsync(data.PatientId);
             if (patient == null)
             {
                 _log.LogError($"Unable to load Patient for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -165,7 +151,7 @@
                 };
             }
 
-            var patientRegisteredWithMedicalPractitioner = await patientMedicalPractitionerTask;
+            var patientRegisteredWithMedicalPractitioner = _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
 
             // Create a new Appointment and add it to the AppointmentSlot to make the booking
             appointmentSlot.Patient = patient;
@@ -174,16 +160,13 @@
             // update the status of the slot to pending patient arrival to indicate it is booked
             appointmentSlot.State = SlotState.Booked;
 
-            var slotUpdateResultTask = _apptSlotDal.UpdateAsync(appointmentSlot);
-
             if (!patientRegisteredWithMedicalPractitioner)
             {
                 await RegisterPatientIfNotRegisteredToMedicalPractitioner(data, patient, medicalPractitioner);
             }
 
-
             // Collect the result of the slot update task
-            var slotUpdateResult = await slotUpdateResultTask;
+            var slotUpdateResult = await _apptSlotDal.UpdateAsync(appointmentSlot);
 
             if (slotUpdateResult != null)
             {
@@ -214,25 +197,8 @@
                 throw new ArgumentNullException(nameof(data));
             }
 
-            // Get current Appointment Slot
-            var currentAppointmentSlotTask = _apptSlotDal.FilterAsync(x => x.Id == data.SlotId);
-
-            // Get the proposed new Appointment Slot
-            var newAppointmentSlotTask = _apptSlotDal.GetEntityAsync(data.SlotId);
-
-            // Get Medical Practitioner Employee Id
-            var medicalPractitionerTask = _userDal.GetEntityAsync(data.MedicalPractitionerId);
-
-            // Get Patient details
-            var patientTask = _patientDal.GetEntityAsync(data.PatientId);
-
-            //Check PatientsMedicalPractitioners to see if this user is registered with this Medical Practitioner
-            var patientMedicalPractitionerTask =
-                _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
-            Task.WaitAll(currentAppointmentSlotTask, newAppointmentSlotTask, medicalPractitionerTask, patientTask, patientMedicalPractitionerTask);
-
             // Get the results of the completed tasks
-            var currentAppointmentSlotFiltered = await currentAppointmentSlotTask;
+            var currentAppointmentSlotFiltered = await _apptSlotDal.FilterAsync(x => x.Id == data.SlotId); ;
             var currentAppointmentSlot = currentAppointmentSlotFiltered.FirstOrDefault();
             if (currentAppointmentSlot == null)
             {
@@ -243,7 +209,7 @@
                 };
             }
 
-            var newAppointmentSlot = await newAppointmentSlotTask;
+            var newAppointmentSlot = await _apptSlotDal.GetEntityAsync(data.SlotId);
             if (newAppointmentSlot == null)
             {
                 _log.LogError($"Unable to load proposed new AppointmentSlot for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -253,7 +219,7 @@
                 };
             }
 
-            var medicalPractitioner = await medicalPractitionerTask;
+            var medicalPractitioner = await _userDal.GetEntityAsync(data.MedicalPractitionerId);
             if (medicalPractitioner == null)
             {
                 _log.LogError($"Unable to load MedicalPractitioner for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -263,7 +229,7 @@
                 };
             }
 
-            var patient = await patientTask;
+            var patient = await _patientDal.GetEntityAsync(data.PatientId);
             if (patient == null)
             {
                 _log.LogError($"Unable to load Patient for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -273,7 +239,7 @@
                 };
             }
 
-            var patientRegisteredWithMedicalPractitioner = await patientMedicalPractitionerTask;
+            var patientRegisteredWithMedicalPractitioner = _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
 
             newAppointmentSlot.Patient = currentAppointmentSlot.Patient;
             newAppointmentSlot.AppointmentState = AppointmentState.PendingPatientArrival;
