@@ -5,6 +5,8 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using MediBook.Core.DTOs;
+    using MediBook.Services.AppointmentBook;
+    using MediBook.Services.Enums;
     using MediBook.Services.PatientAdministration;
     using MediBook.Services.PatientRecord;
     using MediBook.Services.UserAdministration;
@@ -38,22 +40,30 @@
         private readonly IPatientAdministrationService _patientAdminSvc;
 
         /// <summary>
+        /// The AppointmentBook service
+        /// </summary>
+        private readonly IAppointmentBookService _appointmentBookService;
+
+        /// <summary>
         /// Initialise an instance of the <see cref="PatientRecordController"/>
         /// </summary>
         /// <param name="log"></param>
         /// <param name="patientRecordSvc"></param>
         /// <param name="userAdminSvc"></param>
         /// <param name="patientAdminSvc"></param>
+        /// <param name="appointmentBookService"></param>
         public PatientRecordController(
             ILogger<PatientRecordController> log,
             IPatientRecordService patientRecordSvc,
             IUserAdministrationService userAdminSvc,
-            IPatientAdministrationService patientAdminSvc)
+            IPatientAdministrationService patientAdminSvc,
+            IAppointmentBookService appointmentBookService)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _patientRecordSvc = patientRecordSvc ?? throw new ArgumentNullException(nameof(patientRecordSvc));
             _userAdminSvc = userAdminSvc ?? throw new ArgumentNullException(nameof(userAdminSvc));
             _patientAdminSvc = patientAdminSvc ?? throw new ArgumentNullException(nameof(patientAdminSvc));
+            _appointmentBookService = appointmentBookService;
         }
 
         [HttpGet]
@@ -81,6 +91,7 @@
                 return RedirectToAction("Details", "Patient", id);
             }
 
+            // Retrieve the patient notes authored by the calling MedicalPractitioner
             var patientNotes = _patientRecordSvc.RetrievePatientRecords<PatientNoteDto>(id, userId);
 
             if (patientNotes == null)
@@ -89,6 +100,8 @@
                 Alert("Failed to load the Patient Notes from the Patients Record", AlertType.danger);
                 return RedirectToAction("Details", "Patient", id);
             }
+
+            // Set up the PatientRecord
             var patientRecord = new PatientRecord()
             {
                 PatientId = patientDetails.Id,
@@ -96,6 +109,19 @@
                 PatientLastName = patientDetails.Lastname,
                 PatientNotes = patientNotes.OrderByDescending(t => t.Timestamp).ToList()
             };
+
+            // Retrieve the patient appointments associated by the calling MedicalPractitioner
+            var patientAppointmentsResult = await _appointmentBookService.GetPatientAppointmentHistory(id, userId);
+
+            if (patientAppointmentsResult.ResultCode == ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to load the Patient Appointment History from the Patient's Record");
+                Alert("Failed to load the Patient Appointment History from the Patient's Record", AlertType.danger);
+                return RedirectToAction("Details", "Patient", id);
+            }
+
+            // Add the Patient's Appointments to the PatientRecord
+            patientRecord.PatientAppointments = patientAppointmentsResult.AppointmentsDetails;
 
             return View(patientRecord);
         }
@@ -156,29 +182,6 @@
             _log.LogError($"Failed to save new Patient note. \"PatientId\"={newPatientNote.PatientId}, \"MedicalPractitionerId\"={newPatientNote.MedicalPractitionerId}");
             Alert("Failed to save new Patient note.", AlertType.danger);
             return RedirectToAction("Index", newPatientNote.PatientId);
-        }
-
-        /// <summary>
-        /// Extract the logged in user's Id from the Claims Principal
-        /// </summary>
-        /// <returns></returns>
-        private int GetLoggedInUserId()
-        {
-            // extracting the custom user claim here
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity?.Claims.FirstOrDefault(x => x.Type == "Id");
-
-            // extract user id from claim
-            var idString = claim != null ? claim.Value : string.Empty;
-
-            // Try to parse idString to an int
-            if (int.TryParse(idString, out var id))
-            {
-                return id;
-            }
-
-            // Failed to parse the idString. Return -1 as a number that could never be an Id
-            return -1;
         }
     }
 }

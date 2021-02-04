@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using AutoMapper;
     using MediBook.Core.DTOs;
     using MediBook.Services.Enums;
     using MediBook.Services.UserAdministration;

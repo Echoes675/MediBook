@@ -26,5 +26,10 @@
         /// The Patient notes
         /// </summary>
         public List<PatientNoteDto> PatientNotes { get; set; }
+
+        /// <summary>
+        /// A list of the patient's Appointments
+        /// </summary>
+        public List<AppointmentDetails> PatientAppointments { get; set; }
     }
 }

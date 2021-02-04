@@ -153,7 +153,8 @@
                 medicalPractitioners,
                 session => session.MedicalPractitionerId,
                 medicalPractitioner => medicalPractitioner.Id,
-                (session, medicalPractitioner) => new AppointmentSessionDetails(session, medicalPractitioner)).ToList();
+                (session, medicalPractitioner) => new AppointmentSessionDetails(session, medicalPractitioner))
+                .OrderBy(x => x.MedicalPractitioner.LastName).ToList();
 
             // return success and the sessionDetails
             return new AppointmentBookResults()

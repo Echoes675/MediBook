@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using MediBook.Core.DTOs;
     using MediBook.Core.Models;
 
     public interface IAppointmentSessionManager

@@ -9,6 +9,7 @@
     using MediBook.Core.Models;
     using MediBook.Data.Repositories;
     using MediBook.Services.Enums;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -47,6 +48,11 @@
         private readonly IPatientsMedicalPractitionerDal _patientsMedicalPractitionerDal;
 
         /// <summary>
+        /// The AppointmentSession Dal
+        /// </summary>
+        private readonly IAppointmentSessionDal _sessionDal;
+
+        /// <summary>
         /// Initializes an instance of the <see cref="AppointmentBookingManager"/>
         /// </summary>
         public AppointmentBookingManager(
@@ -55,7 +61,8 @@
             IAppointmentSlotDal apptSlotDal, 
             IAppointmentDal apptDal, 
             IPatientDal patientDal, 
-            IPatientsMedicalPractitionerDal patientsMedicalPractitionerDal)
+            IPatientsMedicalPractitionerDal patientsMedicalPractitionerDal,
+            IAppointmentSessionDal sessionDal)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _userDal = userDal ?? throw new ArgumentNullException(nameof(userDal));
@@ -63,6 +70,7 @@
             _apptDal = apptDal ?? throw new ArgumentNullException(nameof(apptDal));
             _patientDal = patientDal ?? throw new ArgumentNullException(nameof(patientDal));
             _patientsMedicalPractitionerDal = patientsMedicalPractitionerDal ?? throw new ArgumentNullException(nameof(patientsMedicalPractitionerDal));
+            _sessionDal = sessionDal ?? throw new ArgumentNullException(nameof(sessionDal));
         }
 
         /// <summary>
@@ -98,7 +106,7 @@
 
 
                 var appointmentDetails = appointmentSlots.Select(x => new AppointmentDetails(callingUser, x)).OrderByDescending(x => x.AppointmentDateTime).ToList();
-                var result = new AppointmentBookResults()
+                return new AppointmentBookResults()
                 {
                     ResultCode = ServiceResultStatusCode.Success,
                     AppointmentsDetails = appointmentDetails
@@ -365,6 +373,74 @@
             return new AppointmentBookResults()
             {
                 ResultCode = ServiceResultStatusCode.Failed
+            };
+        }
+
+        /// <summary>
+        /// Returns a list of SelectListItems representing the appointment slots that
+        /// are available to book for a given active Medical Practitioner from today (now) onwards
+        /// </summary>
+        /// <returns></returns>
+        public async Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int medicalPractitionerUserId)
+        {
+            if (medicalPractitionerUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(medicalPractitionerUserId));
+            }
+
+            // Load the associated user account and ensure it is active and is for a Medical Practitioner
+            var medicalPractitioner = await _userDal.GetEntityAsync(medicalPractitionerUserId);
+            if (medicalPractitioner == null)
+            {
+                _log.LogWarning($"Failed to find MedicalPractitioner with matching Id. Can not build MedicalPractitioner free slots SelectList. \"UserId\"={medicalPractitionerUserId}");
+                return new AppointmentBookResults()
+                {
+                    ResultCode = ServiceResultStatusCode.Failed
+                };
+            }
+
+            if (medicalPractitioner.State != AccountState.Active)
+            {
+                _log.LogWarning($"MedicalPractitioner account is not Active. Can not build MedicalPractitioner free slots SelectList. \"UserId\"={medicalPractitionerUserId}, \"AccountState\"={medicalPractitioner.State}");
+                return new AppointmentBookResults()
+                {
+                    ResultCode = ServiceResultStatusCode.Failed
+                };
+            }
+
+            if (medicalPractitioner.JobDescription == null)
+            {
+                _log.LogWarning($"Unable to verify User account role. Can not build MedicalPractitioner free slots SelectList. \"UserId\"={medicalPractitionerUserId}");
+                return new AppointmentBookResults()
+                {
+                    ResultCode = ServiceResultStatusCode.Failed
+                };
+            }
+
+            if (medicalPractitioner.JobDescription.Role != UserRole.MedicalPractitioner)
+            {
+                _log.LogWarning($"User account role is not MedicalPractitioner. Can not build MedicalPractitioner free slots SelectList. \"UserId\"={medicalPractitionerUserId}, \"Role\"={medicalPractitioner.JobDescription.Role}");
+                return new AppointmentBookResults()
+                {
+                    ResultCode = ServiceResultStatusCode.Failed
+                };
+            }
+
+            // Get the medical practitioner's upcoming sessions
+            var medicalPractitionerSessions = _sessionDal.Filter(x => x.StartDateTime.Date >= DateTime.UtcNow.Date);
+
+            var freeSlots =
+                medicalPractitionerSessions.SelectMany(x => x.AppointmentSlots
+                    .Where(y => y.State == SlotState.Available))
+                    .OrderByDescending(z => z.AppointmentDateTime);
+            
+            var selectListItems = freeSlots.Select(x =>
+                new SelectListItem(x.AppointmentDateTime.ToString("dd/MM/yyyy HH:mm"), x.Id.ToString())).ToList();
+
+            return new AppointmentBookResults()
+            {
+                ResultCode = ServiceResultStatusCode.Success,
+                SelectList = selectListItems
             };
         }
 

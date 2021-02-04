@@ -1,7 +1,10 @@
 ﻿namespace MediBook.Services.AppointmentBook
 {
+    using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface IAppointmentBookingManager
     {
@@ -37,5 +40,12 @@
         /// </summary>
         /// <returns></returns>
         Task<AppointmentBookResults> CancelAppointmentAsync(AppointmentSlot slot);
+
+        /// <summary>
+        /// Returns a list of SelectListItems representing the appointment slots that
+        /// are available to book for a given active Medical Practitioner from today (now) onwards
+        /// </summary>
+        /// <returns></returns>
+        Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int medicalPractitionerUserId);
     }
 }

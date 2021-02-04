@@ -1,9 +1,14 @@
 ﻿namespace MediBook.Services.AppointmentBook
 {
     using System;
+    using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
+    using MediBook.Core.DTOs;
+    using MediBook.Core.Enums;
     using MediBook.Data.Repositories;
     using MediBook.Services.Enums;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -32,18 +37,25 @@
         private readonly IAppointmentSessionDal _apptSessionDal;
 
         /// <summary>
+        /// The User dal
+        /// </summary>
+        private readonly IUserDal _userDal;
+
+        /// <summary>
         /// Initializes an instance of the <see cref="AppointmentBookService"/>
         /// </summary>
         public AppointmentBookService(
             ILogger<AppointmentBookService> log,
             IAppointmentSessionManager sessionMgr,
             IAppointmentBookingManager apptBooking,
-            IAppointmentSessionDal apptSessionDal)
+            IAppointmentSessionDal apptSessionDal,
+            IUserDal userDal)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _sessionMgr = sessionMgr ?? throw new ArgumentNullException(nameof(sessionMgr));
             _apptBooking = apptBooking ?? throw new ArgumentNullException(nameof(apptBooking));
             _apptSessionDal = apptSessionDal ?? throw new ArgumentNullException(nameof(apptSessionDal));
+            _userDal = userDal ?? throw new ArgumentNullException(nameof(userDal));
         }
 
         /// <summary>
@@ -182,6 +194,61 @@
             }
 
             return _apptBooking.CancelAppointmentAsync(slotId);
+        }
+
+        /// <summary>
+        /// Returns a list of SelectListItems representing the active Medical Practitioners
+        /// </summary>
+        /// <returns></returns>
+        public async Task<AppointmentBookResults> GetMedicalPractitionerSelectList()
+        {
+            // Load the associated user account and ensure it is active and is for a Medical Practitioner
+            var medicalPractitioners = await _userDal.FilterAsync(x => x.JobDescription.Role == UserRole.MedicalPractitioner);
+
+            var medicalPractitionerSelectList = medicalPractitioners.Select(x =>
+                new SelectListItem(FormatMedicalPractitionerName(x.EmployeeDetails.Lastname, x.EmployeeDetails.Firstname, x.EmployeeDetails.Title, x.JobDescription.Description),
+                    x.Id.ToString())).OrderBy(x => x.Text).ToList();
+
+            return new AppointmentBookResults()
+            {
+                ResultCode = ServiceResultStatusCode.Success,
+                SelectList = medicalPractitionerSelectList
+            };
+        }
+
+        /// <summary>
+        /// Returns a list of SelectListItems representing the appointment slots that
+        /// are available to book for a given active Medical Practitioner
+        /// </summary>
+        /// <returns></returns>
+        public Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int medicalPractitionerUserId)
+        {
+            if (medicalPractitionerUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(medicalPractitionerUserId));
+            }
+
+            return _apptBooking.GetMedicalPractitionerFreeSlotsSelectList(medicalPractitionerUserId);
+        }
+
+        /// <summary>
+        /// Formats the strings for the text in the select list of medical practitioners
+        /// </summary>
+        /// <param name="lastname"></param>
+        /// <param name="firstname"></param>
+        /// <param name="title"></param>
+        /// <param name="jobDescription"></param>
+        /// <returns></returns>
+        private string FormatMedicalPractitionerName(string lastname, string firstname, Title title, string jobDescription)
+        {
+            var sb = new StringBuilder();
+            sb.Append(lastname);
+            sb.Append(", ");
+            sb.Append(firstname);
+            sb.Append(" (" + title + ") - ");
+            sb.Append(jobDescription);
+
+            return sb.ToString();
         }
     }
 }

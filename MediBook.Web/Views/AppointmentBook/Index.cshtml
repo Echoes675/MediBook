@@ -1,5 +1,93 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Appointment Sessions";
+}
+
+@model AppointmentBookViewModel
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">@ViewData["Title"]</li>
+    </ol>
+</nav>
+
+<div class="container-fluid">
+
+    <h3>@ViewData["Title"]</h3>
+    <h5></h5>
+    <div class="row mb-4">
+        <div class="col">
+            <a class="btn" asp-controller="UserAdmin" asp-action="CreateUser">
+                <i class="fas fa-plus-circle fa-lg"></i> Add User
+            </a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <ul class="nav md-pills nav-justified table-blue-border">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#activeUsers">Active Users</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#inactiveUsers">Inactive Users</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#deletedUsers">Deleted Users</a></li>
+        </ul>
+    </div>
+</div>
+<div class="tab-content">
+    <div id="activeUsers" class="tab-pane active">
+        <!-- Active Users table -->
+        <partial name="_ActiveUsers" />
+    </div>
+    <div id="inactiveUsers" class="tab-pane">
+        <!-- Inactive Users table -->
+        <partial name="_InactiveUsers" />
+    </div>
+    <div id="deletedUsers" class="tab-pane">
+        <!-- Deleted Users table -->
+        <partial name="_DeletedUsers" />
+    </div>
+</div>
+<div class="modal fade" id="deletesession" tabindex="-1" role="dialog" aria-labelledby="deletesessionLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletesessionLabel">Delete User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="message-text"></p>
+            </div>
+            <div class="modal-footer">
+                <form asp-action="DeleteSession">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <!-- hidden input for Id -->
+                    <div id="deletesession"></div>
+
+                    <!-- Confirm Delete and cancel buttons-->
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Confirm Delete" class="btn btn-red-confirm" />
+                        <button type="button" class="btn btn-grey-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $('#deletesession').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var id = button.data('id') // Extract info from data-* attributes
+            var name = button.data('username')
+            var modal = $(this)
+            modal.find('.modal-title').text('Confirm Delete Appointment Session')
+            modal.find('.modal-body #message-text').text('Are you sure you want to delete the session. Note, this will cancel any appointments currently booked to this session: \"' + name + '\" (Id:' + id + ')')
+            modal.find('.modal-footer #deletesession').html('<input type="hidden" class="form-control" data-val="true" data-val-required="The Id field is required." id="Id" name="Id" value="' + id + '" />')
+        })
+    </script>
+
+}
+
+@section Head{
+    <meta http-equiv="refresh" content="60">
 }
