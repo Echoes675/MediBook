@@ -15,9 +15,6 @@
     /// </summary>
     public static class ServiceExtensions
     {
-        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
-            services.AddScoped<IRepositoryManager, RepositoryManager>();
-
         /// <summary>
         /// Adds the Data Accessors to the Service Collection
         /// </summary>

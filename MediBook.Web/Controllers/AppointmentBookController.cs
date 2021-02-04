@@ -19,14 +19,14 @@
         /// <summary>
         /// The logger
         /// </summary>
-        private readonly Logger<AppointmentBookController> _log;
+        private readonly ILogger<AppointmentBookController> _log;
 
         /// <summary>
         /// The AppointmentBook Service
         /// </summary>
         private readonly IAppointmentBookService _apptSvc;
 
-        public AppointmentBookController(Logger<AppointmentBookController> log, IAppointmentBookService apptSvc, IUserDal userDal)
+        public AppointmentBookController(ILogger<AppointmentBookController> log, IAppointmentBookService apptSvc, IUserDal userDal)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _apptSvc = apptSvc ?? throw new ArgumentNullException(nameof(apptSvc));
