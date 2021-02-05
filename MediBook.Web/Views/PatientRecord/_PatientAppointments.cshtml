@@ -1,8 +1,7 @@
 ﻿<table class="table table-striped">
     <thead class="">
         <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Time</th>
+            <th scope="col">Date & Time</th>
             <th scope="col">Duration (mins)</th>
             <th scope="col">Medical Practitioner</th>
             <th scope="col">Appointment State</th>
@@ -13,14 +12,13 @@
         @for (int i = 0; i < Model?.PatientAppointments?.Count; i++)
         {
         <tr>
-            <td>@Model?.PatientAppointments?.AppointmentDateTime.ToString("dd/MM/yyyy")</td>
-            <td>@Model?.PatientAppointments?.AppointmentDateTime.ToString("HH:mm")</td>
-            <td>@Model?.PatientAppointments?.AppointmentDurationInMins</td>
+            <td>@Model?.PatientAppointments[i]?.AppointmentDateTime.ToString()</td>
+            <td>@Model?.PatientAppointments[i]?.AppointmentDurationInMins</td>
             <td>
-                @(Model?.PatientAppointments?.MedicalPractitionerDetails?.Lastname + ","
-                      + Model?.PatientAppointments?.MedicalPractitionerDetails?.Firstname)
+                @(Model?.PatientAppointments[i]?.MedicalPractitionerDetails?.LastName + ","
+                      + Model?.PatientAppointments[i]?.MedicalPractitionerDetails?.FirstName)
             </td>
-            <td>@Model?.PatientAppointments?.State</td>
+            <td>@Model?.PatientAppointments[i]?.State</td>
         </tr>
         }
     </tbody>

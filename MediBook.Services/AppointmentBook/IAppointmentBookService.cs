@@ -69,5 +69,12 @@
         /// </summary>
         /// <returns></returns>
         Task<AppointmentBookResults> GetMedicalPractitionerSelectList();
+
+        /// <summary>
+        /// Returns a list of SelectListItems representing the appointment slots that
+        /// are available to book for a given active Medical Practitioner from today (now) onwards
+        /// </summary>
+        /// <returns></returns>
+        Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int slotId);
     }
 }

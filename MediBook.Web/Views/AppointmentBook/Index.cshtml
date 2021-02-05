@@ -86,8 +86,11 @@
                                                 <asp-appointment-slot-text slot="@slot"></asp-appointment-slot-text>
                                                 @if (slot.State == SlotState.Booked)
                                                 {
+                                                    <a class="btn" asp-roles="PracticeAdmin, Reception" asp-controller="AppointmentBook" asp-action="EditAppointment" asp-route-id="@slot.Id">
+                                                        Edit
+                                                    </a>
                                                     <a class="btn" asp-roles="PracticeAdmin, Reception" asp-controller="AppointmentBook" asp-action="CancelAppointment" asp-route-id="@slot.Id">
-                                                        Cancel Appointment
+                                                        Cancel
                                                     </a>
                                                 }
                                             </li>

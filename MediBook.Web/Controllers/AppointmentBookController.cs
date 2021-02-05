@@ -263,5 +263,56 @@
             Alert("Failed to add new Appointment.", AlertType.danger);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet("EditAppointment")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
+        public async Task<IActionResult> EditAppointment(int id)
+        {
+            if (id <= 0)
+            {
+                _log.LogError($"Invalid Slot Id received for appointment booking. \"SlotId\"={id}");
+                Alert("Invalid Patient received for appointment booking.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var freeSlotsResults = await _apptSvc.GetMedicalPractitionerFreeSlotsSelectList(id);
+            if (freeSlotsResults.ResultCode != ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to load available Appointment slots.");
+                Alert("Failed to load available Appointment slots.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var apptData = new AddOrUpdateAppointmentData()
+            {
+                SlotId = id,
+                SelectList = freeSlotsResults.SelectList
+            };
+
+            return View(apptData);
+        }
+
+        [HttpPost("EditAppointment")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
+        public async Task<IActionResult> EditAppointment([FromForm] AddOrUpdateAppointmentData apptData)
+        {
+            if (apptData == null)
+            {
+                _log.LogError($"Failed to update Appointment. No data received.");
+                Alert("Failed to book new Appointment.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var result = await _apptSvc.UpdateAppointmentAsync(apptData);
+
+            if (result.ResultCode == ServiceResultStatusCode.Success)
+            {
+                Alert("Successfully updated Appointment.", AlertType.success);
+                return RedirectToAction(nameof(Index));
+            }
+
+            Alert("Failed to update Appointment.", AlertType.danger);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

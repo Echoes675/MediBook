@@ -89,5 +89,12 @@
         /// </summary>
         /// <returns></returns>
         Task<List<AppointmentSlot>> GetPatientAppointmentSlotsAssociatedWithMedicalPractitionerSessions(int userId, int patientId);
+
+        /// <summary>
+        /// Returns the Session that owns the slot
+        /// </summary>
+        /// <param name="slotId"></param>
+        /// <returns></returns>
+        Task<AppointmentSession> GetSessionThatOwnsSlot(int slotId);
     }
 }

@@ -46,6 +46,6 @@
         /// are available to book for a given active Medical Practitioner from today (now) onwards
         /// </summary>
         /// <returns></returns>
-        Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int medicalPractitionerUserId);
+        Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int slotId);
     }
 }

@@ -233,18 +233,19 @@
 
         /// <summary>
         /// Returns a list of SelectListItems representing the appointment slots that
-        /// are available to book for a given active Medical Practitioner
+        /// are available to book for a given active Medical Practitioner from today (now) onwards
         /// </summary>
         /// <returns></returns>
-        public Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int medicalPractitionerUserId)
+        public Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int slotId)
         {
-            if (medicalPractitionerUserId <= 0)
+            if (slotId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(medicalPractitionerUserId));
+                throw new ArgumentOutOfRangeException(nameof(slotId));
             }
 
-            return _apptBooking.GetMedicalPractitionerFreeSlotsSelectList(medicalPractitionerUserId);
+            return _apptBooking.GetMedicalPractitionerFreeSlotsSelectList(slotId);
         }
+
 
         /// <summary>
         /// Formats the strings for the text in the select list of medical practitioners
