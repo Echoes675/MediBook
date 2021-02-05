@@ -102,5 +102,15 @@
             await Db.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
+
+        public Task<List<AppointmentSlot>> GetPatientsAppointmentSlots(int patientId)
+        {
+            if (patientId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(patientId));
+            }
+
+            return Db.Set<AppointmentSlot>().Where(x => x.PatientId == patientId).ToListAsync();
+        }
     }
 }

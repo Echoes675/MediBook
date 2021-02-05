@@ -13,12 +13,12 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col">
-            <a class="btn table-blue-border" asp-controller="Patient" asp-action="Search">
+            <a class="btn table-blue-border" asp-roles="MedicalPractitioner" asp-controller="Patient" asp-action="Search">
                 <i class="fas fa-search fa-lg"></i> Find a Patient
             </a>
         </div>
         <div class="col">
-            <a class="btn table-blue-border" asp-controller="Patient" asp-action="Details" asp-route-id="@Model.PatientId">View Patient Details
+            <a class="btn table-blue-border" asp-roles="MedicalPractitioner" asp-controller="Patient" asp-action="Details" asp-route-id="@Model.PatientId">View Patient Details
             </a>
         </div>
     </div>
@@ -38,12 +38,12 @@
 </div>
 <div class="container-fluid">
     <ul class="nav md-pills nav-justified table-blue-border">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#patientNotes">Patient Notes</a></li>
+        <li asp-roles="MedicalPractitioner" class="nav-item"><a class="nav-link active" data-toggle="tab" href="#patientNotes">Patient Notes</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#patientAppointments">Patient Appointments</a></li>
     </ul>
 </div>
 <div class="tab-content">
-    <div id="patientNotes" class="tab-pane active">
+    <div asp-roles="MedicalPractitioner" id="patientNotes" class="tab-pane active">
         <!-- Patient Notes -->
         <partial name="_PatientNotes" />
     </div>

@@ -1,7 +1,9 @@
 ﻿namespace MediBook.Web.Controllers
 {
+    using System;
     using System.Linq;
     using System.Security.Claims;
+    using MediBook.Core.Enums;
     using MediBook.Web.Enums;
     using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +44,29 @@
 
             // Failed to parse the idString. Return -1 as a number that could never be an Id
             return -1;
+        }
+
+        /// <summary>
+        /// Extract the logged in user's Role from the Claims Principal
+        /// </summary>
+        /// <returns></returns>
+        protected UserRole GetLoggedInUserRole()
+        {
+            // extracting the custom user claim here
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity?.Claims.FirstOrDefault(x => x.Type == "Role");
+
+            // extract user id from claim
+            var roleString = claim != null ? claim.Value : string.Empty;
+
+
+            if (Enum.TryParse<UserRole>(roleString, out var userRole))
+            {
+                return userRole;
+            }
+
+            // Failed to parse the roleString. Return Unknown
+            return UserRole.Unknown;
         }
     }
 }

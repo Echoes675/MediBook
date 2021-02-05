@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using MediBook.Core.DTOs;
+    using MediBook.Core.Enums;
     using MediBook.Services.AppointmentBook;
     using MediBook.Services.Enums;
     using MediBook.Services.PatientAdministration;
@@ -67,7 +68,7 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "MedicalPractitioner")]
+        [Authorize(Roles = "MedicalPractitioner,Patient")]
         public async Task<IActionResult> Index(int id)
         {
             if (id <= 0)
@@ -83,21 +84,19 @@
                 return RedirectToAction("Details", "Patient", new { id = id });
             }
 
+            var userRole = GetLoggedInUserRole();
+            if (userRole == UserRole.Unknown)
+            {
+                _log.LogError($"Authentication failure. Could not extract User's Role from Claims Principal.");
+                Alert("Failed to authorize current User access to the Patient Record", AlertType.danger);
+                return RedirectToAction("Details", "Patient", new { id = id });
+            }
+
             var patientDetails = await _patientAdminSvc.GetPatientDetailsAsync(id, userId);
             if (patientDetails == null)
             {
                 _log.LogError($"Failed to load the Patient's details");
                 Alert("Failed to load the Patient", AlertType.danger);
-                return RedirectToAction("Details", "Patient", new { id = id });
-            }
-
-            // Retrieve the patient notes authored by the calling MedicalPractitioner
-            var patientNotes = _patientRecordSvc.RetrievePatientRecords<PatientNoteDto>(id, userId);
-
-            if (patientNotes == null)
-            {
-                _log.LogError($"Failed to load the Patient Notes from the Patients Record");
-                Alert("Failed to load the Patient Notes from the Patients Record", AlertType.danger);
                 return RedirectToAction("Details", "Patient", new { id = id });
             }
 
@@ -107,10 +106,24 @@
                 PatientId = patientDetails.Id,
                 PatientFirstName = patientDetails.Firstname,
                 PatientLastName = patientDetails.Lastname,
-                PatientNotes = patientNotes.OrderByDescending(t => t.Timestamp).ToList()
             };
 
-            // Retrieve the patient appointments associated by the calling MedicalPractitioner
+            if (userRole == UserRole.MedicalPractitioner)
+            {
+                // Retrieve the patient notes authored by the calling MedicalPractitioner
+                var patientNotes = _patientRecordSvc.RetrievePatientRecords<PatientNoteDto>(id, userId);
+
+                if (patientNotes == null)
+                {
+                    _log.LogError($"Failed to load the Patient Notes from the Patients Record");
+                    Alert("Failed to load the Patient Notes from the Patients Record", AlertType.danger);
+                    return RedirectToAction("Details", "Patient", new { id = id });
+                }
+
+                patientRecord.PatientNotes = patientNotes.OrderByDescending(t => t.Timestamp).ToList();
+            }
+
+            // Retrieve the patient appointments associated by the calling MedicalPractitioner if Med Pract role and all appts if Patient role
             var patientAppointmentsResult = await _appointmentBookService.GetPatientAppointmentHistory(id, userId);
 
             if (patientAppointmentsResult.ResultCode != ServiceResultStatusCode.Success)

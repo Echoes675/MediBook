@@ -59,6 +59,11 @@
         public DbSet<User> Users { get; set; }
 
         /// <summary>
+        /// The DbSet of PatientUsers table in the Database
+        /// </summary>
+        public DbSet<PatientUser> PatientUsers { get; set; }
+
+        /// <summary>
         ///     Creates a <see cref="DbSet{TEntity}" /> that can be used to query and save instances of <typeparamref name="TEntity" />.
         /// </summary>
         /// <typeparam name="TEntity"> The type of entity for which a set should be returned. </typeparam>
@@ -96,27 +101,6 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Set up relationships between tables
-            //modelBuilder.Entity<Appointment>()
-            //    .HasOne(pt => pt.Patient)
-            //    .WithMany(p => p.Appointments)
-            //    .HasForeignKey(pt => pt.PatientId);
-
-            ////modelBuilder.Entity<Appointment>()
-            ////    .HasOne(pt => pt.MedicalPractitioner)
-            ////    .WithMany(p => p.Appointments)
-            ////    .HasForeignKey(pt => pt.MedicalPractitionerId)
-            ////    .OnDelete(DeleteBehavior.ClientCascade);
-
-            ////modelBuilder.Entity<PatientsMedicalPractitioner>()
-            ////    .HasOne(pt => pt.MedicalPractitioner)
-            ////    .WithMany(p => p.PatientsMedicalPractitioners)
-            ////    .HasForeignKey(pt => pt.MedicalPractitionerId);
-
-            //modelBuilder.Entity<PatientsMedicalPractitioner>()
-            //    .HasOne(pt => pt.Patient)
-            //    .WithMany(p => p.PatientsMedicalPractitioners)
-            //    .HasForeignKey(pt => pt.PatientId);
         }
     }
 }
