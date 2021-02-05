@@ -8,6 +8,7 @@
         Unknown = 0,
         Reception = 1,
         PracticeAdmin = 2,
-        MedicalPractitioner = 3
+        MedicalPractitioner = 3,
+        Patient = 4
     }
 }

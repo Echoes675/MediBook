@@ -28,6 +28,7 @@
             services.AddScoped<IPatientsMedicalPractitionerDal, PatientsMedicalPractitionerDal>();
             services.AddScoped<IPatientNoteDal, PatientNoteDal>();
             services.AddScoped<IUserDal, UserDal>();
+            services.AddScoped<IPatientUserDal, PatientUserDal>();
             services.AddScoped<IEmployeeDal, EmployeeDal>();
         }
 

@@ -21,7 +21,8 @@
         {
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
-            var e = Assert.Throws<ArgumentNullException>(() => new UserAuthenticationService(null, mockLogger, mockCryptoSvc));
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
+            var e = Assert.Throws<ArgumentNullException>(() => new UserAuthenticationService(null, mockLogger, mockCryptoSvc, mockPatientUserDal));
             Assert.That(e.Message, Does.Contain("userDal"));
         }
 
@@ -29,8 +30,9 @@
         public void Ctor_NullLogger_ThrowsArgumentNullException()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
-            var e = Assert.Throws<ArgumentNullException>(() => new UserAuthenticationService(mockDal, null, mockCryptoSvc));
+            var e = Assert.Throws<ArgumentNullException>(() => new UserAuthenticationService(mockDal, null, mockCryptoSvc, mockPatientUserDal));
             Assert.That(e.Message, Does.Contain("logger"));
         }
 
@@ -38,8 +40,9 @@
         public void Ctor_NullCryptographyService_ThrowsArgumentNullException()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
-            var e = Assert.Throws<ArgumentNullException>(() => new UserAuthenticationService(mockDal, mockLogger, null));
+            var e = Assert.Throws<ArgumentNullException>(() => new UserAuthenticationService(mockDal, mockLogger, null, mockPatientUserDal));
             Assert.That(e.Message, Does.Contain("cryptographyService"));
         }
 
@@ -47,9 +50,10 @@
         public void Login_UsernameIsNull_ThrowsArgumentNullException()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var e = Assert.ThrowsAsync<ArgumentNullException>(() => svc.Login(null, "password"));
             Assert.That(e.Message, Does.Contain("username"));
@@ -59,9 +63,10 @@
         public void Login_UsernameIsEmpty_ThrowsArgumentNullException()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var e = Assert.ThrowsAsync<ArgumentNullException>(() => svc.Login(string.Empty, "password"));
             Assert.That(e.Message, Does.Contain("username"));
@@ -71,9 +76,10 @@
         public void Login_PasswordIsNull_ThrowsArgumentNullException()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var e = Assert.ThrowsAsync<ArgumentNullException>(() => svc.Login("username", null));
             Assert.That(e.Message, Does.Contain("password"));
@@ -83,9 +89,10 @@
         public void Login_PasswordIsEmpty_ThrowsArgumentNullException()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var e = Assert.ThrowsAsync<ArgumentNullException>(() => svc.Login("username", string.Empty));
             Assert.That(e.Message, Does.Contain("password"));
@@ -95,12 +102,13 @@
         public void Login_UserNotFound_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
 
             mockDal.GetUserAsync("username").Returns((User)null);
 
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var result = svc.Login("username", "password").GetAwaiter().GetResult();
             Assert.That(result, Is.Not.Null);
@@ -112,6 +120,7 @@
         public void Login_UserFoundButAccountNotActive_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
 
@@ -122,7 +131,7 @@
             mockDal.GetUserAsync("username").Returns(mockUser);
             mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "wrongPassword").Returns(false);
 
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var result = svc.Login("username", "wrongPassword").GetAwaiter().GetResult();
             Assert.That(result, Is.Not.Null);
@@ -134,6 +143,7 @@
         public void Login_UserFoundButPasswordIncorrect_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
 
@@ -150,7 +160,7 @@
             mockDal.GetUserAsync("username").Returns(mockUser);
             mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "wrongPassword").Returns(false);
 
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var result = svc.Login("username", "wrongPassword").GetAwaiter().GetResult();
             Assert.That(result, Is.Not.Null);
@@ -162,6 +172,7 @@
         public void Login_UserFoundHasUnknownRole_ReturnsFailedResult()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
 
@@ -181,7 +192,7 @@
 
             mockDal.GetUserAsync("username").Returns(user);
 
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
 
@@ -194,6 +205,7 @@
         public void Login_UserFoundHasValidDetails_ReturnsUserDetailsDto()
         {
             var mockDal = Substitute.For<IUserDal>();
+            var mockPatientUserDal = Substitute.For<IPatientUserDal>();
             var mockLogger = Substitute.For<ILogger<UserAuthenticationService>>();
             var mockCryptoSvc = Substitute.For<ICryptographyService>();
 
@@ -220,7 +232,7 @@
             mockDal.GetUserAsync("username").Returns(user);
             mockCryptoSvc.VerifyPasswordHash(Arg.Any<byte[]>(), Arg.Any<byte[]>(), "rightPassword").Returns(true);
 
-            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc);
+            var svc = new UserAuthenticationService(mockDal, mockLogger, mockCryptoSvc, mockPatientUserDal);
 
             var result = svc.Login("username", "rightPassword").GetAwaiter().GetResult();
 

@@ -91,7 +91,7 @@
                 return View();
             }
 
-            var claimsPrincipal = BuildClaimsPrincipal(result.UserAccountDetails);
+            var claimsPrincipal = BuildClaimsPrincipal(result);
 
             // Make sure the ClaimsPrincipal was created
             if (claimsPrincipal == null)
@@ -119,11 +119,11 @@
         }
 
         // Build a claims principal from authenticated user
-        private ClaimsPrincipal BuildClaimsPrincipal(UserAccountDetailsDto user)
+        private ClaimsPrincipal BuildClaimsPrincipal(UserLoginResult user)
         {
 
-            if (string.IsNullOrEmpty(user.Username) || user.Id < 1 ||
-                user.JobDescription == null || user.JobDescription.Role == UserRole.Unknown)
+            if (user.UserAccountDetails == null || string.IsNullOrEmpty(user.UserAccountDetails.Username) || user.UserAccountDetails.Id < 1 ||
+                user.UserAccountDetails.JobDescription == null || user.UserAccountDetails.JobDescription.Role == UserRole.Unknown)
             {
                 return null;
             }
@@ -133,9 +133,10 @@
             // user Id to be submitted with requests
             var claims = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim("Id", user.Id.ToString(CultureInfo.InvariantCulture)),
-                new Claim(ClaimTypes.Role, user.JobDescription.Role.ToString())
+                new Claim(ClaimTypes.Name, user.UserAccountDetails.Username),
+                new Claim("Id", user.UserAccountDetails.Id.ToString(CultureInfo.InvariantCulture)),
+                new Claim("PatientId", user.PatientAccountPatientId.ToString(CultureInfo.InvariantCulture)),
+                new Claim(ClaimTypes.Role, user.UserAccountDetails.JobDescription.Role.ToString())
             }, CookieAuthenticationDefaults.AuthenticationScheme);
 
             // build principal using claims

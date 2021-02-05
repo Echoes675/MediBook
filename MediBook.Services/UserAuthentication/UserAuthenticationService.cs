@@ -21,6 +21,8 @@
         /// </summary>
         private readonly ICryptographyService _cryptographyService;
 
+        private readonly IPatientUserDal _patientUserDal;
+
         /// <summary>
         /// The database context
         /// </summary>
@@ -32,11 +34,13 @@
         /// <param name="userDal"></param>
         /// <param name="logger"></param>
         /// <param name="cryptographyService"></param>
-        public UserAuthenticationService(IUserDal userDal, ILogger<UserAuthenticationService> logger, ICryptographyService cryptographyService)
+        /// <param name="patientUserDal"></param>
+        public UserAuthenticationService(IUserDal userDal, ILogger<UserAuthenticationService> logger, ICryptographyService cryptographyService, IPatientUserDal patientUserDal)
         {
             _userDal = userDal ?? throw new ArgumentNullException(nameof(userDal));
             _log = logger ?? throw new ArgumentNullException(nameof(logger));
             _cryptographyService = cryptographyService ?? throw new ArgumentNullException(nameof(cryptographyService));
+            _patientUserDal = patientUserDal ?? throw new ArgumentNullException(nameof(patientUserDal));
         }
 
         /// <summary>
@@ -92,7 +96,19 @@
             var userAccountDetails = new UserAccountDetailsDto(user);
             message = "Account login Success.";
             _log.LogInformation(message);
-            return new UserLoginResult(ServiceResultStatusCode.Success, message, userAccountDetails);
+            var results = new UserLoginResult(ServiceResultStatusCode.Success, message, userAccountDetails);
+
+            if (user.JobDescription.Role == UserRole.Patient)
+            {
+                var patient = _patientUserDal.GetAssociatedPatient(user.Id);
+
+                if (patient != null)
+                {
+                    results.PatientAccountPatientId = patient.Id;
+                }
+            }
+
+            return results;
         }
     }
 }

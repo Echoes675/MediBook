@@ -102,6 +102,17 @@
                     AppointmentsDetails = appointmentDetails
                 };
             }
+            
+            if (callingUser.JobDescription.Role == UserRole.Patient)
+            {
+                var appointmentSlots = await _apptSlotDal.GetPatientsAppointmentSlots(patientId);
+                var appointmentDetails = appointmentSlots.Select(x => new AppointmentDetails(callingUser, x)).OrderByDescending(x => x.AppointmentDateTime).ToList();
+                return new AppointmentBookResults()
+                {
+                    ResultCode = ServiceResultStatusCode.Success,
+                    AppointmentsDetails = appointmentDetails
+                };
+            }
 
             return new AppointmentBookResults()
             {

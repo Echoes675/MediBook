@@ -27,11 +27,20 @@
         // extracting the custom user claim here
         var claimsIdentity = (ClaimsIdentity)User.Identity;
         var claim = claimsIdentity.Claims.FirstOrDefault(x => string.Compare(x.Type, "Id", StringComparison.InvariantCultureIgnoreCase) == 0);
+        var claimPatientId = claimsIdentity.Claims.FirstOrDefault(x => string.Compare(x.Type, "PatientId", StringComparison.InvariantCultureIgnoreCase) == 0);
         var claimName = claimsIdentity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
         // extract user id from claim
         var id = claim != null ? claim.Value : string.Empty;
+        var patientIdString = claimPatientId != null ? claimPatientId.Value : string.Empty;
         TempData["userId"] = id;
+        TempData["patientId"] = patientIdString;
         TempData["username"] = claimName != null ? claimName.Value : string.Empty;
+        int patientId = 0;
+        if (!string.IsNullOrEmpty(patientIdString))
+        {
+            int.TryParse(patientIdString, out patientId);
+        }
+
     }
     <header>
         @{
@@ -59,7 +68,10 @@
                                     <a class="nav-link text-white" asp-area="" asp-roles="PracticeAdmin,Reception,MedicalPractitioner" asp-controller="AppointmentBook" asp-action="Index"><i class="far fa-calendar fa-lg" title="Appointments"></i>Appointment Book</a>
                                 </li>
                                 <li class="nav-item ml-2">
-                                    <a class="nav-link text-white" asp-area="" asp-roles="PracticeAdmin,Reception,MedicalPractitioner" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt fa-lg" title="Logout"></i>Logout</a>
+                                    <a class="nav-link text-white" asp-area="" asp-roles="Patient" asp-controller="PatientRecord" asp-action="Index" asp-route-id="@patientId"><i class="far fa-calendar fa-lg" title="Appointments"></i>Patient Appointments</a>
+                                </li>
+                                <li class="nav-item ml-2">
+                                    <a class="nav-link text-white" asp-area="" asp-roles="PracticeAdmin,Reception,MedicalPractitioner,Patient" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt fa-lg" title="Logout"></i>Logout</a>
                                 </li>
                             </ul>
                         </div>
@@ -92,10 +104,9 @@
     <footer class="border-top footer text-muted">
         <div class="container">
             <div class="row">
-                <div class="col-4"></div>
                 <div class="float-left">&copy; 2021 - MediBook.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></div>
             </div>
-            <div class="col-7">
+            <div>
                 @if (User?.Identity == null || User.Identity.IsAuthenticated)
                 {
                     <div class="float-right">Logged in User: @TempData["username"]</div>
