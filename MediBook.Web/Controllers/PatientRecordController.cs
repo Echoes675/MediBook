@@ -11,6 +11,7 @@
     using MediBook.Services.PatientRecord;
     using MediBook.Services.UserAdministration;
     using MediBook.Web.Enums;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -67,7 +68,7 @@
         }
 
         [HttpGet]
-        //[Authorize(Roles = "MedicalPractitioner")]
+        [Authorize(Roles = "MedicalPractitioner")]
         public async Task<IActionResult> Index(int id)
         {
             if (id <= 0)
@@ -127,7 +128,7 @@
         }
 
         [HttpGet]
-        //[Authorize(Roles = "MedicalPractitioner")]
+        [Authorize(Roles = "MedicalPractitioner")]
         public async Task<IActionResult> AddPatientNote(int id)
         {
             var userId = GetLoggedInUserId();
@@ -159,7 +160,7 @@
         }
 
         [HttpPost]
-        //[Authorize(Roles = "MedicalPractitioner")]
+        [Authorize(Roles = "MedicalPractitioner")]
         public async Task<IActionResult> AddPatientNote([FromForm] PatientNoteDto newPatientNote)
         {
             if (newPatientNote == null)

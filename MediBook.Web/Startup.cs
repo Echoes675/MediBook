@@ -57,7 +57,7 @@ namespace MediBook.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.AccessDeniedPath = "/Auth/ErrorNotAuthorised";
+                    options.AccessDeniedPath = "/Home/Index";
                     options.LoginPath = "/Auth/Login";
                     options.ExpireTimeSpan = new TimeSpan(30, 0, 0, 0);
                 });

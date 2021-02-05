@@ -10,6 +10,7 @@
     using MediBook.Services.PatientRecord;
     using MediBook.Web.Enums;
     using MediBook.Web.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -34,21 +35,21 @@
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
+        [Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet("Search")]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
+        [Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public IActionResult Search()
         {
             return View(new PatientSearchViewModel());
         }
 
         [HttpPost("Search")]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
+        [Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public async Task<IActionResult> Search([FromForm] PatientSearchViewModel searchViewModel)
         {
             if (searchViewModel == null)
@@ -74,7 +75,7 @@
         }
 
         [HttpGet("Details")]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
+        [Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public async Task<IActionResult> Details(int id)
         {
             if (id < 1)
@@ -104,14 +105,14 @@
         }
 
         [HttpGet("Register")]
-        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
         public IActionResult Register()
         {
             return View(new PatientForRegistration());
         }
 
         [HttpPost("Register")]
-        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
         public async Task<IActionResult> Register([FromForm] PatientForRegistration newPatientDetails)
         {
             if (newPatientDetails == null)
@@ -139,7 +140,7 @@
         }
 
         [HttpGet("Edit")]
-        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
         public async Task<IActionResult> Edit(int id)
         {
             if (id < 1)
@@ -170,7 +171,7 @@
         }
 
         [HttpPost("Edit")]
-        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
         public async Task<IActionResult> Edit([FromForm] PatientDetailsDto updatedPatientDetails)
         {
             if (updatedPatientDetails == null)
