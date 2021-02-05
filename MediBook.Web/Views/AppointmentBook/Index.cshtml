@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="row mb-4">
-        <h4>Showing sessions from:<strong> @Model.Date</strong></h4>
+        <h4>Showing sessions from:<strong> @Model.Date.ToString("HH:mm")</strong></h4>
     </div>
     <div class="row mb-4">
         <div class="col-2">
@@ -86,8 +86,11 @@
                                                 <asp-appointment-slot-text slot="@slot"></asp-appointment-slot-text>
                                                 @if (slot.State == SlotState.Booked)
                                                 {
+                                                    <a class="btn" asp-roles="PracticeAdmin, Reception" asp-controller="AppointmentBook" asp-action="EditAppointment" asp-route-id="@slot.Id">
+                                                        Edit
+                                                    </a>
                                                     <a class="btn" asp-roles="PracticeAdmin, Reception" asp-controller="AppointmentBook" asp-action="CancelAppointment" asp-route-id="@slot.Id">
-                                                        Cancel Appointment
+                                                        Cancel
                                                     </a>
                                                 }
                                             </li>

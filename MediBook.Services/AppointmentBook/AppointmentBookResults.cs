@@ -26,7 +26,7 @@
         public List<AppointmentDetails> AppointmentsDetails { get; set; }
 
         /// <summary>
-        /// The list of SelectList items intended for use in a View
+        /// The FreeSlotsSelectListItems
         /// </summary>
         public List<SelectListItem> SelectList { get; set; }
     }

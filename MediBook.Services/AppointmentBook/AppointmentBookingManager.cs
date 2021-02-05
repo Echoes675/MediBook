@@ -198,8 +198,9 @@
             }
 
             // Get the results of the completed tasks
-            var currentAppointmentSlotFiltered = await _apptSlotDal.FilterAsync(x => x.Id == data.SlotId); ;
-            var currentAppointmentSlot = currentAppointmentSlotFiltered.FirstOrDefault();
+            var currentAppointmentSlot = await _apptSlotDal.GetEntityAsync(data.SlotId);
+            //var currentAppointmentSlotFiltered = await _apptSlotDal.FilterAsync(x => x.Id == data.SlotId); ;
+            //var currentAppointmentSlot = currentAppointmentSlotFiltered.FirstOrDefault();
             if (currentAppointmentSlot == null)
             {
                 _log.LogError($"Unable to load current AppointmentSlot for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -209,27 +210,40 @@
                 };
             }
 
-            var newAppointmentSlot = await _apptSlotDal.GetEntityAsync(data.SlotId);
+            var affectedSession = await _sessionDal.GetSessionThatOwnsSlot(data.NewSlotId);
+
+            var newAppointmentSlot = await _apptSlotDal.GetEntityAsync(data.NewSlotId);
             if (newAppointmentSlot == null)
             {
-                _log.LogError($"Unable to load proposed new AppointmentSlot for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
+                _log.LogError($"Unable to load proposed new AppointmentSlot for Appointment to be updated. \"AppointmentId\"={data.AppointmentId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
                 return new AppointmentBookResults()
                 {
                     ResultCode = ServiceResultStatusCode.Failed
                 };
             }
 
-            var medicalPractitioner = await _userDal.GetEntityAsync(data.MedicalPractitionerId);
+            var medicalPractitioner = await _userDal.GetEntityAsync(affectedSession.MedicalPractitionerId);
             if (medicalPractitioner == null)
             {
-                _log.LogError($"Unable to load MedicalPractitioner for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
+                _log.LogError($"Unable to load MedicalPractitioner for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} , \"MedicalPractitioner\"={data.MedicalPractitionerId}");
                 return new AppointmentBookResults()
                 {
                     ResultCode = ServiceResultStatusCode.Failed
                 };
             }
 
-            var patient = await _patientDal.GetEntityAsync(data.PatientId);
+            var patientId = currentAppointmentSlot.PatientId ?? 0;
+
+            if (patientId < 1)
+            {
+                _log.LogError($"Unable to load PatientId for Appointment to be updated. \"AppointmentId\"={data.AppointmentId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
+                return new AppointmentBookResults()
+                {
+                    ResultCode = ServiceResultStatusCode.Failed
+                };
+            }
+
+            var patient = await _patientDal.GetEntityAsync(patientId);
             if (patient == null)
             {
                 _log.LogError($"Unable to load Patient for Appointment to be updated. \"AppointmentId\"={data.AppointmentId} \"PatientId\"={data.PatientId}, \"MedicalPractitioner\"={data.MedicalPractitionerId}");
@@ -239,9 +253,9 @@
                 };
             }
 
-            var patientRegisteredWithMedicalPractitioner = _patientsMedicalPractitionerDal.CheckEntityExistsAsync(data.PatientId, data.MedicalPractitionerId);
+            var patientRegisteredWithMedicalPractitioner = _patientsMedicalPractitionerDal.CheckEntityExistsAsync(currentAppointmentSlot.Patient.Id, medicalPractitioner.Id);
 
-            newAppointmentSlot.Patient = currentAppointmentSlot.Patient;
+            newAppointmentSlot.Patient = patient;
             newAppointmentSlot.AppointmentState = AppointmentState.PendingPatientArrival;
             newAppointmentSlot.State = SlotState.Booked;
             currentAppointmentSlot.Patient = null;
@@ -327,8 +341,17 @@
         /// are available to book for a given active Medical Practitioner from today (now) onwards
         /// </summary>
         /// <returns></returns>
-        public async Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int medicalPractitionerUserId)
+        public async Task<AppointmentBookResults> GetMedicalPractitionerFreeSlotsSelectList(int slotId)
         {
+            if (slotId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(slotId));
+            }
+
+            var slotSession = await _sessionDal.GetSessionThatOwnsSlot(slotId);
+
+            var medicalPractitionerUserId = slotSession.MedicalPractitionerId;
+
             if (medicalPractitionerUserId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(medicalPractitionerUserId));
@@ -373,7 +396,12 @@
             }
 
             // Get the medical practitioner's upcoming sessions
-            var medicalPractitionerSessions = _sessionDal.Filter(x => x.StartDateTime.Date >= DateTime.UtcNow.Date);
+            //var medicalPractitionerSessions = _sessionDal.Filter(x => 
+            //    x.StartDateTime.AddMinutes(x.DurationInMins) !< DateTime.UtcNow);
+
+            var allSessions = await _sessionDal.GetAllAsync();
+            var medicalPractitionerSessions =
+                allSessions.Where(x => x.MedicalPractitionerId == medicalPractitionerUserId);
 
             var freeSlots =
                 medicalPractitionerSessions.SelectMany(x => x.AppointmentSlots

@@ -15,9 +15,9 @@
     <h3>@ViewData["Title"]</h3>
     <div class="container-fluid">
         <ul class="nav md-pills nav-justified table-blue-border">
-            <li class="nav-item"><a class="nav-link" asp-action="Edit" asp-controller="Patient" asp-route-id="@Model.Id"><i class="fas fa-user-edit fa-lg rgba-blue-light" title="EditDetails"></i></a>Edit Patient Details</li>
-            <li class="nav-item"><a class="nav-link" asp-action="BookAppointment" asp-controller="AppointmentBook" asp-route-id="@Model.Id"><i class="far fa-calendar-plus fa-lg rgba-green-light" title="Book Appointment"></i></a>Book Appointment</li>
-            <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="PatientRecord" asp-route-id="@Model.Id"><i class="fas fa-notes-medical fa-lg rgba-red-light" title="Patient Record"></i></a>Access Patient Record</li>
+            <li asp-roles="PracticeAdmin,Reception" class="nav-item"><a class="nav-link" asp-action="Edit" asp-roles="PracticeAdmin,Reception" asp-controller="Patient" asp-route-id="@Model.Id"><i class="fas fa-user-edit fa-lg rgba-blue-light" title="EditDetails"></i></a>Edit Patient Details</li>
+            <li asp-roles="PracticeAdmin,Reception" class="nav-item"><a class="nav-link" asp-action="BookAppointment" asp-roles="PracticeAdmin,Reception" asp-controller="AppointmentBook" asp-route-id="@Model.Id"><i class="far fa-calendar-plus fa-lg rgba-green-light" title="Book Appointment"></i></a>Book Appointment</li>
+            <li asp-roles="MedicalPractitioner" class="nav-item"><a class="nav-link" asp-action="Index" asp-roles="MedicalPractitioner" asp-controller="PatientRecord" asp-route-id="@Model.Id"><i class="fas fa-notes-medical fa-lg rgba-red-light" title="Patient Record"></i></a>Access Patient Record</li>
         </ul>
     </div>
 
@@ -66,7 +66,7 @@
             </div>
             <div class="row">
                 <div class="col-4"><strong>PostCode: </strong></div>
-                <div class="col-8">@Model.City</div>
+                <div class="col-8">@Model.PostCode</div>
             </div>
             <div class="row">
                 <div class="col-4"><strong>Phone: </strong></div>

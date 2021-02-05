@@ -7,6 +7,7 @@
     using MediBook.Services.UserAdministration;
     using MediBook.Web.Enums;
     using MediBook.Web.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -40,7 +41,7 @@
         }
 
         [HttpGet]
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         public async Task<IActionResult> Index()
         {
             var users = await _userAdminSvc.LoadUserAccounts().ConfigureAwait(false);
@@ -58,7 +59,7 @@
         }
 
         // GET auth/CreateUser
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         [HttpGet("CreateUser")]
         public IActionResult CreateUser()
         {
@@ -66,7 +67,7 @@
         }
 
         // POST auth/EditUser
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromForm] UserForRegistrationDto userRegistrationDetails)
         {
@@ -94,7 +95,7 @@
         }
 
         // GET auth/EditUser
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         [HttpGet("EditUser")]
         public async Task<IActionResult> EditUser(int id)
         {
@@ -116,7 +117,7 @@
         }
 
         // POST auth/EditUser
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         [HttpPost("EditUser")]
         public async Task<IActionResult> EditUser([FromForm] UserDetailsViewModel userDetailsView)
         {
@@ -146,7 +147,7 @@
         }
 
         // GET auth/ResetPassword
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         [HttpGet("ResetPassword")]
         public async Task<IActionResult> ResetPassword(int id)
         {
@@ -171,7 +172,7 @@
         }
 
         // POST auth/ResetPassword
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromForm] UserPasswordResetDto passwordResetDetails)
         {
@@ -200,7 +201,7 @@
         }
 
         // POST userauth/delete
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "PracticeAdmin")]
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromForm] int id)
         {

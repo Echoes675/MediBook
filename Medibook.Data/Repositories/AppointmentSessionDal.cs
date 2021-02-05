@@ -60,6 +60,16 @@
         }
 
         /// <summary>
+        /// Returns the Session that owns the slot
+        /// </summary>
+        /// <param name="slotId"></param>
+        /// <returns></returns>
+        public Task<AppointmentSession> GetSessionThatOwnsSlot(int slotId)
+        {
+            return Db.Set<AppointmentSession>().Where(x => x.AppointmentSlots.Any(y => y.Id == slotId)).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Filters and orders the list of Appointment Sessions per the requirements. Includes Appointment Slots and Appointments
         /// </summary>
         /// <param name="appointmentSessionWhere"></param>
@@ -138,8 +148,10 @@
                 .Include(x => x.AppointmentSlots)
                 .ThenInclude(p => p.Patient);
             
-            return await appointmentSessions.SelectMany(x =>
+            var slots =  await appointmentSessions.SelectMany(x =>
                 x.AppointmentSlots.Where(y => y.PatientId == patientId)).ToListAsync();
+
+            return slots;
         }
     }
 }

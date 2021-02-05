@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+@model AddOrUpdateAppointmentData
+<!--Breadcrumb navigation-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active text-white" aria-current="page">@ViewData["Title"]</li>
+    </ol>
+</nav>
+
+<div class="container-fluid">
+    <h3>@ViewData["Title"]</h3>
+    <div class="row mb-4">
+        <div class="col">
+            <!-- Loop for each appointment session returned in the ViewModel -->
+            @if (Model?.SelectList?.Count > 0)
+            {
+                <h4>Please select an alternate slot</h4>
+                <div class="row card-group" style="">
+                    <form asp-action="EditAppointment" class="md-form">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="SlotId" class="form-control" />
+                        <div class="form-group">
+                            <select asp-for="NewSlotId" class="browser-default custom-select" asp-items="@Model.SelectList">
+                            </select>
+                            <span asp-validation-for="NewSlotId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mt-4">
+                            <input type="submit" value="Save" class="btn table-blue-border" />
+                            <a class="btn btn-grey-cancel" asp-controller="AppointmentBook" asp-action="Index">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <p><strong>Unfortunately this Medical Practitioner has no free slots. Please cancel this appointment and rebook with another Medical Practitioner</strong></p>
+            }
+        </div>
+    </div>
+</div>

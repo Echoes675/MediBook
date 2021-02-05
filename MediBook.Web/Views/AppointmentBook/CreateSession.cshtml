@@ -28,13 +28,6 @@
                     <span asp-validation-for="Date" class="text-danger"></span>
                     <small>Surgery opening hours are 8am to 6pm</small>
                 </div>
-                @*<div class="md-form">
-                    <label class="col-form-label" for="StartTime">StartTime</label>
-                    <input asp-for="StartTime" class="form-control" id="StartTime" name="StartTime" type="time" asp-format="{0:HH:mm}" />
-                    <input type="text" value="9/23/2009" style="width: 100px;" readonly="readonly" name="Date" id="Date" class="hasDatepicker" />
-                    <span asp-validation-for="StartTime" class="text-danger"></span>
-                    <small>Surgery opening hours are 8am to 6pm</small>
-                </div>*@
                 <div class="md-form">
                     <div class='input-group date' id='datetimepicker1'>
                         <input asp-for="StartTime" type='text' class="form-control" />

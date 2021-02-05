@@ -8,6 +8,7 @@
     using MediBook.Services.Enums;
     using MediBook.Web.Enums;
     using MediBook.Web.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -34,7 +35,7 @@
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
+        [Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public async Task<IActionResult> Index()
         {
             var currentLoggedInUser = GetLoggedInUserId();
@@ -63,70 +64,8 @@
             return View(appointmentBookViewModel);
         }
 
-        [HttpPost("GetNextDay")]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> GetNextDay([FromForm] AppointmentBookViewModel model)
-        {
-            var nextDate = model.Date.AddDays(1);
-
-            var currentLoggedInUser = GetLoggedInUserId();
-            if (currentLoggedInUser < 1)
-            {
-                _log.LogError($"Authentication failure. Could not extract User's Id from Claims Principal.");
-                Alert("Failed to identify current User for authorization", AlertType.danger);
-                return RedirectToAction(nameof(Index), "Home");
-            }
-
-            var appointmentSessions = await _apptSvc.GetAppointmentBookSessions(currentLoggedInUser, nextDate);
-            if (appointmentSessions.ResultCode != ServiceResultStatusCode.Success)
-            {
-                _log.LogError($"Failed to load Appointment Session(s). \"ResultCode\"={appointmentSessions.ResultCode}");
-                Alert("Failed to load Appointment Session(s).", AlertType.danger);
-                return RedirectToAction(nameof(Index), "Home");
-            }
-
-            var appointmentBookViewModel = new AppointmentBookViewModel()
-            {
-                Date = nextDate,
-                AppointmentSessions = appointmentSessions.AppointmentSessionDetails
-            };
-
-            return View(nameof(Index), appointmentBookViewModel);
-        }
-
-        [HttpPost("GetPreviousDay")]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
-        public async Task<IActionResult> GetPreviousDay([FromForm] AppointmentBookViewModel model)
-        {
-            var previousDate = model.Date.AddDays(-1);
-
-            var currentLoggedInUser = GetLoggedInUserId();
-            if (currentLoggedInUser < 1)
-            {
-                _log.LogError($"Authentication failure. Could not extract User's Id from Claims Principal.");
-                Alert("Failed to identify current User for authorization", AlertType.danger);
-                return RedirectToAction(nameof(Index), "Home");
-            }
-
-            var appointmentSessions = await _apptSvc.GetAppointmentBookSessions(currentLoggedInUser, previousDate);
-            if (appointmentSessions.ResultCode != ServiceResultStatusCode.Success)
-            {
-                _log.LogError($"Failed to load Appointment Session(s). \"ResultCode\"={appointmentSessions.ResultCode}");
-                Alert("Failed to load Appointment Session(s).", AlertType.danger);
-                return RedirectToAction(nameof(Index), "Home");
-            }
-
-            var appointmentBookViewModel = new AppointmentBookViewModel()
-            {
-                Date = previousDate,
-                AppointmentSessions = appointmentSessions.AppointmentSessionDetails
-            };
-
-            return View(nameof(Index), appointmentBookViewModel);
-        }
-
         [HttpPost("GetSessionsForDay")]
-        //[Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
+        [Authorize(Roles = "Reception, PracticeAdmin, MedicalPractitioner")]
         public async Task<IActionResult> GetSessionsForDay([FromForm] AppointmentBookViewModel model)
         {
             var currentLoggedInUser = GetLoggedInUserId();
@@ -155,7 +94,7 @@
         }
 
         [HttpGet("CancelAppointment")]
-        //[Authorize(Roles = "Reception,PracticeAdmin")]
+        [Authorize(Roles = "Reception,PracticeAdmin")]
         public async Task<IActionResult> CancelAppointment(int id)
         {
             if (id <= 0)
@@ -177,7 +116,7 @@
         }
 
         [HttpGet("CreateSession")]
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         public async Task<IActionResult> CreateSession()
         {
             var medicalPractitioners = await _apptSvc.GetMedicalPractitionerSelectList();
@@ -196,7 +135,7 @@
         }
 
         [HttpPost("CreateSession")]
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         public async Task<IActionResult> CreateSession([FromForm] CreateAppointmentSessionViewModel createSessionDetails)
         {
             if (createSessionDetails == null)
@@ -248,7 +187,7 @@
         }
 
         [HttpGet("DeleteSession")]
-        //[Authorize(Roles = "PracticeAdmin")]
+        [Authorize(Roles = "PracticeAdmin")]
         public async Task<IActionResult> DeleteSession(int id)
         {
             if (id <= 0)
@@ -271,7 +210,7 @@
         }
 
         [HttpGet("BookAppointment")]
-        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
         public async Task<IActionResult> BookAppointment(int id)
         {
             if (id <= 0)
@@ -303,7 +242,7 @@
         }
 
         [HttpPost("BookAppointment")]
-        //[Authorize(Roles = "Reception, PracticeAdmin")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
         public async Task<IActionResult> BookAppointment([FromForm] AddOrUpdateAppointmentData apptData)
         {
             if (apptData == null)
@@ -322,6 +261,57 @@
             }
 
             Alert("Failed to add new Appointment.", AlertType.danger);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet("EditAppointment")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
+        public async Task<IActionResult> EditAppointment(int id)
+        {
+            if (id <= 0)
+            {
+                _log.LogError($"Invalid Slot Id received for appointment booking. \"SlotId\"={id}");
+                Alert("Invalid Patient received for appointment booking.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var freeSlotsResults = await _apptSvc.GetMedicalPractitionerFreeSlotsSelectList(id);
+            if (freeSlotsResults.ResultCode != ServiceResultStatusCode.Success)
+            {
+                _log.LogError($"Failed to load available Appointment slots.");
+                Alert("Failed to load available Appointment slots.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var apptData = new AddOrUpdateAppointmentData()
+            {
+                SlotId = id,
+                SelectList = freeSlotsResults.SelectList
+            };
+
+            return View(apptData);
+        }
+
+        [HttpPost("EditAppointment")]
+        [Authorize(Roles = "Reception, PracticeAdmin")]
+        public async Task<IActionResult> EditAppointment([FromForm] AddOrUpdateAppointmentData apptData)
+        {
+            if (apptData == null)
+            {
+                _log.LogError($"Failed to update Appointment. No data received.");
+                Alert("Failed to book new Appointment.", AlertType.danger);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var result = await _apptSvc.UpdateAppointmentAsync(apptData);
+
+            if (result.ResultCode == ServiceResultStatusCode.Success)
+            {
+                Alert("Successfully updated Appointment.", AlertType.success);
+                return RedirectToAction(nameof(Index));
+            }
+
+            Alert("Failed to update Appointment.", AlertType.danger);
             return RedirectToAction(nameof(Index));
         }
     }
