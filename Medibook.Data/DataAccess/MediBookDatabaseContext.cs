@@ -106,6 +106,14 @@
                 .HasOne(e => e.PatientUserAccount)
                 .WithOne(e => e.PatientDetails)
                 .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder.Entity<User>()
+                .HasDiscriminator<string>("Discriminator")
+                .HasValue<User>("1");
+
+            modelBuilder.Entity<PatientUser>()
+                .HasDiscriminator<string>("Discriminator")
+                .HasValue<PatientUser>("2");
         }
     }
 }

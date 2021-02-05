@@ -15,6 +15,13 @@
 
         public IActionResult Index()
         {
+            var patientId = GetLoggedInPatientUserPatientId();
+
+            if (patientId > 1)
+            {
+                TempData["PatientId"] = patientId;
+            }
+
             return View();
         }
 

@@ -2,6 +2,7 @@
 {
     using MediBook.Core.DTOs;
     using MediBook.Services.Enums;
+    using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
     /// <summary>
     /// Result of the login attempt
@@ -35,5 +36,10 @@
         /// The UserAccountDetails
         /// </summary>
         public UserAccountDetailsDto UserAccountDetails { get; }
+
+        /// <summary>
+        /// The PatientId if the user is a PatientUser
+        /// </summary>
+        public int PatientAccountPatientId { get; set; }
     }
 }

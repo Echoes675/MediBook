@@ -66,5 +66,12 @@
         /// <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/></exception>
         /// <exception cref="T:System.InvalidOperationException">Condition.</exception>
         IEnumerable<PatientUser> Filter(Func<PatientUser, bool> predicate);
+
+        /// <summary>
+        /// Gets the Patient associated with the User Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Patient GetAssociatedPatient(int userId);
     }
 }
