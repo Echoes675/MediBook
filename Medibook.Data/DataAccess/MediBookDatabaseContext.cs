@@ -101,6 +101,11 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<Patient>()
+                .HasOne(e => e.PatientUserAccount)
+                .WithOne(e => e.PatientDetails)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

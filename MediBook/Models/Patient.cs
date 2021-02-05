@@ -111,5 +111,7 @@
         /// The patient's appointments
         /// </summary>
         public ICollection<AppointmentSlot> AppointmentSlots { get; set; }
+
+        public PatientUser PatientUserAccount { get; set; }
     }
 }
