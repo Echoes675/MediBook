@@ -2,7 +2,6 @@
 {
     using MediBook.Core.DTOs;
     using MediBook.Services.Enums;
-    using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
     /// <summary>
     /// Result of the login attempt

@@ -3,10 +3,12 @@ using System;
 using MediBook.Data.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace MediBook.Data.Migrations
+#nullable disable
+
+namespace Medibook.Data.Migrations
 {
     [DbContext(typeof(MediBookDatabaseContext))]
     partial class MediBookDatabaseContextModelSnapshot : ModelSnapshot
@@ -15,28 +17,30 @@ namespace MediBook.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DurationInMins")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("MedicalPractitionerId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -51,26 +55,27 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AppointmentDateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("AppointmentDurationInMins")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("AppointmentSessionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("AppointmentState")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("State")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -85,21 +90,22 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Firstname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("Title")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -110,15 +116,16 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("Role")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -129,37 +136,38 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address1")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Address2")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("City")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("County")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Firstname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<long>("HealthAndCare")
                         .HasColumnType("bigint");
@@ -167,26 +175,26 @@ namespace MediBook.Data.Migrations
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("MobilePhone")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("PostCode")
                         .IsRequired()
                         .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                        .HasColumnType("character varying(8)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("Title")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -197,24 +205,25 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("Content")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("bytea");
 
                     b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("MedicalPractitionerId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -231,14 +240,15 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MedicalPractitionerId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -253,32 +263,34 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1)
+                        .HasColumnType("character varying(1)");
 
                     b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("JobDescriptionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<byte[]>("PasswordHash")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("bytea");
 
                     b.Property<byte[]>("PasswordSalt")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("bytea");
 
                     b.Property<int>("State")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -288,7 +300,9 @@ namespace MediBook.Data.Migrations
 
                     b.ToTable("Users");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
+                    b.HasDiscriminator().HasValue("1");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("MediBook.Core.Models.PatientUser", b =>
@@ -296,13 +310,12 @@ namespace MediBook.Data.Migrations
                     b.HasBaseType("MediBook.Core.Models.User");
 
                     b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasIndex("PatientId")
-                        .IsUnique()
-                        .HasFilter("[PatientId] IS NOT NULL");
+                        .IsUnique();
 
-                    b.HasDiscriminator().HasValue("PatientUser");
+                    b.HasDiscriminator().HasValue("2");
                 });
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
@@ -423,9 +436,9 @@ namespace MediBook.Data.Migrations
 
                     b.Navigation("PatientNotes");
 
-                    b.Navigation("PatientsMedicalPractitioners");
-
                     b.Navigation("PatientUserAccount");
+
+                    b.Navigation("PatientsMedicalPractitioners");
                 });
 #pragma warning restore 612, 618
         }

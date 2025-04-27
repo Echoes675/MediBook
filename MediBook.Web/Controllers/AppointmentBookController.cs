@@ -169,7 +169,7 @@
             var newSessionConfig = new AppointmentSessionConfiguration()
             {
                 DurationInMins = validSessionDuration,
-                StartDateTime = validStartDateTime,
+                StartDateTime = validStartDateTime.ToUniversalTime(),
                 NumberOfAppointmentSlots = createSessionDetails.NumberOfAppointmentSlots,
                 MedicalPractitionerId = createSessionDetails.MedicalPractitionerId
             };

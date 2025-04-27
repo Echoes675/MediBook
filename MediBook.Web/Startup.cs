@@ -13,6 +13,7 @@ namespace MediBook.Web
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using System;
+    using System.Configuration;
 
     public class Startup
     {
@@ -26,6 +27,8 @@ namespace MediBook.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(Configuration);
+
             services.AddLogging();
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -35,8 +38,11 @@ namespace MediBook.Web
             });
 
             #region Database
+            //services.AddDbContext<MediBookDatabaseContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDbContext<MediBookDatabaseContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("PostgreSQLConnection")));
 
             // Allows the Db to be injectable using an interface
             services.AddScoped<IDatabaseContext>(provider => provider.GetService<MediBookDatabaseContext>());

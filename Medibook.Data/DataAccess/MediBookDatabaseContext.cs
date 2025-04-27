@@ -114,6 +114,13 @@
             modelBuilder.Entity<PatientUser>()
                 .HasDiscriminator<string>("Discriminator")
                 .HasValue<PatientUser>("2");
+
+            SeedData(modelBuilder);
+        }
+
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+            // Add your database seeding logic here.
         }
     }
 }

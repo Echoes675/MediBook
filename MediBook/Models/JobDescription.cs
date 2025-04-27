@@ -20,8 +20,12 @@
         public string Description { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the role associated with the job description.
         /// </summary>
+        /// <remarks>
+        /// The <see cref="UserRole"/> defines the specific role or responsibility 
+        /// assigned to the user, such as Medical Practitioner, Reception, or Practice Admin.
+        /// </remarks>
         public UserRole Role { get; set; }
     }
 }

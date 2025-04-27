@@ -1,17 +1,33 @@
 namespace MediBook.Web
 {
     using System;
+    using System.Threading.Tasks;
+    using MediBook.Data.DataAccess;
+    using MediBook.Web.Seeders;
     using Microsoft.Extensions.Hosting;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
-                CreateHostBuilder(args).Build().Run();
+                var host = CreateHostBuilder(args).Build();
+                using (var scope = host.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    var dbContext = services.GetRequiredService<MediBookDatabaseContext>();
+                    dbContext.Database.Migrate();
+
+                    await SeedUserData.Seed(services, dbContext);
+                    await SeedPatientsData.Seed(services, dbContext);
+                }
+
+                host.Run();
             }
             catch (Exception e)
             {

@@ -3,67 +3,47 @@ using System;
 using MediBook.Data.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace MediBook.Data.Migrations
+#nullable disable
+
+namespace Medibook.Data.Migrations
 {
     [DbContext(typeof(MediBookDatabaseContext))]
-    [Migration("20210204162839_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250427023608_InitialCreate")]
+    partial class InitialCreate
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("MediBook.Core.Models.Appointment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("MedicalPractitionerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MedicalPractitionerId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("Appointments");
-                });
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DurationInMins")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("MedicalPractitionerId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -78,29 +58,33 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AppointmentDateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("AppointmentDurationInMins")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AppointmentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("AppointmentSessionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AppointmentState")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("State")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppointmentId");
-
                     b.HasIndex("AppointmentSessionId");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("AppointmentSlots");
                 });
@@ -109,21 +93,22 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Firstname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("Title")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -134,15 +119,16 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("Role")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -153,37 +139,38 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address1")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Address2")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("City")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("County")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Firstname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<long>("HealthAndCare")
                         .HasColumnType("bigint");
@@ -191,26 +178,26 @@ namespace MediBook.Data.Migrations
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("MobilePhone")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("PostCode")
                         .IsRequired()
                         .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                        .HasColumnType("character varying(8)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("Title")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -221,24 +208,25 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("Content")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("bytea");
 
                     b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("MedicalPractitionerId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -255,14 +243,15 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MedicalPractitionerId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -277,28 +266,34 @@ namespace MediBook.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("character varying(1)");
 
                     b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("JobDescriptionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<byte[]>("PasswordHash")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("bytea");
 
                     b.Property<byte[]>("PasswordSalt")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("bytea");
 
                     b.Property<int>("State")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -307,25 +302,23 @@ namespace MediBook.Data.Migrations
                     b.HasIndex("JobDescriptionId");
 
                     b.ToTable("Users");
+
+                    b.HasDiscriminator().HasValue("1");
+
+                    b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("MediBook.Core.Models.Appointment", b =>
+            modelBuilder.Entity("MediBook.Core.Models.PatientUser", b =>
                 {
-                    b.HasOne("MediBook.Core.Models.Employee", "MedicalPractitioner")
-                        .WithMany("Appointments")
-                        .HasForeignKey("MedicalPractitionerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasBaseType("MediBook.Core.Models.User");
 
-                    b.HasOne("MediBook.Core.Models.Patient", "Patient")
-                        .WithMany("Appointments")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("PatientId")
+                        .HasColumnType("integer");
 
-                    b.Navigation("MedicalPractitioner");
+                    b.HasIndex("PatientId")
+                        .IsUnique();
 
-                    b.Navigation("Patient");
+                    b.HasDiscriminator().HasValue("2");
                 });
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
@@ -345,17 +338,15 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSlot", b =>
                 {
-                    b.HasOne("MediBook.Core.Models.Appointment", "Appointment")
-                        .WithMany()
-                        .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MediBook.Core.Models.AppointmentSession", null)
                         .WithMany("AppointmentSlots")
                         .HasForeignKey("AppointmentSessionId");
 
-                    b.Navigation("Appointment");
+                    b.HasOne("MediBook.Core.Models.Patient", "Patient")
+                        .WithMany("AppointmentSlots")
+                        .HasForeignKey("PatientId");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("MediBook.Core.Models.PatientNote", b =>
@@ -419,6 +410,17 @@ namespace MediBook.Data.Migrations
                     b.Navigation("JobDescription");
                 });
 
+            modelBuilder.Entity("MediBook.Core.Models.PatientUser", b =>
+                {
+                    b.HasOne("MediBook.Core.Models.Patient", "PatientDetails")
+                        .WithOne("PatientUserAccount")
+                        .HasForeignKey("MediBook.Core.Models.PatientUser", "PatientId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("PatientDetails");
+                });
+
             modelBuilder.Entity("MediBook.Core.Models.AppointmentSession", b =>
                 {
                     b.Navigation("AppointmentSlots");
@@ -426,8 +428,6 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.Employee", b =>
                 {
-                    b.Navigation("Appointments");
-
                     b.Navigation("AppointmentSessions");
 
                     b.Navigation("PatientNotes");
@@ -435,9 +435,11 @@ namespace MediBook.Data.Migrations
 
             modelBuilder.Entity("MediBook.Core.Models.Patient", b =>
                 {
-                    b.Navigation("Appointments");
+                    b.Navigation("AppointmentSlots");
 
                     b.Navigation("PatientNotes");
+
+                    b.Navigation("PatientUserAccount");
 
                     b.Navigation("PatientsMedicalPractitioners");
                 });
