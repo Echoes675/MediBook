@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Medibook.Data.Migrations
+namespace MediBook.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

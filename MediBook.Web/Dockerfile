@@ -13,8 +13,8 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["MediBook.Web/MediBook.Web.csproj", "MediBook.Web/"]
-COPY ["Medibook.Data/MediBook.Data.csproj", "Medibook.Data/"]
-COPY ["MediBook/MediBook.Core.csproj", "MediBook/"]
+COPY ["MediBook.Data/MediBook.Data.csproj", "MediBook.Data/"]
+COPY ["MediBook.Core/MediBook.Core.csproj", "MediBook.Core/"]
 COPY ["MediBook.Services/MediBook.Services.csproj", "MediBook.Services/"]
 RUN dotnet restore "./MediBook.Web/MediBook.Web.csproj"
 COPY . .
