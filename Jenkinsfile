@@ -12,6 +12,7 @@ pipeline {
         }
         stage('Restore Dependencies') {
             steps {
+                sh 'dotnet dev-certs https --trust'
                 sh 'dotnet restore'
             }
         }
