@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Medibook.Data.Migrations
+namespace MediBook.Data.Migrations
 {
     [DbContext(typeof(MediBookDatabaseContext))]
     partial class MediBookDatabaseContextModelSnapshot : ModelSnapshot
