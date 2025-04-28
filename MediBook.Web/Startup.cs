@@ -1,6 +1,5 @@
 namespace MediBook.Web
 {
-    using AutoMapper;
     using MediBook.Data.DataAccess;
     using MediBook.Web.Extensions;
     using Microsoft.AspNetCore.Authentication.Cookies;
@@ -13,7 +12,6 @@ namespace MediBook.Web
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using System;
-    using System.Configuration;
 
     public class Startup
     {

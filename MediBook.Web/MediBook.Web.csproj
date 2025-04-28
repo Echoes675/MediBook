@@ -19,12 +19,13 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Medibook.Data\MediBook.Data.csproj" />
+    <ProjectReference Include="..\MediBook.Data\MediBook.Data.csproj" />
     <ProjectReference Include="..\MediBook.Services\MediBook.Services.csproj" />
-    <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
+    <ProjectReference Include="..\MediBook.Core\MediBook.Core.csproj" />
   </ItemGroup>
 
 </Project>

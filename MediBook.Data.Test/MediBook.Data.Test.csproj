@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Medibook.Data\MediBook.Data.csproj" />
-    <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
+    <ProjectReference Include="..\MediBook.Data\MediBook.Data.csproj" />
+    <ProjectReference Include="..\MediBook.Core\MediBook.Core.csproj" />
   </ItemGroup>
 
 </Project>

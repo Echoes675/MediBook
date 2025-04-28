@@ -1,8 +1,6 @@
 ﻿namespace MediBook.Services.Test.UserAuth
 {
     using System;
-    using System.Security.Claims;
-    using System.Security.Cryptography.X509Certificates;
     using MediBook.Core.Enums;
     using MediBook.Core.Models;
     using MediBook.Data.Repositories;

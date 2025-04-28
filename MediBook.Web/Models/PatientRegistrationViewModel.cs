@@ -1,6 +1,5 @@
 ﻿namespace MediBook.Web.Models
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
     using MediBook.Core.Enums;
 

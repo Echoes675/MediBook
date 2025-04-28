@@ -3,10 +3,8 @@
     using System;
     using System.Collections.Generic;
     using MediBook.Core.DTOs;
-    using MediBook.Core.Enums;
     using MediBook.Core.Models;
     using MediBook.Data.Repositories;
-    using MediBook.Services.Cryptography;
     using MediBook.Services.PatientAdministration;
     using Microsoft.Extensions.Logging;
     using NSubstitute;

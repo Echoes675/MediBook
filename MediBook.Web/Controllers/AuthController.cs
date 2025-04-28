@@ -11,7 +11,6 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using MediBook.Core.Enums;
-    using MediBook.Core.Models;
     using MediBook.Services.Enums;
     using MediBook.Services.UserAuthentication;
     using Microsoft.Extensions.Logging;

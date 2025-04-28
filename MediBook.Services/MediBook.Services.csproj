@@ -5,14 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Medibook.Data\MediBook.Data.csproj" />
-    <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.Mvc.ViewFeatures">
-      <HintPath>C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\Microsoft.AspNetCore.Mvc.ViewFeatures.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\MediBook.Data\MediBook.Data.csproj" />
+    <ProjectReference Include="..\MediBook.Core\MediBook.Core.csproj" />
   </ItemGroup>
 
 </Project>
