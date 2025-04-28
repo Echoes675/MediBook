@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Core", "MediBook\MediBook.Core.csproj", "{D540A34E-7F2E-410F-8329-3669690CF371}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Core", "MediBook.Core\MediBook.Core.csproj", "{D540A34E-7F2E-410F-8329-3669690CF371}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Data", "Medibook.Data\MediBook.Data.csproj", "{2B09FC21-5E44-424F-B3F8-6DB8D85EC59D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Data", "MediBook.Data\MediBook.Data.csproj", "{2B09FC21-5E44-424F-B3F8-6DB8D85EC59D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{795637DB-5C06-4C51-9CF1-E61B0DAA3235}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Data.Test", "Medibook.Data.Test\MediBook.Data.Test.csproj", "{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Data.Test", "MediBook.Data.Test\MediBook.Data.Test.csproj", "{3D699B5D-0F1C-4849-A44D-D4BF5D0ECE30}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Web", "MediBook.Web\MediBook.Web.csproj", "{7981175C-BD25-4F71-9280-87F6E6B694A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Services", "MediBook.Services\MediBook.Services.csproj", "{48C80CF8-FF03-49BA-815C-42D90E418668}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Services.Test", "Medibook.Services.Test\MediBook.Services.Test.csproj", "{0FAA1C73-7E13-4739-804B-6A2F5530BD90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Services.Test", "MediBook.Services.Test\MediBook.Services.Test.csproj", "{0FAA1C73-7E13-4739-804B-6A2F5530BD90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
