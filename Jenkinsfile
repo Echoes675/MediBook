@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { dockerfile true }
     environment {
         DOTNET_VERSION = '9.0' // Specify .NET version
         BUILD_CONFIGURATION = 'Release'
