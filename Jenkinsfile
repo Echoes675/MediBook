@@ -1,10 +1,5 @@
 pipeline {
-    agent { 
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:9.0'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
     environment {
         DOTNET_VERSION = '9.0' // Specify .NET version
         BUILD_CONFIGURATION = 'Release'
@@ -14,6 +9,11 @@ pipeline {
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}" // Full path for the branch
     }
     stages {
+        stage('Test Docker'){
+            steps {
+                sh 'docker --version'
+            }
+        }
         stage('Checkout Code') {
             steps {
                 sh 'git clean -fdx'
