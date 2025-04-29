@@ -11,6 +11,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
+                sh 'git clean -fdx'
                 checkout scm
             }
         }
