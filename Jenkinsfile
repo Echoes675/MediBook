@@ -13,8 +13,12 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                sh 'git clean -fdx'
-                checkout scm
+                withCredentials([string(credentialsId: 'github_medibook_pat', variable: 'GITHUB_TOKEN')]){
+                    sh 'git clean -fdx'
+                    sh 'git config --global credential.helper store'
+                    sh "echo \"https://${GITHUB_TOKEN}:@github.com\" > ~/.git-credentials"
+                    checkout scm
+                }
             }
         }
         stage('Restore Dependencies') {
