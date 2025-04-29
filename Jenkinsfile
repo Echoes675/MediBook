@@ -31,7 +31,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 echo '================================================= Run Unit Tests ===============================================' 
-                sh 'dotnet test --no-build --verbosity normal'
+                sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --verbosity normal'
             }
         }
         stage('Package DLLs') {
