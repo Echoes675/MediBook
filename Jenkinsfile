@@ -1,5 +1,9 @@
 pipeline {
-    agent { dockerfile true }
+    agent { 
+        dockerfile {
+            filename 'Dockerfile' // Optional: Specify the Dockerfile name if not in the root directory
+            additionalBuildArgs '--build-arg BUILD_CONFIGURATION=Release' // Optional: Pass build arguments
+    }
     environment {
         DOTNET_VERSION = '9.0' // Specify .NET version
         BUILD_CONFIGURATION = 'Release'
