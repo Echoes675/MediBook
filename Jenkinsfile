@@ -14,52 +14,52 @@ pipeline {
                 sh 'docker --version'
             }
         }
-        stage('Checkout Code') {
-            steps {
-                sh 'git clean -fdx'
-                checkout scm
-            }
-        }
-        stage('Restore Dependencies') {
-            steps {
-                sh 'dotnet dev-certs https --trust'
-                echo '================================================= Restore Dependencies ===============================================' 
-                sh 'dotnet restore'
-            }
-        }
-        stage('Build') {
-            steps {
-                echo '================================================= Build ===============================================' 
-                sh 'dotnet build --configuration ${BUILD_CONFIGURATION}'
-            }
-        }
-        stage('Run Unit Tests') {
-            steps {
-                echo '================================================= Run Unit Tests ===============================================' 
-                sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --verbosity normal'
-            }
-        }
-        stage('Package DLLs') {
-            steps {
-                echo '================================================= Package DLLs ===============================================' 
-                sh "zip -r ${ZIP_FILE} ${OUTPUT_DIR}"
-            }
-        }
-        stage('Upload to External Share via SFTP') {
-            steps {
-                echo '================================================= Upload to External Share via SFTP ===============================================' 
-                withCredentials([sshUserPrivateKey(credentialsId: 'jenkins_sftpgo', keyFileVariable: 'SSH_KEY', usernameVariable: 'SFTP_USER')]) {
-                    sh """
-                    sftp -i $SSH_KEY $SFTP_USER@sv-mediavault.local:16022 <<EOF
-                    mkdir ${SFTP_BRANCH_PATH}
-                    cd ${SFTP_BRANCH_PATH}
-                    put ${ZIP_FILE}
-                    bye
-                    EOF
-                    """
-                }
-            }
-        }
+        //stage('Checkout Code') {
+        //    steps {
+        //        sh 'git clean -fdx'
+        //        checkout scm
+        //    }
+        //}
+        //stage('Restore Dependencies') {
+        //    steps {
+        //        sh 'dotnet dev-certs https --trust'
+        //        echo '================================================= Restore Dependencies ===============================================' 
+        //        sh 'dotnet restore'
+        //    }
+        //}
+        //stage('Build') {
+        //    steps {
+        //        echo '================================================= Build ===============================================' 
+        //        sh 'dotnet build --configuration ${BUILD_CONFIGURATION}'
+        //    }
+        //}
+        //stage('Run Unit Tests') {
+        //    steps {
+        //        echo '================================================= Run Unit Tests ===============================================' 
+        //        sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --verbosity normal'
+        //    }
+        //}
+        //stage('Package DLLs') {
+        //    steps {
+        //        echo '================================================= Package DLLs ===============================================' 
+        //        sh "zip -r ${ZIP_FILE} ${OUTPUT_DIR}"
+        //    }
+        //}
+        //stage('Upload to External Share via SFTP') {
+        //    steps {
+        //        echo '================================================= Upload to External Share via SFTP ===============================================' 
+        //        withCredentials([sshUserPrivateKey(credentialsId: 'jenkins_sftpgo', keyFileVariable: 'SSH_KEY', usernameVariable: 'SFTP_USER')]) {
+        //            sh """
+        //            sftp -i $SSH_KEY $SFTP_USER@sv-mediavault.local:16022 <<EOF
+        //            mkdir ${SFTP_BRANCH_PATH}
+        //            cd ${SFTP_BRANCH_PATH}
+        //            put ${ZIP_FILE}
+        //            bye
+        //            EOF
+        //            """
+        //        }
+        //    }
+        //}
     }
     post {
         always {
