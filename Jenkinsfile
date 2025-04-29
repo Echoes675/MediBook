@@ -1,5 +1,7 @@
 pipeline {
-    agent { dockerfile true }
+    agent {
+        docker{ image 'mcr.microsoft.com/dotnet/sdk:9.0' }
+    }
     environment {
         DOTNET_VERSION = '9.0' // Specify .NET version
         BUILD_CONFIGURATION = 'Release'
