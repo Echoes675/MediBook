@@ -9,12 +9,14 @@ pipeline {
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}" // Full path for the branch
     }
     stages {
-        stage('Checkout Code') {
-            steps {
-                sh 'git clean -fdx'
-                checkout scm
-            }
-        }
+         stage('Checkout Code') {
+             steps {
+                 sh 'git clean -fdx'
+                 git branch: 'main',
+                     url: 'https://github.com/Echoes675/MediBook.git',
+                     credentialsId: 'jenkins_github'
+             }
+         }
         stage('Restore Dependencies') {
             steps {
                 echo '================================================= Restore Dependencies ===============================================' 
