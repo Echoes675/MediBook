@@ -10,7 +10,7 @@ public class MediBookDatabaseContextFactory : IDesignTimeDbContextFactory<MediBo
     public MediBookDatabaseContext CreateDbContext(string[] args)
     {
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Medibook.Web"))
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "..", "MediBook.Web"))
             .AddJsonFile("appsettings.json")
             .Build();
         
