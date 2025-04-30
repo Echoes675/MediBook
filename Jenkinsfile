@@ -9,6 +9,11 @@ pipeline {
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}" // Full path for the branch
     }
     stages {
+         stage('Clean Workspace') {
+             steps {
+                 deleteDir() // Deletes all files in the workspace
+             }
+         }
          stage('Checkout Code') {
              steps {
                  git credentialsId: 'jenkins_github', url: 'https://github.com/Echoes675/MediBook.git'
