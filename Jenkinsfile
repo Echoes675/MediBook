@@ -11,12 +11,15 @@ pipeline {
     stages {
          stage('Checkout Code') {
              steps {
-                 sh 'git clean -fdx'
-                 git branch: 'main',
-                     url: 'https://github.com/Echoes675/MediBook.git',
-                     credentialsId: 'jenkins_github'
+                 git credentialsId: 'jenkins_github', url: 'https://github.com/Echoes675/MediBook.git'
              }
          }
+         stage('Clean Project') {
+            steps {
+                echo '================================================= Clean Project ===============================================' 
+                dotnetClean sdk: '.Net 9.0 SDK'
+            }
+        }
         stage('Restore Dependencies') {
             steps {
                 echo '================================================= Restore Dependencies ===============================================' 
