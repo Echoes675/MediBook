@@ -7,6 +7,7 @@ pipeline {
         ZIP_FILE = "build_output_${env.BRANCH_NAME}.zip" // Use branch name in the zip file
         SFTP_BASE_PATH = '/Artifacts/MediBook' // Base path on the SFTP server
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}" // Full path for the branch
+        DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 'true'
     }
     stages {
          stage('Clean Workspace') {
