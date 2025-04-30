@@ -17,21 +17,20 @@ pipeline {
         }
         stage('Restore Dependencies') {
             steps {
-                sh 'dotnet dev-certs https --trust'
                 echo '================================================= Restore Dependencies ===============================================' 
-                sh 'dotnet restore'
+                dotnetRestore sdk: '.Net 9.0 SDK'
             }
         }
         stage('Build') {
             steps {
                 echo '================================================= Build ===============================================' 
-                sh 'dotnet build --configuration ${BUILD_CONFIGURATION}'
+                dotnetBuild configuration: 'Release', sdk: '.Net 9.0 SDK'
             }
         }
         stage('Run Unit Tests') {
             steps {
                 echo '================================================= Run Unit Tests ===============================================' 
-                sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --verbosity normal'
+                dotnetTest configuration: 'Release', noBuild: true, sdk: '.Net 9.0 SDK', verbosity: 'n'
             }
         }
         stage('Package DLLs') {
