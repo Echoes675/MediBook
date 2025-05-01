@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Core", "MediBook.Core\MediBook.Core.csproj", "{D540A34E-7F2E-410F-8329-3669690CF371}"
 EndProject
@@ -12,6 +12,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Web", "MediBook.Web\MediBook.Web.csproj", "{7981175C-BD25-4F71-9280-87F6E6B694A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediBook.Services", "MediBook.Services\MediBook.Services.csproj", "{48C80CF8-FF03-49BA-815C-42D90E418668}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediBook.Data.Test", "UnitTests\MediBook.Data.Test\MediBook.Data.Test.csproj", "{50E749B1-A010-D164-05A6-81E9978C415B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediBook.Services.Test", "UnitTests\MediBook.Services.Test\MediBook.Services.Test.csproj", "{E0F4530C-032B-3D9A-E2EE-A8CE3051BA61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +39,21 @@ Global
 		{48C80CF8-FF03-49BA-815C-42D90E418668}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48C80CF8-FF03-49BA-815C-42D90E418668}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48C80CF8-FF03-49BA-815C-42D90E418668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50E749B1-A010-D164-05A6-81E9978C415B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E749B1-A010-D164-05A6-81E9978C415B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50E749B1-A010-D164-05A6-81E9978C415B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50E749B1-A010-D164-05A6-81E9978C415B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0F4530C-032B-3D9A-E2EE-A8CE3051BA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F4530C-032B-3D9A-E2EE-A8CE3051BA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F4530C-032B-3D9A-E2EE-A8CE3051BA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F4530C-032B-3D9A-E2EE-A8CE3051BA61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{50E749B1-A010-D164-05A6-81E9978C415B} = {795637DB-5C06-4C51-9CF1-E61B0DAA3235}
+		{E0F4530C-032B-3D9A-E2EE-A8CE3051BA61} = {795637DB-5C06-4C51-9CF1-E61B0DAA3235}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EF17E2E-FA69-4D35-B9A8-6D388C6117FD}
