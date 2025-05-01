@@ -13,18 +13,17 @@ pipeline {
          stage('Clean Workspace') {
              steps {
                  deleteDir() // Deletes all files in the workspace
-                 git clean -fdx
              }
          }
          stage('Checkout Code') {
              steps {
-                 git credentialsId: 'jenkins_github', url: 'https://github.com/Echoes675/MediBook.git'
+                checkout scm
              }
          }
         stage('Clean Project') {
            steps {
                echo '================================================= Clean Project ===============================================' 
-               git clean -fdx
+               sh 'git clean -fdx'
                dotnetClean sdk: '.Net 9.0 SDK'
            }
         }
