@@ -27,7 +27,7 @@ pipeline {
                git clean -fdx
                dotnetClean sdk: '.Net 9.0 SDK'
            }
-        
+        }
         stage('Restore Dependencies') {
             steps {
                 echo '================================================= Restore Dependencies ===============================================' 
