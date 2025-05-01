@@ -24,7 +24,7 @@ pipeline {
            steps {
                echo '================================================= Clean Project ===============================================' 
                sh 'git clean -fdx'
-               dotnetClean sdk: '.Net 9.0 SDK'
+               dotnetClean configuration: "${BUILD_CONFIGURATION}", sdk: '.Net 9.0 SDK'
            }
         }
         stage('Restore Dependencies') {
@@ -36,13 +36,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo '================================================= Build ===============================================' 
-                dotnetBuild configuration: 'Release', sdk: '.Net 9.0 SDK'
+                dotnetBuild configuration: "${BUILD_CONFIGURATION}", sdk: '.Net 9.0 SDK'
             }
         }
         stage('Run Unit Tests') {
             steps {
                 echo '================================================= Run Unit Tests ===============================================' 
-                dotnetTest configuration: 'Release', noBuild: true, sdk: '.Net 9.0 SDK', verbosity: 'n'
+                dotnetTest configuration: "${BUILD_CONFIGURATION}", noBuild: true, sdk: '.Net 9.0 SDK', verbosity: 'n'
             }
         }
         stage('Package DLLs') {
