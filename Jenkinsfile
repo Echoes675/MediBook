@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    options {
+        ansiColor('xterm')
+        timestamps()
+        logRotator(numToKeepStr: '10')
+    }
     environment {
         DOTNET_VERSION = '9.0'
         BUILD_CONFIGURATION = 'Release'
@@ -55,8 +60,9 @@ pipeline {
             steps {
                 echo '================================================= Add Host Key ==============================================='
                 sh """
+                set -e
                 mkdir -p ${WORKSPACE}/.ssh
-                ssh-keyscan -p 16022 sv-mediavault.local >> ${WORKSPACE}/.ssh/known_hosts
+                ssh-keyscan -p 16022 sv-mediavault.local >> ${WORKSPACE}/.ssh/known_hosts || { echo 'ssh-keyscan failed'; exit 1; }
                 """
             }
         }
