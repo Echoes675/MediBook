@@ -54,10 +54,17 @@ pipeline {
         stage('Upload to External Share via SFTP') {
             steps {
                 echo '================================================= Upload to External Share via SFTP ==============================================='
-                publishOverSsh(
-                    server: 'jenkins_sftpgo',
-                    transferSet: [
-                        [sourceFiles: "${ZIP_FILE}", remoteDirectory: "${SFTP_BRANCH_PATH}"]
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'your-sftp-server-config-name',
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: "${ZIP_FILE}",
+                                    remoteDirectory: "${SFTP_BRANCH_PATH}"
+                                )
+                            ]
+                        )
                     ]
                 )
             }
