@@ -53,8 +53,10 @@ pipeline {
         }
         stage('Add Host Key') {
             steps {
+                echo '================================================= Add Host Key ==============================================='
                 sh """
-                ssh-keyscan -p 16022 sv-mediavault.local >> ~/.ssh/known_hosts
+                mkdir -p ${WORKSPACE}/.ssh
+                ssh-keyscan -p 16022 sv-mediavault.local >> ${WORKSPACE}/.ssh/known_hosts
                 """
             }
         }
@@ -63,7 +65,7 @@ pipeline {
                 echo '================================================= Upload to External Share via SFTP ==============================================='
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins_sftpgo', keyFileVariable: 'SSH_KEY', usernameVariable: 'SFTP_USER')]) {
                     sh """
-                    sftp -i ${SSH_KEY} ${SFTP_USER}@sv-mediavault.local:16022 <<EOF
+                    sftp -o UserKnownHostsFile=${WORKSPACE}/.ssh/known_hosts -i ${SSH_KEY} ${SFTP_USER}@sv-mediavault.local:16022 <<EOF
                     mkdir ${SFTP_BRANCH_PATH}
                     cd ${SFTP_BRANCH_PATH}
                     put ${ZIP_FILE}
