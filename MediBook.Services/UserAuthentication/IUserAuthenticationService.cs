@@ -1,6 +1,5 @@
 ﻿namespace MediBook.Services.UserAuthentication
 {
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     public interface IUserAuthenticationService

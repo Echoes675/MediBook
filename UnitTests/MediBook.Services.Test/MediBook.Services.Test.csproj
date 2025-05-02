@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.13.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="MockQueryable.Core" Version="7.0.3" />
     <PackageReference Include="MockQueryable.NSubstitute" Version="7.0.3" />
@@ -16,8 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Medibook.Data\MediBook.Data.csproj" />
-    <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
+    <ProjectReference Include="..\..\MediBook.Core\MediBook.Core.csproj" />
+    <ProjectReference Include="..\..\MediBook.Data\MediBook.Data.csproj" />
+    <ProjectReference Include="..\..\MediBook.Services\MediBook.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,5 @@
 ﻿namespace MediBook.Web.Models
 {
-    using System.Collections.Generic;
     using MediBook.Core.DTOs;
     /// <summary>
     /// The Patient Search View Model

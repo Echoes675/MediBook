@@ -1,10 +1,7 @@
 ﻿namespace MediBook.Services.AppointmentBook
 {
-    using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using MediBook.Core.Models;
-    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface IAppointmentBookingManager
     {

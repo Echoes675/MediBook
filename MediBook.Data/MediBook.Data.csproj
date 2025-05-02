@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MediBook\MediBook.Core.csproj" />
+    <ProjectReference Include="..\MediBook.Core\MediBook.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

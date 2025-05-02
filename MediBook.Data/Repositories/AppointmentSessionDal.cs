@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using MediBook.Core.DTOs;
     using MediBook.Core.Models;
     using MediBook.Data.DataAccess;
     using Microsoft.EntityFrameworkCore;
