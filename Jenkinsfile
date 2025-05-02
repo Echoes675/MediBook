@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOTNET_VERSION = '9.0' // Specify .NET version
         BUILD_CONFIGURATION = 'Release'
-        OUTPUT_DIR = 'bin/${BUILD_CONFIGURATION}/net9.0' // Adjust based on your project structure
+        OUTPUT_DIR = 'BuildOutput/net9.0' // Adjust based on your project structure
         ZIP_FILE = "build_output_${env.BRANCH_NAME}.zip" // Use branch name in the zip file
         SFTP_BASE_PATH = '/Artifacts/MediBook' // Base path on the SFTP server
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}" // Full path for the branch

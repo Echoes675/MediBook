@@ -6,6 +6,10 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <OutputPath>..\BuildOutput\</OutputPath>
+    </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="log4net" Version="3.0.4" />
