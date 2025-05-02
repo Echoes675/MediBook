@@ -48,7 +48,7 @@ pipeline {
         stage('Package DLLs') {
             steps {
                 echo '================================================= Package DLLs ==============================================='
-                zip zipFile: "${ZIP_FILE}", archive: false, dir: "${OUTPUT_DIR}"
+                zip zipFile: "${ZIP_FILE}", dir: "${OUTPUT_DIR}"
             }
         }
         stage('Upload to External Share via SFTP') {
