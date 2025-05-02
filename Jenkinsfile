@@ -57,7 +57,7 @@ pipeline {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'your-sftp-server-config-name',
+                            configName: 'jenkins_sftpgo',
                             transfers: [
                                 sshTransfer(
                                     sourceFiles: "${ZIP_FILE}",
