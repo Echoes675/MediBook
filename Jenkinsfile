@@ -1,10 +1,5 @@
 pipeline {
     agent any
-    options {
-        ansiColor('xterm')
-        timestamps()
-        logRotator(numToKeepStr: '10')
-    }
     environment {
         DOTNET_VERSION = '9.0'
         BUILD_CONFIGURATION = 'Release'
