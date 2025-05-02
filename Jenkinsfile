@@ -65,7 +65,7 @@ pipeline {
                 sh """
                 set -e
                 echo 'Testing ssh-keyscan...'
-                ssh-keyscan -p 16022 sv-mediavault.local || { echo 'ssh-keyscan failed'; exit 1; }
+                ssh-keyscan -4 -p 16022 sv-mediavault.local || { echo 'ssh-keyscan failed'; exit 1; }
                 """
             }
         }
@@ -84,7 +84,7 @@ pipeline {
                 sh """
                 set -e
                 mkdir -p ${WORKSPACE}/.ssh
-                ssh-keyscan -v -p 16022 sv-mediavault.local >> ${WORKSPACE}/.ssh/known_hosts || { echo 'ssh-keyscan failed'; exit 1; }
+                ssh-keyscan -4 -v -p 16022 sv-mediavault.local >> ${WORKSPACE}/.ssh/known_hosts || { echo 'ssh-keyscan failed'; exit 1; }
                 """
             }
         }
