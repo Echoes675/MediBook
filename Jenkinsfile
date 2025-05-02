@@ -48,59 +48,18 @@ pipeline {
         stage('Package DLLs') {
             steps {
                 echo '================================================= Package DLLs ==============================================='
-                sh "zip -r ${ZIP_FILE} ${OUTPUT_DIR}"
-            }
-        }
-        stage('Debug Network Connectivity') {
-            steps {
-                sh """
-                set -e
-                echo 'Testing connectivity to sv-mediavault.local...'
-                nc -zv sv-mediavault.local 16022 || { echo 'Unable to connect to sv-mediavault.local on port 16022'; exit 1; }
-                """
-            }
-        }
-        stage('Test ssh-keyscan') {
-            steps {
-                sh """
-                set -e
-                echo 'Testing ssh-keyscan...'
-                ssh-keyscan -4 -p 16022 sv-mediavault.local || { echo 'ssh-keyscan failed'; exit 1; }
-                """
-            }
-        }
-        stage('Check Hostname Resolution') {
-            steps {
-                sh """
-                set -e
-                echo 'Resolving hostname...'
-                nslookup sv-mediavault.local || { echo 'Hostname resolution failed'; exit 1; }
-                """
-            }
-        }
-        stage('Add Host Key') {
-            steps {
-                echo '================================================= Add Host Key ==============================================='
-                sh """
-                set -e
-                mkdir -p ${WORKSPACE}/.ssh
-                ssh-keyscan -4 -v -p 16022 sv-mediavault.local >> ${WORKSPACE}/.ssh/known_hosts || { echo 'ssh-keyscan failed'; exit 1; }
-                """
+                zip zipFile: "${ZIP_FILE}", archive: false, dir: "${OUTPUT_DIR}"
             }
         }
         stage('Upload to External Share via SFTP') {
             steps {
                 echo '================================================= Upload to External Share via SFTP ==============================================='
-                withCredentials([sshUserPrivateKey(credentialsId: 'jenkins_sftpgo', keyFileVariable: 'SSH_KEY', usernameVariable: 'SFTP_USER')]) {
-                    sh """
-                    sftp -o UserKnownHostsFile=${WORKSPACE}/.ssh/known_hosts -i ${SSH_KEY} ${SFTP_USER}@sv-mediavault.local:16022 <<EOF
-                    mkdir ${SFTP_BRANCH_PATH}
-                    cd ${SFTP_BRANCH_PATH}
-                    put ${ZIP_FILE}
-                    bye
-                    EOF
-                    """
-                }
+                publishOverSsh(
+                    server: 'jenkins_sftpgo',
+                    transferSet: [
+                        [sourceFiles: "${ZIP_FILE}", remoteDirectory: "${SFTP_BRANCH_PATH}"]
+                    ]
+                )
             }
         }
     }
