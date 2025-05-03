@@ -4,11 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <UserSecretsId>8b644406-eca3-4492-b644-14c7419a0de2</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <PublishDir>..\PublishOutput\</PublishDir>
   </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <OutputPath>..\BuildOutput\</OutputPath>
-    </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />

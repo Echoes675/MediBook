@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOTNET_VERSION = '9.0'
         BUILD_CONFIGURATION = 'Release'
-        OUTPUT_DIR = 'BuildOutput/net9.0'
+        OUTPUT_DIR = 'PublishOutput/net9.0'
         ZIP_FILE = "build_output_${env.BRANCH_NAME}.zip"
         SFTP_BASE_PATH = '/Artifacts/MediBook'
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}"
@@ -12,11 +12,13 @@ pipeline {
     stages {
         stage('Clean Workspace') {
             steps {
+                echo '================================================= Clean Workspace ==============================================='
                 deleteDir()
             }
         }
         stage('Checkout Code') {
             steps {
+                echo '================================================= Git Checkout ==============================================='
                 checkout scm
             }
         }
@@ -43,6 +45,12 @@ pipeline {
             steps {
                 echo '================================================= Run Unit Tests ==============================================='
                 dotnetTest configuration: "${BUILD_CONFIGURATION}", noBuild: true, sdk: '.Net 9.0 SDK', verbosity: 'n'
+            }
+        }
+        stage('Publish') {
+            steps {
+                echo '================================================= Publish ==============================================='
+                dotnetPublish configuration: '${BUILD_CONFIGURATION}', noBuild: true, sdk: '.Net 9.0 SDK', selfContained: false
             }
         }
         stage('Package DLLs') {
@@ -78,7 +86,7 @@ pipeline {
             echo '++++++++++++++++++++++++++++++++++++++++++++++++ Build and deployment succeeded. +++++++++++++++++++++++++++++++++++++++++++++++++'
         }
         failure {
-            echo '-------------------------------------------------- Build or deployment failed. ---------------------------------------------------'
+            echo '⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠ Build or deployment failed. ⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠'
         }
     }
 }
