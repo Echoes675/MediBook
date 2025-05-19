@@ -78,20 +78,13 @@ pipeline {
         //         )
         //     }
         // }
-        stage('Build Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
-                echo '================================================= Build Docker Image =============================================='
-                sh '''
-                    docker build -t $DOCKER_IMAGE -f MediBook.Web/Dockerfile .
-                '''
-            }
-        }
-        stage('Push Docker Image') {
-            steps {
-                echo '================================================= Push Docker Image =============================================='
-                sh '''
-                    docker push $DOCKER_IMAGE
-                '''
+                echo '================================================= Build and Push Docker Image ==============================================='
+                script {
+                    def image = docker.build(env.DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
+                    image.push()
+                }
             }
         }
     }
