@@ -8,6 +8,7 @@ pipeline {
         SFTP_BASE_PATH = '/Artifacts/MediBook'
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}"
         DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 'true'
+        DOCKER_IMAGE = "sv-mediavalut.localhost:5000/medibook:${env.BRANCH_NAME}"
     }
     stages {
         stage('Clean Workspace') {
@@ -53,28 +54,44 @@ pipeline {
                 dotnetPublish configuration: '${BUILD_CONFIGURATION}', noBuild: true, sdk: '.Net 9.0 SDK', selfContained: false
             }
         }
-        stage('Package DLLs') {
+        // stage('Package DLLs') {
+        //     steps {
+        //         echo '================================================= Package DLLs ==============================================='
+        //         zip zipFile: "${ZIP_FILE}", dir: "${OUTPUT_DIR}"
+        //     }
+        // }
+        // stage('Upload to External Share via SFTP') {
+        //     steps {
+        //         echo '================================================= Upload to External Share via SFTP ==============================================='
+        //         sshPublisher(
+        //             publishers: [
+        //                 sshPublisherDesc(
+        //                     configName: 'jenkins_sftpgo',
+        //                     transfers: [
+        //                         sshTransfer(
+        //                             sourceFiles: "${ZIP_FILE}",
+        //                             remoteDirectory: "${SFTP_BRANCH_PATH}"
+        //                         )
+        //                     ]
+        //                 )
+        //             ]
+        //         )
+        //     }
+        // }
+        stage('Build Docker Image') {
             steps {
-                echo '================================================= Package DLLs ==============================================='
-                zip zipFile: "${ZIP_FILE}", dir: "${OUTPUT_DIR}"
+                echo '================================================= Build Docker Image =============================================='
+                sh '''
+                    docker build -t $DOCKER_IMAGE -f MediBook.Web/Dockerfile .
+                '''
             }
         }
-        stage('Upload to External Share via SFTP') {
+        stage('Push Docker Image') {
             steps {
-                echo '================================================= Upload to External Share via SFTP ==============================================='
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'jenkins_sftpgo',
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: "${ZIP_FILE}",
-                                    remoteDirectory: "${SFTP_BRANCH_PATH}"
-                                )
-                            ]
-                        )
-                    ]
-                )
+                echo '================================================= Push Docker Image =============================================='
+                sh '''
+                    docker push $DOCKER_IMAGE
+                '''
             }
         }
     }
@@ -86,7 +103,7 @@ pipeline {
             echo '++++++++++++++++++++++++++++++++++++++++++++++++ Build and deployment succeeded. +++++++++++++++++++++++++++++++++++++++++++++++++'
         }
         failure {
-            echo '⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠ Build or deployment failed. ⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠'
+            echo '------------------------------------------------ Build or deployment failed. -----------------------------------------------------'
         }
     }
 }
