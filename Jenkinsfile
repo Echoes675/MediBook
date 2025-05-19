@@ -54,30 +54,6 @@ pipeline {
                 dotnetPublish configuration: '${BUILD_CONFIGURATION}', noBuild: true, sdk: '.Net 9.0 SDK', selfContained: false
             }
         }
-        // stage('Package DLLs') {
-        //     steps {
-        //         echo '================================================= Package DLLs ==============================================='
-        //         zip zipFile: "${ZIP_FILE}", dir: "${OUTPUT_DIR}"
-        //     }
-        // }
-        // stage('Upload to External Share via SFTP') {
-        //     steps {
-        //         echo '================================================= Upload to External Share via SFTP ==============================================='
-        //         sshPublisher(
-        //             publishers: [
-        //                 sshPublisherDesc(
-        //                     configName: 'jenkins_sftpgo',
-        //                     transfers: [
-        //                         sshTransfer(
-        //                             sourceFiles: "${ZIP_FILE}",
-        //                             remoteDirectory: "${SFTP_BRANCH_PATH}"
-        //                         )
-        //                     ]
-        //                 )
-        //             ]
-        //         )
-        //     }
-        // }
         stage('Build and Push Docker Image') {
             steps {
                 echo '================================================= Build and Push Docker Image ==============================================='
