@@ -1,9 +1,5 @@
-ARG APP_UID=2345
-
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-ARG APP_UID
-RUN adduser --uid $APP_UID --disabled-password --gecos "" appuser
-USER appuser
+USER app
 WORKDIR /app
 EXPOSE 8100
 EXPOSE 8101
@@ -27,9 +23,8 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./MediBook.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
-ARG APP_UID
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN chown -R $APP_UID:$APP_UID /app
-USER appuser
+RUN chown -R app:app /app
+USER app
 ENTRYPOINT ["dotnet", "MediBook.Web.dll"]
