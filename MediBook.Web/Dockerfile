@@ -28,4 +28,5 @@ COPY --from=publish /app/publish .
 USER root
 RUN chown -R app:app /app
 USER app
+ENV ASPNETCORE_URLS="http://+:8100;https://+:8101"
 ENTRYPOINT ["dotnet", "MediBook.Web.dll"]
