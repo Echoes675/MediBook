@@ -1,4 +1,4 @@
-ARG APP_UID=1000
+ARG APP_UID=2345
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 ARG APP_UID
