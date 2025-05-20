@@ -30,6 +30,4 @@ RUN dotnet publish "./MediBook.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publi
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN chown -R $APP_UID:$APP_UID /app
-USER $APP_UID
 ENTRYPOINT ["dotnet", "MediBook.Web.dll"]
