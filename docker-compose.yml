@@ -1,1 +1,23 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+# In your medibook application's source repository
+version: '3.8' # Use a recent Docker Compose version
+
+services:
+  medibook:
+    image: ${DOCKER_IMAGE_REPO}:${DOCKER_IMAGE_TAG:-master} # Use variables for registry and tag
+    container_name: medibook
+    ports:
+      - "8100:8100"
+      - "8101:8101"
+    volumes:
+      # Mount the appsettings.json from the same directory on the host
+      - ./appsettings.json:/app/appsettings.json:ro
+    # Add any other required volumes, e.g., for logs or persistent data
+    # - ./data:/app/data
+
+    # Add environment variables if your app needs them
+    # environment:
+    #   - ASPNETCORE_ENVIRONMENT=Production
+    #   - MY_CUSTOM_SETTING=SomeValue
+
+    restart: unless-stopped # Good default restart policy
+    # Add other configurations like depends_on, networks if you have more services
