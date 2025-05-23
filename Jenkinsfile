@@ -95,7 +95,7 @@ pipeline {
                             )
                         ]
                     )
-                    echo "Uploaded ${localComposeFilePath} to sftp://${env.SFTP_HOST}:${env.SFTP_PORT}${remoteComposeFilePath}"
+                    echo "Uploaded ${localComposeFilePath} to sftp://${env.SFTP_HOST}:${env.SFTP_PORT}${SFTP_BRANCH_COMPOSE_PATH}"
                 }
             }
         }
