@@ -8,7 +8,7 @@ pipeline {
         SFTP_BASE_PATH = '/Artifacts/MediBook'
         SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}"
         DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 'true'
-        DOCKER_IMAGE = "sv-mediavalut.localhost:5000/medibook:${env.BRANCH_NAME}"
+        DOCKER_IMAGE = "registry.alphaepsilon.co.uk/medibook:${env.BRANCH_NAME}"
     }
     stages {
         stage('Clean Workspace') {
@@ -58,8 +58,15 @@ pipeline {
             steps {
                 echo '================================================= Build and Push Docker Image ==============================================='
                 script {
-                    def image = docker.build(env.DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
-                    image.push()
+                    // Define the registry URL and the credentials ID
+                    def registryUrl = 'https://registry.alphaepsilon.co.uk' // Use https
+                    def credentialsId = 'alphaepsilon-docker-registry' // This is the ID you'll define in Jenkins
+
+                    // Use withRegistry to handle Docker login/logout
+                    docker.withRegistry(registryUrl, credentialsId) {
+                        def image = docker.build(env.DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
+                        image.push()
+                    }
                 }
             }
         }
