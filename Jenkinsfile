@@ -89,7 +89,7 @@ pipeline {
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: "${localComposeFilePath}",
-                                        remoteDirectory: "${SFTP_BRANCH_PATH}"
+                                        remoteDirectory: "${SFTP_BRANCH_COMPOSE_PATH}"
                                     )
                                 ]
                             )
