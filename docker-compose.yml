@@ -1,13 +1,9 @@
-# In your medibook application's source repository
-version: '3.8' # Use a recent Docker Compose version
-
 services:
   medibook:
     image: ${DOCKER_IMAGE_REPO}:${DOCKER_IMAGE_TAG:-master} # Use variables for registry and tag
     container_name: medibook
     ports:
       - "8100:8100"
-      - "8101:8101"
     volumes:
       # Mount the appsettings.json from the same directory on the host
       - ./appsettings.json:/app/appsettings.json:ro
