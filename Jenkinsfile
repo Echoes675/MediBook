@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options{
+        disableConcurrentBuilds()
+    }
     environment {
         DOTNET_VERSION = '9.0'
         BUILD_CONFIGURATION = 'Release'
