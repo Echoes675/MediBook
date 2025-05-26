@@ -11,8 +11,18 @@ pipeline {
         SFTP_BASE_COMPOSE_PATH = '/compose_files/MediBook'
         SFTP_BRANCH_COMPOSE_PATH = "${SFTP_BASE_COMPOSE_PATH}/${env.BRANCH_NAME}"
         DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 'true'
-        DOCKER_IMAGE = "registry.alphaepsilon.co.uk/medibook:${env.BRANCH_NAME}"
-        SFTP_CREDENTIALS_ID = 'jenkins_sftpgo' // Assuming this is defined in Jenkins credentials
+
+        // --- MODIFIED ENVIRONMENT VARIABLE ---
+        // The DOCKER_IMAGE tag will now directly use env.BRANCH_NAME
+        // Be aware that Docker tags have some character restrictions.
+        // If your branch names contain characters like '/' or ':', Docker might complain.
+        // Common safe characters for tags: [a-zA-Z0-9.-_]
+        // If your branch names ever contain '/', you'll need to use the previous 'BRANCH_TAG' sanitization.
+        DOCKER_IMAGE_TAG = "${env.BRANCH_NAME}" // Directly use the branch name as the tag
+        DOCKER_REGISTRY = "registry.alphaepsilon.co.uk"
+        FULL_DOCKER_IMAGE = "${DOCKER_REGISTRY}/medibook:${DOCKER_IMAGE_TAG}" // Full image name with branch tag
+
+        SFTP_CREDENTIALS_ID = 'jenkins_sftpgo'
         SFTP_HOST = "sv-mediavault.local"
         SFTP_PORT = "16022"
     }
@@ -64,13 +74,21 @@ pipeline {
             steps {
                 echo '================================================= Build and Push Docker Image ==============================================='
                 script {
-                    // Define the registry URL and the credentials ID
-                    def registryUrl = 'https://registry.alphaepsilon.co.uk' // Use https
-                    def credentialsId = 'alphaepsilon-docker-registry' // This is the ID you'll define in Jenkins
+                    def registryUrl = "https://${env.DOCKER_REGISTRY}"
+                    def credentialsId = 'alphaepsilon-docker-registry'
 
-                    // Use withRegistry to handle Docker login/logout
+                    echo "Building Docker image with tag: ${env.FULL_DOCKER_IMAGE}"
+
                     docker.withRegistry(registryUrl, credentialsId) {
-                        def image = docker.build(env.DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
+                        // Use the FULL_DOCKER_IMAGE variable which contains the branch name as the tag
+                        def image = docker.build(env.FULL_DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
+
+                        if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master') {
+                            def latestTag = "${env.DOCKER_REGISTRY}/medibook:latest"
+                            echo "Also tagging as: ${latestTag}"
+                            image.tag(latestTag)
+                        }
+
                         image.push()
                     }
                 }
@@ -80,9 +98,6 @@ pipeline {
             steps {
                 echo '================================================= Uploading Docker Compose File ==============================================='
                 script {
-                    // Local path to your docker-compose.yml in the Jenkins workspace
-                    // ASSUMPTION: docker-compose.yml is in the root of your Git repo checkout.
-                    // ADJUST THIS PATH if your docker-compose.yml is in a subdirectory (e.g., 'deploy/docker-compose.yml')
                     def localComposeFilePath = 'docker-compose.yml'
 
                     sshPublisher(
