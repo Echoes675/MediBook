@@ -13,10 +13,10 @@ services:
     - proxy-tier
     # Add environment variables if your app needs them
     environment:
-        - ASPNETCORE_ENVIRONMENT=${ASP_NETCORE_ENVIRONMENT}
-        - VIRTUAL_HOST=${VIRTUAL_HOSTS}
-        - LETSENCRYPT_HOST=${SSLCERT_HOSTS}
-        - LETSENCRYPT_EMAIL=${SSLCERT_EMAIL}
+        - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+        - VIRTUAL_HOST=${VIRTUAL_HOST}
+        - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+        - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
 
     restart: unless-stopped # Good default restart policy
     # Add other configurations like depends_on, networks if you have more services
