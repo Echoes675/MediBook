@@ -82,12 +82,6 @@ pipeline {
                     docker.withRegistry(registryUrl, credentialsId) {
                         // Use the FULL_DOCKER_IMAGE variable which contains the branch name as the tag
                         def image = docker.build(env.FULL_DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
-
-                        if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master') {
-                            echo "Also tagging with 'latest'"
-                            image.tag("latest")
-                        }
-
                         image.push()
                     }
                 }
