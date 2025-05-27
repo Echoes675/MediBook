@@ -21,7 +21,7 @@ namespace MediBook.Web
                 {
                     var services = scope.ServiceProvider;
                     var dbContext = services.GetRequiredService<MediBookDatabaseContext>();
-                    dbContext.Database.Migrate();
+                    await dbContext.Database.MigrateAsync();
 
                     await SeedUserData.Seed(services, dbContext);
                     await SeedPatientsData.Seed(services, dbContext);
