@@ -84,9 +84,8 @@ pipeline {
                         def image = docker.build(env.FULL_DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
 
                         if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master') {
-                            def latestTag = "${env.DOCKER_REGISTRY}/medibook:latest"
-                            echo "Also tagging as: ${latestTag}"
-                            image.tag(latestTag)
+                            echo "Also tagging with 'latest'"
+                            image.tag("latest")
                         }
 
                         image.push()
