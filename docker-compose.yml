@@ -1,0 +1,28 @@
+services:
+  medibook:
+    image: ${DOCKER_IMAGE_REPO}:${DOCKER_IMAGE_TAG:-master} # Use variables for registry and tag
+    container_name: medibook
+    ports:
+      - "8100:8100"
+    volumes:
+      # Mount the appsettings.json from the same directory on the host
+      - ./appsettings.json:/app/appsettings.json:ro
+    # Add any other required volumes, e.g., for logs or persistent data
+    # - ./data:/app/data
+    networks:
+    - proxy-tier
+    # Add environment variables if your app needs them
+    environment:
+        - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+        - VIRTUAL_HOST=${VIRTUAL_HOST}
+        - VIRTUAL_PORT=8100
+        - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+        - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+
+    restart: unless-stopped # Good default restart policy
+    # Add other configurations like depends_on, networks if you have more services
+
+networks:
+    proxy-tier:
+        external: true
+        name: ${APP_NETWORK_NAME}

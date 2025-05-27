@@ -21,13 +21,16 @@ namespace MediBook.Web
                 {
                     var services = scope.ServiceProvider;
                     var dbContext = services.GetRequiredService<MediBookDatabaseContext>();
-                    dbContext.Database.Migrate();
+                    Console.WriteLine("Applying migrations...");
+                    await dbContext.Database.MigrateAsync();
 
+                    Console.WriteLine("Seeding data...");
                     await SeedUserData.Seed(services, dbContext);
                     await SeedPatientsData.Seed(services, dbContext);
+                    Console.WriteLine("Data seeding completed.");
                 }
 
-                host.Run();
+                await host.RunAsync();
             }
             catch (Exception e)
             {

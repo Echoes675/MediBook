@@ -1,22 +1,41 @@
 pipeline {
     agent any
+    options{
+        disableConcurrentBuilds()
+    }
     environment {
         DOTNET_VERSION = '9.0'
         BUILD_CONFIGURATION = 'Release'
-        OUTPUT_DIR = 'BuildOutput/net9.0'
+        OUTPUT_DIR = 'PublishOutput/'
         ZIP_FILE = "build_output_${env.BRANCH_NAME}.zip"
-        SFTP_BASE_PATH = '/Artifacts/MediBook'
-        SFTP_BRANCH_PATH = "${SFTP_BASE_PATH}/${env.BRANCH_NAME}"
+        SFTP_BASE_COMPOSE_PATH = '/compose_files/MediBook'
+        SFTP_BRANCH_COMPOSE_PATH = "${SFTP_BASE_COMPOSE_PATH}/${env.BRANCH_NAME}"
         DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 'true'
+
+        // --- MODIFIED ENVIRONMENT VARIABLE ---
+        // The DOCKER_IMAGE tag will now directly use env.BRANCH_NAME
+        // Be aware that Docker tags have some character restrictions.
+        // If your branch names contain characters like '/' or ':', Docker might complain.
+        // Common safe characters for tags: [a-zA-Z0-9.-_]
+        // If your branch names ever contain '/', you'll need to use the previous 'BRANCH_TAG' sanitization.
+        DOCKER_IMAGE_TAG = "${env.BRANCH_NAME}" // Directly use the branch name as the tag
+        DOCKER_REGISTRY = "registry.alphaepsilon.co.uk"
+        FULL_DOCKER_IMAGE = "${DOCKER_REGISTRY}/medibook:${DOCKER_IMAGE_TAG}" // Full image name with branch tag
+
+        SFTP_CREDENTIALS_ID = 'jenkins_sftpgo'
+        SFTP_HOST = "sv-mediavault.local"
+        SFTP_PORT = "16022"
     }
     stages {
         stage('Clean Workspace') {
             steps {
+                echo '================================================= Clean Workspace ==============================================='
                 deleteDir()
             }
         }
         stage('Checkout Code') {
             steps {
+                echo '================================================= Git Checkout ==============================================='
                 checkout scm
             }
         }
@@ -45,28 +64,57 @@ pipeline {
                 dotnetTest configuration: "${BUILD_CONFIGURATION}", noBuild: true, sdk: '.Net 9.0 SDK', verbosity: 'n'
             }
         }
-        stage('Package DLLs') {
+        stage('Publish') {
             steps {
-                echo '================================================= Package DLLs ==============================================='
-                zip zipFile: "${ZIP_FILE}", dir: "${OUTPUT_DIR}"
+                echo '================================================= Publish ==============================================='
+                dotnetPublish configuration: '${BUILD_CONFIGURATION}', noBuild: true, sdk: '.Net 9.0 SDK', selfContained: false
             }
         }
-        stage('Upload to External Share via SFTP') {
+        stage('Build and Push Docker Image') {
             steps {
-                echo '================================================= Upload to External Share via SFTP ==============================================='
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'jenkins_sftpgo',
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: "${ZIP_FILE}",
-                                    remoteDirectory: "${SFTP_BRANCH_PATH}"
-                                )
-                            ]
-                        )
-                    ]
-                )
+                echo '================================================= Build and Push Docker Image ==============================================='
+                script {
+                    def registryUrl = "https://${env.DOCKER_REGISTRY}"
+                    def credentialsId = 'alphaepsilon-docker-registry'
+
+                    echo "Building Docker image with tag: ${env.FULL_DOCKER_IMAGE}"
+
+                    docker.withRegistry(registryUrl, credentialsId) {
+                        // Use the FULL_DOCKER_IMAGE variable which contains the branch name as the tag
+                        def image = docker.build(env.FULL_DOCKER_IMAGE, "-f MediBook.Web/Dockerfile .")
+
+                        if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master') {
+                            def latestTag = "${env.DOCKER_REGISTRY}/medibook:latest"
+                            echo "Also tagging as: ${latestTag}"
+                            image.tag(latestTag)
+                        }
+
+                        image.push()
+                    }
+                }
+            }
+        }
+        stage('Upload Docker Compose File') {
+            steps {
+                echo '================================================= Uploading Docker Compose File ==============================================='
+                script {
+                    def localComposeFilePath = 'docker-compose.yml'
+
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'jenkins_sftpgo',
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: "${localComposeFilePath}",
+                                        remoteDirectory: "${SFTP_BRANCH_COMPOSE_PATH}"
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                    echo "Uploaded ${localComposeFilePath} to sftp://${env.SFTP_HOST}:${env.SFTP_PORT}${SFTP_BRANCH_COMPOSE_PATH}"
+                }
             }
         }
     }
@@ -78,7 +126,7 @@ pipeline {
             echo '++++++++++++++++++++++++++++++++++++++++++++++++ Build and deployment succeeded. +++++++++++++++++++++++++++++++++++++++++++++++++'
         }
         failure {
-            echo '-------------------------------------------------- Build or deployment failed. ---------------------------------------------------'
+            echo '------------------------------------------------ Build or deployment failed. -----------------------------------------------------'
         }
     }
 }
