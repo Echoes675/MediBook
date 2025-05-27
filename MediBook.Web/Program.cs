@@ -27,7 +27,7 @@ namespace MediBook.Web
                     await SeedPatientsData.Seed(services, dbContext);
                 }
 
-                host.Run();
+                await host.RunAsync();
             }
             catch (Exception e)
             {
